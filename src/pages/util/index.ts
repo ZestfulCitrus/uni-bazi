@@ -10,5 +10,5 @@ export function formatTimestamp(timestamp:number) {
 
 export function formatTimestampDisplay(timestamp:number) {
     const date = new Date(timestamp);
-    return `${date.getFullYear()}年${date.getMonth()+1}月${date.getDate()}日${date.getHours()}时`
+    return `${date.getFullYear()}年${date.getMonth()+1}月${date.getDate()}日${date.getHours()}点`
 }

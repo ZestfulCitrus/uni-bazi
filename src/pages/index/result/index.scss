@@ -196,3 +196,16 @@
 .pl8{
     padding-left: 8px;
 }
+
+.info-card{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-qrcode{
+  height: 60px;
+  width: 60px;
+  margin-right: 8px;
+}
