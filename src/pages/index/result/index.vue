@@ -13,89 +13,62 @@
           <view>
             <view class="cw pl8">姓名：{{ userInfo.name || "*" }}</view>
             <view class="cw pl8">出生日期：{{ userInfo.birthdayDisplay }}</view>
-            <view class="cw pl8">旺衰参考：{{analysisResult.data.ret_Info.isStrong?'身强':'身弱'}}</view>
+            <view class="cw pl8">旺衰参考：{{ analysisResult.data.ret_Info.isStrong ? '身强' : '身弱' }}</view>
           </view>
           <view class="result-qrcode">
-            <uv-qrcode
-              ref="qrcode"
-              size="60px"
-              :value="`${config.fronturl}2000年6月4日`"
-            ></uv-qrcode>
+            <uv-qrcode ref="qrcode" size="60px" :value="`${config.fronturl}2000年6月4日`"></uv-qrcode>
           </view>
         </view>
       </view>
     </view>
     <view class="table-title bg-light">
-      <uv-text align="center" type="primary" text="日期"></uv-text>
-      <uv-text align="center" type="error" text="流年"></uv-text>
-      <uv-text class="mh24" align="center" type="success" text="大运"></uv-text>
-      <uv-text align="center" type="warning" text="年柱"></uv-text>
+      <uv-text align="center" type="info" text="日期"></uv-text>
+      <uv-text align="center" type="info" text="流年"></uv-text>
+      <uv-text class="mh24" align="center" type="info" text="大运"></uv-text>
+      <uv-text align="center" type="info" text="年柱"></uv-text>
       <uv-text align="center" type="info" text="月柱"></uv-text>
       <uv-text align="center" type="info" text="日柱"></uv-text>
       <uv-text align="center" type="info" text="时柱"></uv-text>
     </view>
     <view class="table-column">
-      <uv-text align="center" type="primary" text="主星"></uv-text>
-      <uv-text align="center" type="error" text="食神"></uv-text>
-      <uv-text
-        class="br1 mh32"
-        align="center"
-        type="success"
-        text="食神"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.ret_Info.gan_shens"
-        align="center"
-        type="warning"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" text="主星"></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.liunianganshen"></uv-text>
+      <uv-text class="br1 mh32" align="center" type="info"
+        :text="analysisResult.data.ret_Info.currentYear.dayunganshen"></uv-text>
+      <uv-text v-for="item in analysisResult.data.ret_Info.gan_shens" align="center" type="info" :text="item"></uv-text>
     </view>
     <view class="table-column">
-      <uv-text align="center" type="primary" text="天干"></uv-text>
-      <uv-text size="24" align="center" type="error" text="癸"></uv-text>
-      <uv-text
-        size="24"
-        class="br1"
-        align="center"
-        type="success"
-        text="壬"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.bazi.TianGan"
-        size="24"
-        align="center"
-        :type="heavenlyStemsColorMap[item]"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" text="天干"></uv-text>
+      <uv-text size="24" align="center"
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.liunian[0]]"
+        :text="analysisResult.data.ret_Info.currentYear.liunian[0]"></uv-text>
+      <uv-text size="24" class="br1" align="center"
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.dayun[0]]"
+        :text="analysisResult.data.ret_Info.currentYear.dayun[0]"></uv-text>
+      <uv-text v-for="item in analysisResult.data.bazi.TianGan" size="24" align="center"
+        :type="heavenlyStemsColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="table-column">
-      <uv-text align="center" type="primary" text="地支"></uv-text>
-      <uv-text size="24" align="center" type="error" text="子"></uv-text>
-      <uv-text
-        size="24"
-        class="br1"
-        align="center"
-        type="success"
-        text="丑"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.bazi.DiZhi"
-        size="24"
-        align="center"
-        :type="earthlyBranchesColorMap[item]"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" text="地支"></uv-text>
+      <uv-text size="24" align="center"
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.liunian[1]]"
+        :text="analysisResult.data.ret_Info.currentYear.liunian[1]"></uv-text>
+      <uv-text size="24" class="br1" align="center"
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.dayun[1]]"
+        :text="analysisResult.data.ret_Info.currentYear.dayun[1]"></uv-text>
+      <uv-text v-for="item in analysisResult.data.bazi.DiZhi" size="24" align="center"
+        :type="earthlyBranchesColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="table-title bg-light">
-      <uv-text align="center" type="primary" text="副星"></uv-text>
-      <uv-text align="center" type="error" text="*"></uv-text>
-      <uv-text align="center" type="success" text="*"></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.ret_Info.zhi_shens"
-        align="center"
-        type="warning"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" text="副星"></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.liunianzhishen[0]"></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.dayunzhishen[0]"></uv-text>
+      <uv-text v-for="item in analysisResult.data.ret_Info.zhi_shens" align="center" type="info" :text="item"></uv-text>
+    </view>
+    <view style="border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="命盘分析结果"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text v-for="item in analysisResult.data.ret_Info.data" mode="info" :text="item"></uv-text>
     </view>
   </view>
 </template>
@@ -149,6 +122,29 @@ const analysisResult = reactive({
       gan_shens: ["", "", "--", ""],
       zhi_shens: ["", "", "", ""],
       isStrong: false,
+      currentYear: {
+        dayun: [
+          "",
+          ""
+        ],
+        dayunganshen: "",
+        dayunzhishen: [
+          "",
+          "",
+          ""
+        ],
+        liunian: [
+          "",
+          ""
+        ],
+        liunianganshen: "",
+        liunianzhishen: [
+          "",
+          "",
+          ""
+        ]
+      },
+      data:[]
     },
   },
 });
@@ -171,7 +167,7 @@ onBackPress((e) => {
 
 onLoad(async (option) => {
   console.log("B 页面 onLoad:", option); //B 页面 onLoad: {id: '1', name: 'uniapp'}
-  const res = await api.analysis({ timestamp: props.userInfo.birthday,sex:props.userInfo.sex });
+  const res = await api.analysis({ timestamp: props.userInfo.birthday, sex: props.userInfo.sex });
   analysisResult.data = res;
 });
 </script>

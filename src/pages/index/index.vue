@@ -87,7 +87,6 @@
       mode="datetime"
       @confirm="pickerConfirm"
     />
-    <view>{{ userInfo }}</view>
   </view>
 </template>
 
