@@ -1,8 +1,8 @@
 <template>
-  <view v-if="false" class="result-page">
-    <!--uv-loading-icon text="正在排盘中..." textSize="30rpx"></!--uv-loading-icon-->
+  <view v-if="loading" class="result-page">
+    <uv-loading-icon text="正在分析中..." textSize="30rpx"></uv-loading-icon>
   </view>
-  <view v-if="true">
+  <view v-if="!loading">
     <view class="space">
       <view class="stars">
         <view class="star"></view>
@@ -65,8 +65,17 @@
       <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.dayunzhishen[0]"></uv-text>
       <uv-text v-for="item in analysisResult.data.ret_Info.zhi_shens" align="center" type="info" :text="item"></uv-text>
     </view>
-    <view style="border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+    <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="命盘分析结果"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text mode="info" :text="'家庭出身：'+analysisResult.data.ret_Info.family_background"></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.wealth_level"></uv-text>
+      <uv-text mode="info" :text="'自身样貌特征：'+analysisResult.data.ret_Info.appearance.level+'('+analysisResult.data.ret_Info.appearance.score+')'"></uv-text>
+      <uv-text mode="info" :text="'配偶样貌：'+analysisResult.data.ret_Info.spouse_appearance"></uv-text>
+      <uv-text mode="info" :text="'学历资质：'+analysisResult.data.ret_Info.judge_education"></uv-text>
+    </view>
+    <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="分析依据"></uv-text>
       <uv-divider></uv-divider>
       <uv-text v-for="item in analysisResult.data.ret_Info.data" mode="info" :text="item"></uv-text>
     </view>
@@ -78,7 +87,9 @@ import "./index.scss";
 import { onBackPress, onLoad } from "@dcloudio/uni-app";
 import config from "../../util/config";
 import api from "../../api";
-import { defineProps, onMounted, reactive } from "vue";
+import { defineProps, onMounted, reactive, ref } from "vue";
+
+const loading = ref(false);
 
 const heavenlyStemsColorMap = {
   甲: 'success',    // 木 - 绿色
@@ -122,6 +133,7 @@ const analysisResult = reactive({
       gan_shens: ["", "", "--", ""],
       zhi_shens: ["", "", "", ""],
       isStrong: false,
+      wealth_level: "",
       currentYear: {
         dayun: [
           "",
@@ -144,7 +156,16 @@ const analysisResult = reactive({
           ""
         ]
       },
-      data:[]
+      family_background:"",
+      spouse_appearance:'',
+      judge_education:'',
+      data:[],
+      appearance:{
+        details:'',
+        features:'',
+        level: '',
+        score: ''
+      }
     },
   },
 });
@@ -167,7 +188,9 @@ onBackPress((e) => {
 
 onLoad(async (option) => {
   console.log("B 页面 onLoad:", option); //B 页面 onLoad: {id: '1', name: 'uniapp'}
+  loading.value=true
   const res = await api.analysis({ timestamp: props.userInfo.birthday, sex: props.userInfo.sex });
   analysisResult.data = res;
+  loading.value=false
 });
 </script>
