@@ -16,7 +16,7 @@
             <view class="cw pl8">旺衰参考：{{ analysisResult.data.ret_Info.isStrong ? '身强' : '身弱' }}</view>
           </view>
           <view class="result-qrcode">
-            <uv-qrcode ref="qrcode" size="60px" :value="`${config.fronturl}2000年6月4日`"></uv-qrcode>
+            <uv-qrcode ref="qrcode" size="60px" :value="`https://space.bilibili.com/3546581452196143`"></uv-qrcode>
           </view>
         </view>
       </view>
@@ -40,10 +40,10 @@
     <view class="table-column">
       <uv-text align="center" type="info" text="天干"></uv-text>
       <uv-text size="24" align="center"
-        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.liunian[0]]"
+        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info.currentYear.liunian[0]]"
         :text="analysisResult.data.ret_Info.currentYear.liunian[0]"></uv-text>
       <uv-text size="24" class="br1" align="center"
-        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.dayun[0]]"
+        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info.currentYear.dayun[0]]"
         :text="analysisResult.data.ret_Info.currentYear.dayun[0]"></uv-text>
       <uv-text v-for="item in analysisResult.data.bazi.TianGan" size="24" align="center"
         :type="heavenlyStemsColorMap[item]" :text="item"></uv-text>
@@ -61,24 +61,36 @@
     </view>
     <view class="table-title bg-light">
       <uv-text align="center" type="info" text="副星"></uv-text>
-      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.liunianzhishen[0]"></uv-text>
-      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.dayunzhishen[0]"></uv-text>
+      <uv-text align="center" type="info"
+        :text="analysisResult.data.ret_Info.currentYear.liunianzhishen[0][1]"></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.dayunzhishen[0][1]"></uv-text>
       <uv-text v-for="item in analysisResult.data.ret_Info.zhi_shens" align="center" type="info" :text="item"></uv-text>
     </view>
-    <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
-      <uv-text type="info" text="命盘分析结果"></uv-text>
+    <view
+      style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="常用基础分析"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text mode="info" :text="'家庭出身：'+analysisResult.data.ret_Info.family_background"></uv-text>
-      <uv-text mode="info" :text="analysisResult.data.ret_Info.wealth_level"></uv-text>
-      <uv-text mode="info" :text="'自身样貌特征：'+analysisResult.data.ret_Info.appearance.level+'('+analysisResult.data.ret_Info.appearance.score+')'"></uv-text>
-      <uv-text mode="info" :text="'配偶样貌：'+analysisResult.data.ret_Info.spouse_appearance"></uv-text>
-      <uv-text mode="info" :text="'学历资质：'+analysisResult.data.ret_Info.judge_education"></uv-text>
+      <uv-text mode="info" :text="'喜用神：' + analysisResult.data.ret_Info.xiYongShen"></uv-text>
+      <uv-text mode="info" :text="'大运喜忌：'+ analysisResult.data.ret_Info.dayunxiji"></uv-text>
     </view>
-    <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+    <uv-alert title="" style="margin: 8px 8px 0 8px;" type="warning"
+      description="以下结果仅属于测试阶段,预测结果仅供娱乐~" closable></uv-alert>
+    <view
+      style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="命盘分析结果 beta"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text mode="info" :text="'家庭出身：' + analysisResult.data.ret_Info.family_background"></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.wealth_level"></uv-text>
+      <uv-text mode="info"
+        :text="'自身样貌特征：' + analysisResult.data.ret_Info.appearance.level + '(' + analysisResult.data.ret_Info.appearance.score + ')'"></uv-text>
+      <uv-text mode="info" :text="'配偶样貌：' + analysisResult.data.ret_Info.spouse_appearance"></uv-text>
+      <uv-text mode="info" :text="'学历资质：' + analysisResult.data.ret_Info.judge_education"></uv-text>
+    </view>
+    <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="分析依据"></uv-text>
       <uv-divider></uv-divider>
       <uv-text v-for="item in analysisResult.data.ret_Info.data" mode="info" :text="item"></uv-text>
-    </view>
+    </view> -->
   </view>
 </template>
 
@@ -156,16 +168,18 @@ const analysisResult = reactive({
           ""
         ]
       },
-      family_background:"",
-      spouse_appearance:'',
-      judge_education:'',
-      data:[],
-      appearance:{
-        details:'',
-        features:'',
+      family_background: "",
+      spouse_appearance: '',
+      judge_education: '',
+      data: [],
+      appearance: {
+        details: '',
+        features: '',
         level: '',
         score: ''
-      }
+      },
+      xiYongShen:'',
+      dayunxiji: ''
     },
   },
 });
@@ -188,9 +202,9 @@ onBackPress((e) => {
 
 onLoad(async (option) => {
   console.log("B 页面 onLoad:", option); //B 页面 onLoad: {id: '1', name: 'uniapp'}
-  loading.value=true
+  loading.value = true
   const res = await api.analysis({ timestamp: props.userInfo.birthday, sex: props.userInfo.sex });
   analysisResult.data = res;
-  loading.value=false
+  loading.value = false
 });
 </script>
