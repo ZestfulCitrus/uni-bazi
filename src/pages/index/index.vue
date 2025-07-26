@@ -1,7 +1,7 @@
 <template>
   <view>
     <uv-transition class="content" :show="step === 1">
-      <uv-alert title="" type="warning" description="计算器的计算结果可以满足大多数场景，如果您有极特殊的情况，请联系我单独为您排盘" closable></uv-alert>
+      <uv-alert title="" type="warning" description="作者：B站账户：玄烛解八字。计算器的计算结果可以满足大多数场景，如果您有极特殊的情况，请联系我单独为您排盘" closable></uv-alert>
 
       <uv-form labelPosition="left" :model="userInfo" :rules="rules" ref="form">
         <uv-form-item label="姓名" prop="name" borderBottom>
