@@ -70,7 +70,7 @@
       style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="常用基础分析"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text mode="info" :text="'喜用神：' + analysisResult.data.ret_Info.xiYongShen"></uv-text>
+      <uv-text mode="info" :text="'调候用神：' + analysisResult.data.ret_Info.xiYongShen"></uv-text>
       <uv-text mode="info" :text="'大运喜忌：'+ analysisResult.data.ret_Info.dayunxiji"></uv-text>
     </view>
     <uv-alert title="" style="margin: 8px 8px 0 8px;" type="warning"
