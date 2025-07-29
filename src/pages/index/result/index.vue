@@ -74,7 +74,7 @@
       <uv-text mode="info" :text="'大运喜忌：'+ analysisResult.data.ret_Info.dayunxiji"></uv-text>
     </view>
     <uv-alert title="" style="margin: 8px 8px 0 8px;" type="warning"
-      description="以下程序函数仅属于测试阶段，预测结果仅供娱乐！有问题可以直接在b站评论, 分值如果过低，也可以直接把盘发给我" closable></uv-alert>
+      description="以下程序函数仅属于测试阶段，我将长期优化下去!大家千万图一乐，预测结果仅供娱乐！有问题可以直接在b站评论, 分值如果过低，可以直接把盘发给我！" closable></uv-alert>
     <view
       style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="命盘分析结果 beta"></uv-text>
@@ -85,6 +85,18 @@
         :text="'自身样貌特征：' + analysisResult.data.ret_Info.appearance.level + '(' + analysisResult.data.ret_Info.appearance.score + ')'"></uv-text>
       <uv-text mode="info" :text="'配偶样貌：' + analysisResult.data.ret_Info.spouse_appearance"></uv-text>
       <uv-text mode="info" :text="'学历资质：' + analysisResult.data.ret_Info.judge_education"></uv-text>
+    </view>
+        <view
+      style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="游戏天赋分析"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.game_talent"></uv-text>
+    </view>
+    <view
+      style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
+      <uv-text type="info" text="运动天赋分析"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.sport_talent"></uv-text>
     </view>
     <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="分析依据"></uv-text>
@@ -179,7 +191,9 @@ const analysisResult = reactive({
         score: ''
       },
       xiYongShen:'',
-      dayunxiji: ''
+      dayunxiji: '',
+      sport_talent:'',
+      game_talent:''
     },
   },
 });
