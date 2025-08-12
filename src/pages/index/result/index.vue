@@ -118,7 +118,7 @@
     </view> -->
   </view>
   <uv-popup ref="popups" :close-on-click-overlay="false" overlayOpacity="0.7">
-    <uv-alert title="拒绝白嫖" type="warning" description="关注UP后获取验证码即可继续查看~"></uv-alert>
+    <uv-alert title="拒绝白嫖" type="warning" description="关注UP后,查看主页获取验证码即可继续查看~"></uv-alert>
     <view style="width: 600rpx;padding: 16px; display: flex; justify-content: center;align-items: center;">
       <uv-code-input v-model="satoken" @finish="finish"></uv-code-input>
     </view>
