@@ -11,7 +11,6 @@
         <view class="star yellow"></view>
         <view class="info-card">
           <view>
-            <view class="cw pl8">姓名：{{ userInfo.name || "*" }}</view>
             <view class="cw pl8">出生日期：{{ userInfo.birthdayDisplay }}</view>
             <view class="cw pl8">旺衰参考：{{ analysisResult.data.ret_Info.isStrong ? '身强' : '身弱' }}</view>
           </view>
@@ -32,42 +31,43 @@
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="主星"></uv-text>
-      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.liunianganshen"></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info?.currentYear?.liunianganshen"></uv-text>
       <uv-text class="br1 mh32" align="center" type="info"
-        :text="analysisResult.data.ret_Info.currentYear.dayunganshen"></uv-text>
+        :text="analysisResult.data.ret_Info?.currentYear?.dayunganshen"></uv-text>
       <uv-text v-for="item in analysisResult.data.ret_Info.gan_shens" align="center" type="info" :text="item"></uv-text>
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="天干"></uv-text>
       <uv-text size="24" align="center"
-        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info.currentYear.liunian[0]]"
-        :text="analysisResult.data.ret_Info.currentYear.liunian[0]"></uv-text>
+        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info?.currentYear?.liunian[0]]"
+        :text="analysisResult.data.ret_Info?.currentYear?.liunian[0]"></uv-text>
       <uv-text size="24" class="br1" align="center"
-        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info.currentYear.dayun[0]]"
-        :text="analysisResult.data.ret_Info.currentYear.dayun[0]"></uv-text>
+        :type="heavenlyStemsColorMap[analysisResult.data.ret_Info?.currentYear?.dayun[0]]"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayun[0]"></uv-text>
       <uv-text v-for="item in analysisResult.data.bazi.TianGan" size="24" align="center"
         :type="heavenlyStemsColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="地支"></uv-text>
       <uv-text size="24" align="center"
-        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.liunian[1]]"
-        :text="analysisResult.data.ret_Info.currentYear.liunian[1]"></uv-text>
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info?.currentYear?.liunian[1]]"
+        :text="analysisResult.data.ret_Info?.currentYear?.liunian[1]"></uv-text>
       <uv-text size="24" class="br1" align="center"
-        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info.currentYear.dayun[1]]"
-        :text="analysisResult.data.ret_Info.currentYear.dayun[1]"></uv-text>
+        :type="earthlyBranchesColorMap[analysisResult.data.ret_Info?.currentYear?.dayun[1]]"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayun[1]"></uv-text>
       <uv-text v-for="item in analysisResult.data.bazi.DiZhi" size="24" align="center"
         :type="earthlyBranchesColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="table-title bg-light">
       <uv-text align="center" type="info" text="副星"></uv-text>
       <uv-text align="center" type="info"
-        :text="analysisResult.data.ret_Info.currentYear.liunianzhishen[0][1]"></uv-text>
-      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info.currentYear.dayunzhishen[0][1]"></uv-text>
+        :text="analysisResult.data.ret_Info?.currentYear?.liunianzhishen[0]"></uv-text>
+      <uv-text align="center" type="info"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayunzhishen[0]"></uv-text>
       <uv-text v-for="item in analysisResult.data.ret_Info.zhi_shens" align="center" type="info" :text="item"></uv-text>
     </view>
-    <uv-alert title="" style="margin: 8px 8px 0 8px;" type="warning"
-      description="以下程序函数仅属于测试阶段，我将长期优化下去!大家千万图一乐，预测结果仅供娱乐！有问题可以直接在b站评论, 分值如果过低，可以直接把盘发给我！" closable></uv-alert>
+    <DayunView style="margin-top: 16rpx;" :analysisResult="analysisResult"
+      :dayunArr="analysisResult.data.ret_Info?.dayunArr" />
     <view>
       <view
         style="margin-top: 8px; margin-bottom: 8px; display:flex;justify-content: space-around; flex-direction: row;flex-wrap: wrap">
@@ -76,13 +76,16 @@
         </uv-tags>
       </view>
     </view>
+    <uv-alert title="" style="margin: 8px 8px 0 8px;" type="warning"
+      description="以下程序函数仅属于测试阶段，大家千万图一乐，预测结果仅供娱乐！有问题可以直接在b站评论, 误差如果过大，可以直接把盘发给我无偿简批！" closable></uv-alert>
 
     <view v-if="select_tag === 0"
       style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="常用基础分析"></uv-text>
       <uv-divider></uv-divider>
       <uv-text mode="info" :text="'调候用神：' + analysisResult.data.ret_Info.xiYongShen"></uv-text>
-      <uv-text mode="info" :text="'大运喜忌：' + analysisResult.data.ret_Info.dayunxiji"></uv-text>
+      <uv-text mode="info" :text="'大运喜忌：' + analysisResult.data.ret_Info?.dayunxiji"></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.basic_analysis_2"></uv-text>
       <uv-text mode="info" :text="'参考喜用神：' + analysisResult.data.ret_Info.use_god.useful_god"></uv-text>
       <uv-text mode="info" :text="'逢喜用神特点：' + analysisResult.data.ret_Info.use_god.useful_god_min"></uv-text>
       <uv-text mode="info" :text="analysisResult.data.ret_Info.main_personality"></uv-text>
@@ -131,6 +134,7 @@ import { onBackPress, onLoad } from "@dcloudio/uni-app";
 import config from "../../util/config";
 import api from "../../api";
 import { defineProps, onMounted, reactive, ref } from "vue";
+import DayunView from "./DayunView.vue";
 
 const loading = ref(false);
 const popups = ref()
@@ -183,6 +187,8 @@ const analysisResult = reactive({
   data: {
     bazi: { TianGan: ["", "", "", ""], DiZhi: ["", "", "", ""] },
     ret_Info: {
+      basic_analysis_1: "",
+      basic_analysis_2: "",
       gan_shens: ["", "", "--", ""],
       zhi_shens: ["", "", "", ""],
       isStrong: false,
@@ -224,10 +230,11 @@ const analysisResult = reactive({
       sport_talent: '',
       game_talent: '',
       use_god: {
-        useful_god: "官杀",
-        useful_god_min: "贵人提扶，公职升官，考试中榜，选举当选，得名位扬，威扬权显等。"
+        useful_god: "",
+        useful_god_min: ""
       },
-      main_personality: ""
+      main_personality: "",
+      dayunArr: []
     },
   },
 });
@@ -289,10 +296,20 @@ function setToken1234(tokenValue) {
   }
 }
 
+function fillEmptyValues(target, source) {
+  Object.keys(target).forEach(key => {
+    if (source[key] === null || source[key] === undefined) {
+      target[key] = target[key]; // 保留原始默认值
+    } else {
+      target[key] = source[key];
+    }
+  });
+}
+
 onLoad(async (option) => {
   loading.value = true
   const res = await api.analysis({ timestamp: props.userInfo.birthday, sex: props.userInfo.sex });
-  analysisResult.data = res;
+  analysisResult.data = res
   loading.value = false
   await openPop();
 });

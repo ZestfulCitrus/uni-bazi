@@ -3312,6 +3312,11 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+lunar-javascript@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/lunar-javascript/-/lunar-javascript-1.7.3.tgz#b3680f8087a9586fb73e622a637598d175e369e4"
+  integrity sha512-p03Nj1D50UIHF66nRszKh9jDGf1nSsGlRFavrbqV6cz9UgOAcjQw7m0NRprjxPV3JsKKwhw4almHhe8BKkNFgg==
+
 magic-string@^0.30.11, magic-string@^0.30.14, magic-string@^0.30.17, magic-string@^0.30.7:
   version "0.30.17"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.17.tgz#450a449673d2460e5bbcfba9a61916a1714c7453"
