@@ -12,7 +12,8 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "玄烛命理 临时链接：vbox.ink",
+		"navigationStyle": "custom",
+		"navigationBarTitleText": "玄烛命理 链接：8char.space",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	}
