@@ -142,6 +142,7 @@
       style="margin-top: 16rpx"
       :analysisResult="analysisResult"
       :dayunArr="analysisResult.data.ret_Info?.dayunArr"
+      @applyResult="applyResult"
     />
     <view>
       <view
@@ -487,10 +488,11 @@ function fillEmptyValues(target, source) {
     }
   });
 }
-
-onLoad(async (option) => {
-  loading.value = true;
-  // const res = await api.analysis({ timestamp: props.userInfo.birthday, sex: props.userInfo.sex });
+const applyResult = (
+  currentYear: number,
+  currentMonth: number,
+  currentDay: number
+) => {
   const dateObj = new Date(Number(props.userInfo.birthday));
   const params = {
     year: dateObj.getUTCFullYear(),
@@ -499,6 +501,9 @@ onLoad(async (option) => {
     hour: dateObj.getHours(),
     minute: dateObj.getMinutes(),
     gender: props.userInfo.sex,
+    currentYear: currentYear,
+    currentMonth: currentMonth,
+    currentDay: currentDay,
   };
   const res = all.getCurrentEightCharJSON(params);
   console.log(res);
@@ -586,7 +591,6 @@ onLoad(async (option) => {
           "-" + e.zhishen,
           [
             ...e.liunianArr?.map((f: any) => {
-              console.log(f);
               return [
                 f?.year,
                 f?.ganZhi[0],
@@ -600,6 +604,14 @@ onLoad(async (option) => {
       }),
     },
   };
+};
+
+onLoad(async (option) => {
+  loading.value = true;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentDay = new Date().getDate();
+  applyResult(currentYear, currentMonth, currentDay);
   loading.value = false;
   await openPop();
 });

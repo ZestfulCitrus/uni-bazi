@@ -28,19 +28,8 @@
           @click="
             () => {
               activeDayunIndex = index;
-              analysisResult.data.ret_Info.currentYear.dayun[0] = dayun[1];
-              analysisResult.data.ret_Info.currentYear.dayun[1] = dayun[2];
-              analysisResult.data.ret_Info.currentYear.liunian[0] =
-                dayun[5][activeLiunianIndex][1];
-              analysisResult.data.ret_Info.currentYear.liunian[1] =
-                dayun[5][activeLiunianIndex][2];
-              analysisResult.data.ret_Info.currentYear.dayunganshen = dayun[3];
-              analysisResult.data.ret_Info.currentYear.dayunzhishen[0] =
-                dayun[4][1];
-              analysisResult.data.ret_Info.currentYear.liunianganshen =
-                dayun[5][activeLiunianIndex][3];
-              analysisResult.data.ret_Info.currentYear.liunianzhishen[0] =
-                dayun[5][activeLiunianIndex][4][0];
+              emit('applyResult', dayun[5][0][0], 6, 6);
+              activeLiunianIndex = 0;
             }
           "
         >
@@ -98,13 +87,8 @@
           :class="{ active: activeLiunianIndex === liuIndex }"
           @click="
             () => {
+              emit('applyResult', liunian[0], 6, 6);
               activeLiunianIndex = liuIndex;
-              analysisResult.data.ret_Info.currentYear.liunian[0] = liunian[1];
-              analysisResult.data.ret_Info.currentYear.liunian[1] = liunian[2];
-              analysisResult.data.ret_Info.currentYear.liunianganshen =
-                liunian[3];
-              analysisResult.data.ret_Info.currentYear.liunianzhishen[0] =
-                liunian[4][0];
             }
           "
         >
@@ -132,7 +116,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, onMounted } from "vue";
+import { ref, computed, defineProps, onMounted, defineEmits } from "vue";
 
 const props = defineProps({
   analysisResult: {
@@ -147,6 +131,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(["applyResult"]);
 
 // 当前选中的大运数据
 const currentDayun = computed(() => {
