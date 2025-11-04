@@ -186,48 +186,6 @@
         padding: 8px;
       "
     >
-      <uv-text type="info" text="常用基础分析"></uv-text>
-      <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        :text="'调候用神：' + analysisResult.data.ret_Info.xiYongShen"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'大运喜忌：' + analysisResult.data.ret_Info?.dayunxiji"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="analysisResult.data.ret_Info.basic_analysis_2"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'参考喜用神：' + analysisResult.data.ret_Info.use_god.useful_god"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="
-          '逢喜用神特点：' + analysisResult.data.ret_Info.use_god.useful_god_min
-        "
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="analysisResult.data.ret_Info.main_personality"
-      ></uv-text>
-    </view>
-
-    <view
-      v-if="select_tag === 1"
-      style="
-        background-color: #f4f4f5;
-        border-radius: 8px;
-        border: 1px solid #f4f4f5;
-        margin-top: 8px;
-        margin-left: 8px;
-        margin-right: 8px;
-        padding: 8px;
-      "
-    >
       <uv-text type="info" text="命盘分析结果 beta"></uv-text>
       <uv-divider></uv-divider>
       <uv-text
@@ -255,6 +213,42 @@
       <uv-text
         mode="info"
         :text="'学历资质：' + analysisResult.data.ret_Info.judge_education"
+      ></uv-text>
+    </view>
+
+    <view
+      v-if="select_tag === 1"
+      style="
+        background-color: #f4f4f5;
+        border-radius: 8px;
+        border: 1px solid #f4f4f5;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 8px;
+      "
+    >
+      <uv-text
+        mode="info"
+        :text="'大运喜忌：' + analysisResult.data.ret_Info?.dayunxiji"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="analysisResult.data.ret_Info.basic_analysis_2"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="'参考喜用神：' + analysisResult.data.ret_Info.use_god.useful_god"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="
+          '逢喜用神特点：' + analysisResult.data.ret_Info.use_god.useful_god_min
+        "
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="analysisResult.data.ret_Info.main_personality"
       ></uv-text>
     </view>
     <view
@@ -569,7 +563,9 @@ const applyResult = (
         "(" +
         res.spouseAppearance.score +
         ")",
-      judge_education: res.educationAndTalent.description +"天赋高聪明不等于高学历，高学历不等于天赋高",
+      judge_education:
+        res.educationAndTalent.description +
+        "天赋高聪明不等于高学历，高学历不等于天赋高",
       data: [],
       appearance: {
         details: res.selfAppearance.description,
@@ -577,13 +573,13 @@ const applyResult = (
         level: res.selfAppearance.description,
         score: res.selfAppearance.appearanceScore,
       },
-      xiYongShen: "",
-      dayunxiji: "",
-      sport_talent: "完善中暂关闭查询",
-      game_talent: "完善中暂关闭查询",
+      xiYongShen: "*",
+      dayunxiji: "*",
+      sport_talent: "*",
+      game_talent: "*",
       use_god: {
-        useful_god: "",
-        useful_god_min: "",
+        useful_god: "*",
+        useful_god_min: "*",
       },
       main_personality: "",
       dayunArr: res.dayunArr.map((e: any) => {
