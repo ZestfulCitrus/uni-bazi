@@ -494,19 +494,19 @@ const applyResult = (
   currentDay: number
 ) => {
   const dateObj = new Date(Number(props.userInfo.birthday));
+  console.log(props.userInfo.sex);
   const params = {
     year: dateObj.getUTCFullYear(),
     month: dateObj.getMonth() + 1,
     day: dateObj.getDate(),
     hour: dateObj.getHours(),
     minute: dateObj.getMinutes(),
-    gender: props.userInfo.sex,
+    gender: props.userInfo.sex === "男" ? 1 : 0,
     currentYear: currentYear,
     currentMonth: currentMonth,
     currentDay: currentDay,
   };
   const res = all.getCurrentEightCharJSON(params);
-  console.log(res);
   analysisResult.data = {
     bazi: {
       TianGan: [
@@ -543,12 +543,12 @@ const applyResult = (
       wealth_level: "",
       currentYear: {
         dayun: [
-          res.currentYun.daYun?.ganZhi[0],
-          res.currentYun.daYun?.ganZhi[1],
+          res.currentYun.daYun?.ganZhi?.[0],
+          res.currentYun.daYun?.ganZhi?.[1],
         ],
         dayunganshen: res.currentYun.daYun?.shiShen,
         dayunzhishen: [
-          res.currentYun.daYun?.zhiHideGanShiShen[0].shiShen,
+          res.currentYun.daYun?.zhiHideGanShiShen?.[0].shiShen,
           "",
           "",
         ],
@@ -563,20 +563,24 @@ const applyResult = (
           "",
         ],
       },
-      family_background: "",
-      spouse_appearance: "",
-      judge_education: "",
+      family_background: `${res.familyBackground.description} (${res.familyBackground.score})`,
+      spouse_appearance:
+        res.spouseAppearance.description +
+        "(" +
+        res.spouseAppearance.score +
+        ")",
+      judge_education: res.educationAndTalent.description +"天赋高聪明不等于高学历，高学历不等于天赋高",
       data: [],
       appearance: {
-        details: "",
-        features: "",
-        level: "",
-        score: "",
+        details: res.selfAppearance.description,
+        features: res.selfAppearance.description,
+        level: res.selfAppearance.description,
+        score: res.selfAppearance.appearanceScore,
       },
       xiYongShen: "",
       dayunxiji: "",
-      sport_talent: "",
-      game_talent: "",
+      sport_talent: "完善中暂关闭查询",
+      game_talent: "完善中暂关闭查询",
       use_god: {
         useful_god: "",
         useful_god_min: "",

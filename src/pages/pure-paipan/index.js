@@ -13557,12 +13557,98 @@ var require_yuanhaiZiping = __commonJS({
         return { error: String(e && e.message || e) };
       }
     }
+    function computeYinyangScore(result) {
+      try {
+        const pillars = result && result.pillars;
+        if (!pillars) return { error: "\u9700\u8981\u63D0\u4F9B result.pillars" };
+        const gYear = pillars?.year?.gan;
+        const gMonth = pillars?.month?.gan;
+        const gDay = pillars?.day?.gan;
+        const gTime = pillars?.time?.gan;
+        const zYear = pillars?.year?.zhi;
+        const zMonth = pillars?.month?.zhi;
+        const zDay = pillars?.day?.zhi;
+        const zTime = pillars?.time?.zhi;
+        if (!gYear || !gMonth || !gDay || !gTime || !zYear || !zMonth || !zDay || !zTime) {
+          return { error: "pillars \u56DB\u67F1\u5E72\u652F\u4E0D\u5B8C\u6574" };
+        }
+        const STEM_YINYANG = {
+          "\u7532": 1,
+          "\u4E59": -1,
+          "\u4E19": 1,
+          "\u4E01": -1,
+          "\u620A": 1,
+          "\u5DF1": -1,
+          "\u5E9A": 1,
+          "\u8F9B": -1,
+          "\u58EC": 1,
+          "\u7678": -1
+        };
+        const BRANCH_YINYANG = {
+          "\u5B50": 1,
+          "\u4E11": -1,
+          "\u5BC5": 1,
+          "\u536F": -1,
+          "\u8FB0": 1,
+          "\u5DF3": -1,
+          "\u5348": 1,
+          "\u672A": -1,
+          "\u7533": 1,
+          "\u9149": -1,
+          "\u620C": 1,
+          "\u4EA5": -1
+        };
+        const val = (obj, map) => obj && map[obj] !== void 0 ? map[obj] : 0;
+        const parts = {
+          stemYear: val(gYear, STEM_YINYANG),
+          stemMonth: val(gMonth, STEM_YINYANG),
+          stemDay: val(gDay, STEM_YINYANG),
+          stemTime: val(gTime, STEM_YINYANG),
+          branchYear: val(zYear, BRANCH_YINYANG),
+          branchMonth: val(zMonth, BRANCH_YINYANG) * 2,
+          branchDay: val(zDay, BRANCH_YINYANG),
+          branchTime: val(zTime, BRANCH_YINYANG)
+        };
+        const score = Object.values(parts).reduce((s, v) => s + v, 0);
+        let judge;
+        if (score >= 7) {
+          judge = "\u7EAF\u9633";
+        } else if (score >= 3) {
+          judge = "\u592A\u9633";
+        } else if (score >= -2) {
+          judge = "\u5E73\u8861";
+        } else if (score >= -6) {
+          judge = "\u592A\u9634";
+        } else {
+          judge = "\u7EAF\u9634";
+        }
+        return {
+          score,
+          judge,
+          normalRange: [-3, 3],
+          breakdown: {
+            pillars: {
+              year: { gan: gYear, zhi: zYear },
+              month: { gan: gMonth, zhi: zMonth },
+              day: { gan: gDay, zhi: zDay },
+              time: { gan: gTime, zhi: zTime }
+            },
+            parts,
+            stemYinyang: STEM_YINYANG,
+            branchYinyang: BRANCH_YINYANG
+          }
+        };
+      } catch (e) {
+        return { error: String(e && e.message || e) };
+      }
+    }
     module.exports = {
       analyzeYuanHaiZiPingWuxing,
       analyzeYuanHaiZiPingYueLing,
       analyzeYuanHaiZiPingTaiSui,
       computeShenQiangScore,
-      computeShiduScore
+      computeShiduScore,
+      computeYinyangScore
     };
   }
 });
@@ -13827,6 +13913,1219 @@ var require_ganzhi = __commonJS({
   }
 });
 
+// analysis/svc.js
+var require_svc = __commonJS({
+  "analysis/svc.js"(exports, module) {
+    "use strict";
+    var GanRelation = require_ganRelation();
+    function analyzeSpouseAppearance(result) {
+      if (!result || !result.pillars) {
+        return {
+          score: 0,
+          description: "\u65E0\u6CD5\u5206\u6790\u914D\u5076\u957F\u76F8\uFF1A\u7F3A\u5C11\u516B\u5B57\u6570\u636E",
+          details: []
+        };
+      }
+      const pillars = result.pillars;
+      const gender = result.gender || "\u7537";
+      const dayGan = pillars.dayMasterGan || pillars.day.gan;
+      const dayZhi = pillars.day.zhi;
+      const shensha = result.shensha || {};
+      let score = 60;
+      const details = [];
+      const dayBranchAnalysis = analyzeDayBranch(dayZhi, gender);
+      score += dayBranchAnalysis.score;
+      details.push(dayBranchAnalysis.description);
+      const spouseStarAnalysis = analyzeSpouseStar(pillars, dayGan, gender);
+      score += spouseStarAnalysis.score;
+      details.push(spouseStarAnalysis.description);
+      const shenshaAnalysis = analyzeShenshaForSpouse(shensha, gender);
+      score += shenshaAnalysis.score;
+      details.push(shenshaAnalysis.description);
+      const wuxingBalanceAnalysis = analyzeWuXingBalanceForAppearance(
+        pillars,
+        dayGan
+      );
+      score += wuxingBalanceAnalysis.score;
+      details.push(wuxingBalanceAnalysis.description);
+      score = Math.max(0, Math.min(100, score));
+      let overallDescription = getOverallDescription(score);
+      return {
+        score: Math.round(score),
+        description: overallDescription,
+        details,
+        analysisMethod: "\u5B50\u5E73\u6CD5\u91CF\u5316\u5206\u6790",
+        factors: {
+          dayBranch: dayBranchAnalysis,
+          spouseStar: spouseStarAnalysis,
+          shensha: shenshaAnalysis,
+          wuxingBalance: wuxingBalanceAnalysis
+        }
+      };
+    }
+    function analyzeDayBranch(dayZhi, gender) {
+      let score = 0;
+      let description = "";
+      const dayZhiAppearanceMap = {
+        \u5B50: { score: 5, description: "\u914D\u5076\u806A\u660E\u673A\u667A\uFF0C\u76AE\u80A4\u767D\u7699\uFF0C\u4E2A\u5B50\u4E2D\u7B49" },
+        \u4E11: { score: 2, description: "\u914D\u5076\u6734\u5B9E\u6566\u539A\uFF0C\u7565\u663E\u4E30\u8174\uFF0C\u80A4\u8272\u8F83\u6697" },
+        \u5BC5: { score: 4, description: "\u914D\u5076\u6D3B\u6CFC\u5F00\u6717\uFF0C\u8EAB\u6750\u9AD8\u6311\uFF0C\u6BDB\u53D1\u6D53\u5BC6" },
+        \u536F: { score: 6, description: "\u914D\u5076\u79C0\u6C14\u6587\u96C5\uFF0C\u8EAB\u6750\u4FEE\u957F\uFF0C\u76AE\u80A4\u7EC6\u817B" },
+        \u8FB0: { score: 3, description: "\u914D\u5076\u7A33\u91CD\u8E0F\u5B9E\uFF0C\u4E2D\u7B49\u8EAB\u6750\uFF0C\u7565\u663E\u4E30\u6EE1" },
+        \u5DF3: { score: 4, description: "\u914D\u5076\u806A\u660E\u7075\u5DE7\uFF0C\u9762\u8272\u7EA2\u6DA6\uFF0C\u53CD\u5E94\u654F\u6377" },
+        \u5348: { score: 5, description: "\u914D\u5076\u70ED\u60C5\u5927\u65B9\uFF0C\u80A4\u8272\u7EA2\u6DA6\uFF0C\u6C14\u8D28\u51FA\u4F17" },
+        \u672A: { score: 3, description: "\u914D\u5076\u6E29\u548C\u5584\u826F\uFF0C\u4E2D\u7B49\u8EAB\u6750\uFF0C\u7565\u663E\u4E30\u8174" },
+        \u7533: { score: 5, description: "\u914D\u5076\u806A\u660E\u673A\u667A\uFF0C\u8EAB\u6750\u5300\u79F0\uFF0C\u884C\u52A8\u654F\u6377" },
+        \u9149: { score: 6, description: "\u914D\u5076\u6F02\u4EAE\u5E05\u6C14\uFF0C\u76AE\u80A4\u767D\u7699\uFF0C\u6C14\u8D28\u4F18\u96C5" },
+        \u620C: { score: 3, description: "\u914D\u5076\u6734\u5B9E\u7A33\u91CD\uFF0C\u4E2D\u7B49\u8EAB\u6750\uFF0C\u80A4\u8272\u5065\u5EB7" },
+        \u4EA5: { score: 4, description: "\u914D\u5076\u806A\u660E\u4F36\u4FD0\uFF0C\u80A4\u8272\u8F83\u767D\uFF0C\u6C14\u8D28\u67D4\u548C" }
+      };
+      if (dayZhi && dayZhiAppearanceMap[dayZhi]) {
+        const info = dayZhiAppearanceMap[dayZhi];
+        score = info.score;
+        description = `\u65E5\u652F\u4E3A${dayZhi}\uFF0C${info.description}`;
+      } else {
+        description = "\u65E5\u652F\u4FE1\u606F\u4E0D\u8DB3\uFF0C\u65E0\u6CD5\u8BE6\u7EC6\u5206\u6790";
+      }
+      return { score, description };
+    }
+    function analyzeSpouseStar(pillars, dayGan, gender) {
+      let score = 0;
+      let description = "";
+      const spouseStars = [];
+      const spouseStarTypes = gender === "\u7537" ? ["\u6B63\u8D22", "\u504F\u8D22"] : ["\u6B63\u5B98", "\u4E03\u6740"];
+      ["year", "month", "day", "time"].forEach((pillarName) => {
+        const pillar = pillars[pillarName];
+        if (pillar) {
+          if (spouseStarTypes.includes(pillar.shiShenGan)) {
+            spouseStars.push({
+              location: pillarName,
+              type: "\u5929\u5E72",
+              element: pillar.shiShenGan,
+              value: pillar.gan,
+              wuXing: pillar.wuXing
+            });
+          }
+          if (pillar.hideGanAttr) {
+            pillar.hideGanAttr.forEach((hideGan) => {
+              if (spouseStarTypes.includes(hideGan.shiShen)) {
+                spouseStars.push({
+                  location: pillarName,
+                  type: "\u5730\u652F\u85CF\u5E72",
+                  element: hideGan.shiShen,
+                  value: hideGan.gan,
+                  wuXing: hideGan.wuXing,
+                  qiLevel: hideGan.qiLevel
+                });
+              }
+            });
+          }
+        }
+      });
+      if (spouseStars.length === 0) {
+        score = -5;
+        description = gender === "\u7537" ? "\u547D\u5C40\u4E2D\u8D22\u661F\u4E0D\u663E\uFF0C\u5BF9\u914D\u5076\u957F\u76F8\u6709\u4E00\u5B9A\u8D1F\u9762\u5F71\u54CD" : "\u547D\u5C40\u4E2D\u5B98\u661F\u4E0D\u663E\uFF0C\u5BF9\u914D\u5076\u957F\u76F8\u6709\u4E00\u5B9A\u8D1F\u9762\u5F71\u54CD";
+      } else {
+        const goodLocations = ["month", "day", "time"];
+        const strongSpouseStars = spouseStars.filter(
+          (star) => goodLocations.includes(star.location) && (star.qiLevel === "\u672C\u6C14" || star.type === "\u5929\u5E72")
+        );
+        if (strongSpouseStars.length > 0) {
+          score = 8;
+          description = gender === "\u7537" ? "\u8D22\u661F\u5F3A\u65FA\uFF0C\u914D\u5076\u957F\u76F8\u8F83\u597D" : "\u5B98\u661F\u5F3A\u65FA\uFF0C\u914D\u5076\u957F\u76F8\u8F83\u597D";
+        } else {
+          score = 3;
+          description = gender === "\u7537" ? "\u8D22\u661F\u8F83\u5F31\uFF0C\u5BF9\u914D\u5076\u957F\u76F8\u6709\u4E00\u5B9A\u8D1F\u9762\u5F71\u54CD" : "\u5B98\u661F\u8F83\u5F31\uFF0C\u5BF9\u914D\u5076\u957F\u76F8\u6709\u4E00\u5B9A\u8D1F\u9762\u5F71\u54CD";
+        }
+      }
+      return { score, description, spouseStars };
+    }
+    function analyzeShenshaForSpouse(shensha, gender) {
+      let score = 0;
+      let description = [];
+      const goodShensha = [
+        "\u5929\u4E59\u8D35\u4EBA",
+        "\u592A\u6781\u8D35\u4EBA",
+        "\u798F\u661F\u8D35\u4EBA",
+        "\u5FB7\u79C0\u8D35\u4EBA",
+        "\u56FD\u5370\u8D35\u4EBA",
+        "\u91D1\u8206",
+        "\u5C06\u661F",
+        "\u6843\u82B1",
+        "\u54B8\u6C60"
+      ];
+      const badShensha = [
+        "\u5B64\u8FB0",
+        "\u5BE1\u5BBF",
+        "\u7A7A\u4EA1",
+        "\u9634\u5DEE\u9633\u9519",
+        "\u9B41\u7F61",
+        "\u4EA1\u795E",
+        "\u52AB\u715E",
+        "\u707E\u715E"
+      ];
+      const allShensha = [];
+      ["nian", "yue", "ri", "shi"].forEach((pillar) => {
+        if (shensha[pillar] && Array.isArray(shensha[pillar])) {
+          shensha[pillar].forEach((s) => allShensha.push(s));
+        }
+      });
+      const goodCount = allShensha.filter(
+        (s) => goodShensha.some((g) => s.includes(g))
+      ).length;
+      const badCount = allShensha.filter(
+        (s) => badShensha.some((b) => s.includes(b))
+      ).length;
+      score += goodCount * 2;
+      score -= badCount * 1;
+      if (goodCount > badCount) {
+        description.push(`\u547D\u5E26${goodCount}\u4E2A\u8D35\u4EBA\u661F\uFF0C\u6709\u5229\u4E8E\u914D\u5076\u957F\u76F8\u548C\u6C14\u8D28`);
+      }
+      if (badCount > goodCount) {
+        description.push(`\u547D\u5E26${badCount}\u4E2A\u4E0D\u5229\u795E\u715E\uFF0C\u5BF9\u914D\u5076\u957F\u76F8\u6709\u4E00\u5B9A\u5F71\u54CD`);
+      }
+      if (badCount === goodCount) {
+        description.push("\u795E\u715E\u5BF9\u914D\u5076\u957F\u76F8\u7684\u5F71\u54CD\u4E0D\u660E\u663E");
+      }
+      return { score, description: description.join("\uFF1B") };
+    }
+    function analyzeWuXingBalanceForAppearance(pillars, dayGan) {
+      let score = 0;
+      let description = "";
+      const wuXingCount = { \u6728: 0, \u706B: 0, \u571F: 0, \u91D1: 0, \u6C34: 0 };
+      ["year", "month", "day", "time"].forEach((pillarName) => {
+        const pillar = pillars[pillarName];
+        if (pillar) {
+          const ganWuXing = pillar.wuXing?.charAt(0) || "";
+          if (wuXingCount[ganWuXing] !== void 0) {
+            wuXingCount[ganWuXing]++;
+          }
+          const zhiWuXing = pillar.wuXing?.charAt(1) || "";
+          if (wuXingCount[zhiWuXing] !== void 0) {
+            wuXingCount[zhiWuXing]++;
+          }
+          if (pillar.hideGanAttr) {
+            pillar.hideGanAttr.forEach((hideGan) => {
+              if (wuXingCount[hideGan.wuXing] !== void 0) {
+                wuXingCount[hideGan.wuXing] += 0.5;
+              }
+            });
+          }
+        }
+      });
+      const values = Object.values(wuXingCount);
+      const total = values.reduce((sum, val) => sum + val, 0);
+      const avg = total / 5;
+      const variance = values.reduce((sum, val) => sum + Math.pow(val - avg, 2), 0) / 5;
+      const stdDev = Math.sqrt(variance);
+      if (stdDev < 1) {
+        score = 5;
+        description = "\u4E94\u884C\u5206\u5E03\u8F83\u4E3A\u5E73\u8861\uFF0C\u914D\u5076\u957F\u76F8\u534F\u8C03\u8F83\u597D";
+      } else if (stdDev < 2) {
+        score = 2;
+        description = "\u4E94\u884C\u5206\u5E03\u57FA\u672C\u5E73\u8861\uFF0C\u914D\u5076\u957F\u76F8\u4E00\u822C";
+      } else {
+        score = -2;
+        description = "\u4E94\u884C\u5206\u5E03\u4E0D\u591F\u5E73\u8861\uFF0C\u914D\u5076\u957F\u76F8\u6709\u504F\u5355\u4E2A\u4E94\u884C\u7684\u7279\u5F81";
+      }
+      return { score, description, wuXingDistribution: wuXingCount };
+    }
+    function getOverallDescription(score) {
+      if (score >= 90) {
+        return "\u914D\u5076\u957F\u76F8\u975E\u5E38\u51FA\u4F17\uFF0C\u6C14\u8D28\u9AD8\u96C5\uFF0C\u5C5E\u4E8E\u4EBA\u7FA4\u4E2D\u7684\u4F7C\u4F7C\u8005";
+      } else if (score >= 80) {
+        return "\u914D\u5076\u957F\u76F8\u8F83\u597D\uFF0C\u6C14\u8D28\u51FA\u4F17\uFF0C\u7ED9\u4EBA\u826F\u597D\u5370\u8C61";
+      } else if (score >= 70) {
+        return "\u914D\u5076\u957F\u76F8\u4E2D\u7B49\u504F\u4E0A\uFF0C\u6C14\u8D28\u4E0D\u9519";
+      } else if (score >= 60) {
+        return "\u914D\u5076\u957F\u76F8\u666E\u901A\uFF0C\u6C14\u8D28\u4E00\u822C";
+      } else if (score >= 50) {
+        return "\u914D\u5076\u957F\u76F8\u8F83\u4E3A\u666E\u901A\uFF0C\u53EF\u80FD\u9700\u8981\u5176\u4ED6\u65B9\u9762\u7684\u4F18\u70B9\u6765\u5F25\u8865";
+      } else {
+        return "\u914D\u5076\u957F\u76F8\u53EF\u80FD\u4E0D\u592A\u7406\u60F3\uFF0C\u5EFA\u8BAE\u591A\u5173\u6CE8\u5185\u5728\u54C1\u8D28";
+      }
+    }
+    function analyzeFamilyBackground(result) {
+      "use strict";
+      if (!result || !result.pillars) {
+        return {
+          score: 0,
+          description: "\u65E0\u6CD5\u5206\u6790\u5BB6\u5EAD\u51FA\u8EAB\uFF1A\u7F3A\u5C11\u516B\u5B57\u6570\u636E",
+          details: []
+        };
+      }
+      const pillars = result.pillars;
+      const dayGan = pillars.day.gan;
+      const yearPillar = pillars.year;
+      const monthPillar = pillars.month;
+      const shensha = result.shensha || {};
+      let score = 60;
+      const details = [];
+      const yearAnalysis = analyzeYearPillarForFamily(yearPillar, dayGan);
+      score += yearAnalysis.score;
+      details.push(yearAnalysis.description);
+      const monthAnalysis = analyzeMonthPillarForFamily(monthPillar, dayGan);
+      score += monthAnalysis.score;
+      details.push(monthAnalysis.description);
+      const shenshaAnalysis = analyzeShenshaForFamily(shensha);
+      score += shenshaAnalysis.score;
+      details.push(shenshaAnalysis.description);
+      score = Math.max(0, Math.min(100, score));
+      return {
+        score,
+        description: getFamilyBackgroundDescription(score),
+        details,
+        analysisMethod: "\u5B50\u5E73\u6CD5\u91CF\u5316\u5206\u6790",
+        factors: {
+          yearPillar: yearAnalysis,
+          monthPillar: monthAnalysis,
+          shensha: shenshaAnalysis
+        }
+      };
+    }
+    function analyzeYearPillarForFamily(yearPillar, dayGan) {
+      const gan = yearPillar.gan;
+      const zhi = yearPillar.zhi;
+      const naYin = yearPillar.naYin;
+      const shiShen = yearPillar.shiShenGan;
+      let score = 0;
+      let description = `\u5E74\u67F1${gan}${zhi}\uFF08${naYin}\uFF09\uFF1A`;
+      const shiShenImpact = {
+        \u6B63\u5370: { score: 5, desc: "\u7956\u8F88\u6709\u6587\u5316\u6216\u516C\u804C\u80CC\u666F" },
+        \u504F\u5370: { score: 3, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u5546\u6216\u6709\u7279\u6B8A\u6280\u827A" },
+        \u6B63\u5B98: { score: 4, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u5B98\u804C\u6216\u793E\u4F1A\u5730\u4F4D" },
+        \u4E03\u6740: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u7ECF\u5386\u6CE2\u6298\u6216\u6709\u6743\u5A01\u6027" },
+        \u6B63\u8D22: { score: 4, desc: "\u7956\u8F88\u5BB6\u5883\u8F83\u597D\uFF0C\u6709\u4E00\u5B9A\u8D44\u4EA7" },
+        \u504F\u8D22: { score: 3, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u610F\u5916\u4E4B\u8D22\u6216\u526F\u4E1A\u6536\u5165" },
+        \u6BD4\u80A9: { score: 1, desc: "\u7956\u8F88\u666E\u901A\u5BB6\u5EAD\uFF0C\u9700\u81EA\u98DF\u5176\u529B" },
+        \u52AB\u8D22: { score: -2, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u8D22\u4EA7\u7EA0\u7EB7\u6216\u7ECF\u6D4E\u56F0\u96BE" },
+        \u98DF\u795E: { score: 3, desc: "\u7956\u8F88\u751F\u6D3B\u4F18\u6E25\uFF0C\u6027\u683C\u6E29\u548C" },
+        \u4F24\u5B98: { score: -1, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u53DB\u9006\u601D\u60F3\u6216\u751F\u6D3B\u8D77\u4F0F" }
+      };
+      if (shiShenImpact[shiShen]) {
+        score += shiShenImpact[shiShen].score;
+        description += `${shiShenImpact[shiShen].desc}\uFF0C`;
+      }
+      const zhiImpact = {
+        \u5B50: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u667A\u6167\u6216\u6D41\u52A8\u6027\u5F3A\u7684\u804C\u4E1A" },
+        \u4E11: { score: 3, desc: "\u7956\u8F88\u7A33\u91CD\uFF0C\u53EF\u80FD\u6709\u571F\u5730\u6216\u623F\u4EA7" },
+        \u5BC5: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u6797\u4E1A\u6216\u6D41\u52A8\u6027\u5DE5\u4F5C" },
+        \u536F: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u6587\u5316\u6216\u6559\u80B2\u884C\u4E1A" },
+        \u8FB0: { score: 3, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u6536\u85CF\u6216\u623F\u5730\u4EA7\u76F8\u5173\u4EA7\u4E1A" },
+        \u5DF3: { score: 1, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u80FD\u6E90\u6216\u6280\u672F\u884C\u4E1A" },
+        \u5348: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u80FD\u6E90\u6216\u6587\u5316\u884C\u4E1A" },
+        \u672A: { score: 3, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u519C\u4E1A\u6216\u98DF\u54C1\u884C\u4E1A" },
+        \u7533: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u91D1\u5C5E\u6216\u4EA4\u901A\u884C\u4E1A" },
+        \u9149: { score: 2, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u91D1\u878D\u6216\u7CBE\u5BC6\u4EEA\u5668\u884C\u4E1A" },
+        \u620C: { score: 3, desc: "\u7956\u8F88\u53EF\u80FD\u6709\u623F\u4EA7\u6216\u4ECE\u4E8B\u5EFA\u7B51\u884C\u4E1A" },
+        \u4EA5: { score: 1, desc: "\u7956\u8F88\u53EF\u80FD\u4ECE\u4E8B\u6C34\u4EA7\u4E1A\u6216\u6D41\u52A8\u6027\u5DE5\u4F5C" }
+      };
+      if (zhiImpact[zhi]) {
+        score += zhiImpact[zhi].score;
+        description += `${zhiImpact[zhi].desc}\uFF0C`;
+      }
+      description += `\u7EB3\u97F3\u4E3A${naYin}\uFF0C`;
+      if (score >= 7) description += "\u7956\u8F88\u5BB6\u5883\u4F18\u6E25\uFF0C\u5BF9\u547D\u4E3B\u6709\u52A9\u76CA\u3002";
+      else if (score >= 3) description += "\u7956\u8F88\u5BB6\u5883\u666E\u901A\uFF0C\u80FD\u63D0\u4F9B\u57FA\u672C\u652F\u6301\u3002";
+      else description += "\u7956\u8F88\u5BB6\u5883\u4E00\u822C\uFF0C\u5BF9\u547D\u4E3B\u5E2E\u52A9\u6709\u9650\u3002";
+      return { score, description };
+    }
+    function analyzeMonthPillarForFamily(monthPillar, dayGan) {
+      const gan = monthPillar.gan;
+      const zhi = monthPillar.zhi;
+      const naYin = monthPillar.naYin;
+      const shiShen = monthPillar.shiShenGan;
+      let score = 0;
+      let description = `\u6708\u67F1${gan}${zhi}\uFF08${naYin}\uFF09\uFF1A`;
+      const shiShenImpact = {
+        \u6B63\u5370: { score: 5, desc: "\u7236\u6BCD\u6709\u6587\u5316\u7D20\u517B\uFF0C\u5BB6\u5EAD\u6C1B\u56F4\u597D" },
+        \u504F\u5370: { score: 3, desc: "\u7236\u6BCD\u53EF\u80FD\u6709\u7279\u6B8A\u6280\u80FD\u6216\u601D\u60F3\u72EC\u7279" },
+        \u6B63\u5B98: { score: 4, desc: "\u7236\u6BCD\u53EF\u80FD\u6709\u7A33\u5B9A\u804C\u4E1A\u6216\u4E00\u5B9A\u793E\u4F1A\u5730\u4F4D" },
+        \u4E03\u6740: { score: -1, desc: "\u7236\u6BCD\u7BA1\u6559\u4E25\u683C\u6216\u5BB6\u5EAD\u73AF\u5883\u6709\u538B\u529B" },
+        \u6B63\u8D22: { score: 5, desc: "\u7236\u6BCD\u7ECF\u6D4E\u6761\u4EF6\u8F83\u597D\uFF0C\u80FD\u63D0\u4F9B\u7269\u8D28\u652F\u6301" },
+        \u504F\u8D22: { score: 3, desc: "\u7236\u6BCD\u53EF\u80FD\u6709\u989D\u5916\u6536\u5165\u6765\u6E90" },
+        \u6BD4\u80A9: { score: 2, desc: "\u7236\u6BCD\u53EF\u80FD\u662F\u666E\u901A\u804C\u5DE5\uFF0C\u5BB6\u5EAD\u5173\u7CFB\u5E73\u7B49" },
+        \u52AB\u8D22: { score: -3, desc: "\u5BB6\u5EAD\u53EF\u80FD\u6709\u8D22\u52A1\u7EA0\u7EB7\u6216\u7236\u6BCD\u5065\u5EB7\u6709\u5FE7" },
+        \u98DF\u795E: { score: 4, desc: "\u7236\u6BCD\u6027\u683C\u6E29\u548C\uFF0C\u5BB6\u5EAD\u6C1B\u56F4\u8F7B\u677E" },
+        \u4F24\u5B98: { score: -2, desc: "\u7236\u6BCD\u53EF\u80FD\u601D\u60F3\u5F00\u653E\u4F46\u5BB6\u5EAD\u5173\u7CFB\u4E0D\u7A33\u5B9A" }
+      };
+      if (shiShenImpact[shiShen]) {
+        score += shiShenImpact[shiShen].score;
+        description += `${shiShenImpact[shiShen].desc}\uFF0C`;
+      }
+      let yueLingShiShen = "";
+      let yueLingScore = 0;
+      let yueLingDesc = "";
+      if (monthPillar.hideGanAttr && monthPillar.hideGanAttr.length > 0) {
+        const mainHideGan2 = monthPillar.hideGanAttr[0];
+        yueLingShiShen = GanRelation.getRelation(dayGan, mainHideGan2.gan);
+        const yueLingImpact = {
+          \u6B63\u5370: { score: 6, desc: "\u6708\u4EE4\u6B63\u5370\uFF0C\u7236\u6BCD\u91CD\u89C6\u6559\u80B2\uFF0C\u5BB6\u5EAD\u6587\u5316\u6C1B\u56F4\u6D53\u539A" },
+          \u504F\u5370: { score: 4, desc: "\u6708\u4EE4\u504F\u5370\uFF0C\u7236\u6BCD\u53EF\u80FD\u6709\u7279\u6B8A\u6280\u827A\u6216\u601D\u60F3" },
+          \u6B63\u5B98: { score: 5, desc: "\u6708\u4EE4\u6B63\u5B98\uFF0C\u7236\u6BCD\u6709\u793E\u4F1A\u5730\u4F4D\uFF0C\u4ECE\u4E8B\u516C\u52A1\u5DE5\u4F5C" },
+          \u4E03\u6740: { score: -2, desc: "\u6708\u4EE4\u4E03\u6740\uFF0C\u5BB6\u5EAD\u73AF\u5883\u8F83\u4E25\u683C\u6216\u6709\u538B\u529B" },
+          \u6B63\u8D22: { score: 6, desc: "\u6708\u4EE4\u6B63\u8D22\uFF0C\u7236\u6BCD\u7ECF\u6D4E\u6761\u4EF6\u4F18\u8D8A" },
+          \u504F\u8D22: { score: 4, desc: "\u6708\u4EE4\u504F\u8D22\uFF0C\u7236\u6BCD\u53EF\u80FD\u6709\u989D\u5916\u6536\u5165\u6216\u6295\u8D44" },
+          \u6BD4\u80A9: { score: 3, desc: "\u6708\u4EE4\u6BD4\u80A9\uFF0C\u7236\u6BCD\u591A\u4E3A\u666E\u901A\u5DE5\u85AA\u9636\u5C42" },
+          \u52AB\u8D22: { score: -4, desc: "\u6708\u4EE4\u52AB\u8D22\uFF0C\u5BB6\u5EAD\u53EF\u80FD\u6709\u7ECF\u6D4E\u7EA0\u7EB7" },
+          \u98DF\u795E: { score: 5, desc: "\u6708\u4EE4\u98DF\u795E\uFF0C\u7236\u6BCD\u6027\u683C\u6E29\u548C\uFF0C\u5BB6\u5EAD\u548C\u8C10" },
+          \u4F24\u5B98: { score: -3, desc: "\u6708\u4EE4\u4F24\u5B98\uFF0C\u7236\u6BCD\u601D\u60F3\u5F00\u653E\u4F46\u5BB6\u5EAD\u5173\u7CFB\u4E0D\u7A33\u5B9A" }
+        };
+        if (yueLingImpact[yueLingShiShen]) {
+          yueLingScore = yueLingImpact[yueLingShiShen].score;
+          yueLingDesc = yueLingImpact[yueLingShiShen].desc;
+          score += yueLingScore;
+          description += yueLingDesc + "\uFF0C";
+        }
+      }
+      const mainHideGan = monthPillar.hideGanAttr && monthPillar.hideGanAttr[0] ? monthPillar.hideGanAttr[0].gan : "";
+      const mainHideShen = mainHideGan ? GanRelation.getRelation(dayGan, mainHideGan) : "";
+      if (mainHideShen && mainHideShen !== shiShen && mainHideShen !== yueLingShiShen) {
+        description += `\u6708\u652F\u85CF\u5E72${mainHideGan}\u4E3A${mainHideShen}\uFF0C`;
+        score += mainHideShen === "\u6B63\u8D22" || mainHideShen === "\u6B63\u5370" ? 2 : 0;
+      }
+      if (score >= 8) description += "\u7236\u6BCD\u5BB6\u5883\u826F\u597D\uFF0C\u5BF9\u547D\u4E3B\u5E2E\u52A9\u5927\u3002";
+      else if (score >= 4) description += "\u7236\u6BCD\u80FD\u63D0\u4F9B\u4E00\u5B9A\u652F\u6301\uFF0C\u5BB6\u5EAD\u6761\u4EF6\u4E2D\u7B49\u3002";
+      else if (score >= 0) description += "\u5BB6\u5EAD\u6761\u4EF6\u4E00\u822C\u3002";
+      else description += "\u5BB6\u5EAD\u53EF\u80FD\u6709\u7ECF\u6D4E\u56F0\u96BE\u6216\u7236\u6BCD\u5173\u7CFB\u4E0D\u548C\u3002";
+      return { score, description, yueLingShiShen, yueLingScore };
+    }
+    function analyzeShenshaForFamily(shensha) {
+      let score = 0;
+      let description = "\u795E\u715E\u5F71\u54CD\uFF1A";
+      const relevantShensha = [];
+      const allShensha = [];
+      for (const key in shensha) {
+        const value = shensha[key];
+        if (Array.isArray(value)) {
+          allShensha.push(...value);
+        } else if (typeof value === "object" && value !== null) {
+          for (const subKey in value) {
+            if (Array.isArray(value[subKey])) {
+              allShensha.push(...value[subKey]);
+            }
+          }
+        }
+      }
+      const positiveShensha = [
+        { name: "\u5929\u4E59\u8D35\u4EBA", score: 3 },
+        { name: "\u6708\u5FB7\u8D35\u4EBA", score: 2 },
+        { name: "\u7984\u795E", score: 2 },
+        { name: "\u65FA\u795E", score: 2 },
+        { name: "\u592A\u6781\u8D35\u4EBA", score: 2 },
+        { name: "\u798F\u661F\u8D35\u4EBA", score: 2 },
+        { name: "\u5FB7\u79C0\u8D35\u4EBA", score: 2 },
+        { name: "\u56FD\u5370\u8D35\u4EBA", score: 2 },
+        { name: "\u91D1\u8206", score: 1 },
+        { name: "\u5C06\u661F", score: 1 }
+      ];
+      positiveShensha.forEach(({ name, score: s }) => {
+        if (allShensha.some((sha) => sha.includes(name))) {
+          relevantShensha.push(name);
+          score += s;
+        }
+      });
+      const negativeShensha = [
+        { name: "\u52AB\u715E", score: -2 },
+        { name: "\u7A7A\u4EA1", score: -2 },
+        { name: "\u5143\u8FB0", score: -1 },
+        { name: "\u5B64\u8FB0", score: -2 },
+        { name: "\u5BE1\u5BBF", score: -2 },
+        { name: "\u4EA1\u795E", score: -1 },
+        { name: "\u707E\u715E", score: -1 }
+      ];
+      negativeShensha.forEach(({ name, score: s }) => {
+        if (allShensha.some((sha) => sha.includes(name))) {
+          relevantShensha.push(name);
+          score += s;
+        }
+      });
+      if (relevantShensha.length > 0) {
+        description += `\u547D\u5E26${relevantShensha.join("\u3001")}\uFF0C`;
+      } else {
+        description += "\u65E0\u663E\u8457\u795E\u715E\u5F71\u54CD\uFF0C";
+      }
+      if (score > 0) description += "\u5BB6\u5EAD\u80CC\u666F\u6709\u8D35\u4EBA\u76F8\u52A9\u3002";
+      else if (score < 0) description += "\u5BB6\u5EAD\u53EF\u80FD\u6709\u6CE2\u6298\u6216\u52A9\u529B\u8F83\u5C11\u3002";
+      else description += "\u5BB6\u5EAD\u52A9\u529B\u4E00\u822C\u3002";
+      return { score, description };
+    }
+    function getFamilyBackgroundDescription(score) {
+      if (score >= 80)
+        return "\u5BB6\u5EAD\u51FA\u8EAB\u4F18\u6E25\uFF0C\u7956\u8F88\u6216\u7236\u6BCD\u6709\u8F83\u9AD8\u793E\u4F1A\u5730\u4F4D\u6216\u7ECF\u6D4E\u57FA\u7840\uFF0C\u80FD\u83B7\u5F97\u826F\u597D\u652F\u6301\u3002";
+      if (score >= 60)
+        return "\u5BB6\u5EAD\u51FA\u8EAB\u826F\u597D\uFF0C\u7236\u6BCD\u6709\u7A33\u5B9A\u804C\u4E1A\u548C\u4E00\u5B9A\u7ECF\u6D4E\u57FA\u7840\uFF0C\u80FD\u63D0\u4F9B\u5FC5\u8981\u652F\u6301\u3002";
+      if (score >= 40)
+        return "\u5BB6\u5EAD\u51FA\u8EAB\u666E\u901A\uFF0C\u7236\u6BCD\u591A\u4E3A\u5DE5\u85AA\u9636\u5C42\uFF0C\u652F\u6301\u6709\u9650\u4F46\u80FD\u7EF4\u6301\u57FA\u672C\u751F\u6D3B\u3002";
+      if (score >= 20) return "\u5BB6\u5EAD\u51FA\u8EAB\u8D2B\u5BD2\uFF0C\u7ECF\u6D4E\u6761\u4EF6\u4E0D\u4F73\uFF0C\u9700\u9760\u81EA\u8EAB\u52AA\u529B\u594B\u6597\u3002";
+      return "\u5BB6\u5EAD\u73AF\u5883\u590D\u6742\uFF0C\u53EF\u80FD\u9762\u4E34\u8F83\u591A\u56F0\u96BE\u548C\u6311\u6218\u3002";
+    }
+    module.exports = {
+      analyzeSpouseAppearance,
+      analyzeFamilyBackground
+    };
+  }
+});
+
+// analysis/svc1.js
+var require_svc1 = __commonJS({
+  "analysis/svc1.js"(exports, module) {
+    function analyzeSelfAppearance(result) {
+      const { gender, pillars, shensha } = result;
+      let appearanceScore = gender === "\u5973" ? 65 : 55;
+      const characteristics = [];
+      const attractivenessOpposite = { score: 0, description: "" };
+      const attractivenessSame = { score: 0, description: "" };
+      const skin = { color: "", texture: "" };
+      const body = { height: "", build: "" };
+      const romanticStars = ["\u6843\u82B1", "\u54B8\u6C60", "\u91D1\u8206", "\u7EA2\u8273\u715E", "\u7EA2\u9E3E"];
+      const positionWeights = { nian: 0.5, yue: 1.5, ri: 1.5, shi: 0.5 };
+      const allShensha = [];
+      Object.entries({ nian: shensha.nian, yue: shensha.yue, ri: shensha.ri, shi: shensha.shi }).forEach(([position, stars]) => {
+        if (Array.isArray(stars)) {
+          stars.forEach((star) => {
+            if (typeof star === "string") {
+              allShensha.push({ name: star, position });
+            }
+          });
+        }
+      });
+      let romanticStarCount = 0;
+      let romanticScore = 0;
+      const starWeights = {
+        "\u6843\u82B1": 2,
+        "\u54B8\u6C60": 1.5,
+        "\u91D1\u8206": 1,
+        "\u7EA2\u8273\u715E": 1.5,
+        "\u7EA2\u9E3E": 1
+      };
+      const starDescriptions = {
+        "\u6843\u82B1": "\u5BB9\u8C8C\u59E3\u597D\uFF0C\u5F02\u6027\u7F18\u4F73",
+        "\u54B8\u6C60": "\u6C14\u8D28\u8FF7\u4EBA\uFF0C\u5BCC\u6709\u9B45\u529B",
+        "\u91D1\u8206": "\u4E3E\u6B62\u4F18\u96C5\uFF0C\u8D35\u4EBA\u76F8\u52A9",
+        "\u7EA2\u8273\u715E": "\u5F02\u6027\u5438\u5F15\u529B\u5F3A",
+        "\u7EA2\u9E3E": "\u5A5A\u59FB\u8FD0\u52BF\u4F73\uFF0C\u6C14\u8D28\u6E29\u5A49"
+      };
+      romanticStars.forEach((star) => {
+        allShensha.forEach(({ name, position }) => {
+          if (name.includes(star)) {
+            romanticStarCount++;
+            const weight = (starWeights[star] || 1) * positionWeights[position];
+            romanticScore += weight;
+            const influence = positionWeights[position] > 1 ? "\u5F71\u54CD\u8F83\u5F3A" : "\u5F71\u54CD\u8F83\u5F31";
+            const positionMap = { nian: "\u5E74", yue: "\u6708", ri: "\u65E5", shi: "\u65F6" };
+            const chinesePosition = positionMap[position] || position;
+            characteristics.push(`${chinesePosition}\u67F1${star}\uFF1A${starDescriptions[star] || "\u63D0\u5347\u5BB9\u8C8C\u5438\u5F15\u529B"}\uFF08${influence}\uFF09`);
+          }
+        });
+      });
+      if (romanticStarCount > 0) {
+        const baseScore = 15;
+        const additionalScore = Math.min(romanticScore * 5, 25);
+        const totalRomanticScore = baseScore + additionalScore;
+        appearanceScore += totalRomanticScore;
+        attractivenessOpposite.score += totalRomanticScore;
+        characteristics.push(`\u5171${romanticStarCount}\u4E2A\u6843\u82B1\u795E\u715E\u5F71\u54CD\uFF0C\u7EFC\u5408\u63D0\u5347\u5BB9\u8C8C\u5438\u5F15\u529B${totalRomanticScore}\u5206`);
+      }
+      const nobleStars = ["\u5929\u5FB7\u8D35\u4EBA", "\u6708\u5FB7\u8D35\u4EBA", "\u5929\u4E59\u8D35\u4EBA", "\u592A\u6781\u8D35\u4EBA", "\u6587\u660C\u8D35\u4EBA"];
+      const hasNobleStar = nobleStars.some(
+        (star) => allShensha.some((s) => s.name.replace(/\(.*\)/, "").trim().includes(star))
+      );
+      if (hasNobleStar) {
+        appearanceScore += 5;
+        characteristics.push("\u6C14\u8D28\u9AD8\u96C5\uFF0C\u6709\u8D35\u4EBA\u76F8");
+      }
+      const wuxingCount = {
+        \u6728: 0,
+        \u706B: 0,
+        \u571F: 0,
+        \u91D1: 0,
+        \u6C34: 0
+      };
+      [pillars.year, pillars.month, pillars.day, pillars.time].forEach((pillar) => {
+        if (pillar.wuXing) {
+          pillar.wuXing.split("").forEach((element) => {
+            if (wuxingCount[element]) wuxingCount[element]++;
+          });
+        }
+      });
+      if (wuxingCount.\u91D1 >= 2) {
+        skin.color = "\u767D\u7699";
+      } else if (wuxingCount.\u6C34 >= 2) {
+        skin.color = "\u6DA6\u6CFD";
+      } else if (wuxingCount.\u571F >= 2) {
+        skin.color = "\u5065\u5EB7\u5C0F\u9EA6\u8272";
+      }
+      if (wuxingCount.\u6728 >= 2) {
+        skin.texture = "\u7EC6\u817B";
+      } else if (wuxingCount.\u706B\u591A) {
+        skin.texture = "\u504F\u6CB9\u6027";
+      }
+      if (wuxingCount.\u6728 >= 2 || pillars.day.gan === "\u7532" || pillars.day.gan === "\u4E59") {
+        body.height = "\u4E2D\u504F\u9AD8";
+      } else if (wuxingCount.\u571F >= 2) {
+        body.height = "\u4E2D\u7B49";
+      }
+      if (wuxingCount.\u91D1 >= 2) {
+        body.build = "\u9AA8\u9ABC\u5206\u660E\uFF0C\u4F53\u578B\u5300\u79F0";
+      } else if (wuxingCount.\u6C34 >= 2) {
+        body.build = "\u4F53\u6001\u7075\u6D3B";
+      } else if (wuxingCount.\u706B >= 2) {
+        body.build = "\u4F53\u578B\u4E2D\u7B49\uFF0C\u808C\u8089\u8F83\u7ED3\u5B9E";
+      }
+      const dayMasterShiShen = pillars.month.shiShenZhi[0];
+      if (["\u6B63\u5B98", "\u6B63\u5370"].includes(dayMasterShiShen)) {
+        characteristics.push("\u76F8\u8C8C\u7AEF\u5E84\uFF0C\u6C14\u8D28\u7A33\u91CD");
+        appearanceScore += 3;
+      } else if (["\u98DF\u795E", "\u4F24\u5B98"].includes(dayMasterShiShen)) {
+        characteristics.push("\u76F8\u8C8C\u6E05\u79C0\uFF0C\u5177\u6709\u827A\u672F\u6C14\u8D28");
+        appearanceScore += 3;
+      }
+      if (skin.color && skin.texture) {
+        characteristics.push(`\u76AE\u80A4${skin.color}${skin.texture}`);
+      }
+      if (body.height && body.build) {
+        characteristics.push(`\u8EAB\u9AD8${body.height}\uFF0C${body.build}`);
+      }
+      if (allShensha.some((s) => s.name.includes("\u5929\u5FB7\u8D35\u4EBA"))) {
+        characteristics.push("\u7709\u5B87\u95F4\u6709\u6B63\u6C14\uFF0C\u7ED9\u4EBA\u53EF\u9760\u611F");
+        appearanceScore += 2;
+      }
+      const spouseStars = gender === "\u5973" ? ["\u6B63\u5B98", "\u4E03\u6740"] : ["\u6B63\u8D22", "\u504F\u8D22"];
+      const hasSpouseStar = spouseStars.includes(pillars.day.shiShenGan) || [pillars.year, pillars.month, pillars.time].some((p) => spouseStars.includes(p.shiShenGan));
+      if (hasSpouseStar) {
+        attractivenessOpposite.score += 8;
+      }
+      appearanceScore = Math.min(appearanceScore, 100);
+      attractivenessOpposite.score = Math.min(attractivenessOpposite.score + Math.floor(appearanceScore / 2), 100);
+      attractivenessSame.score = Math.min(attractivenessSame.score + Math.floor(appearanceScore * 0.7), 100);
+      attractivenessOpposite.description = attractivenessOpposite.score > 70 ? "\u5BF9\u5F02\u6027\u5438\u5F15\u529B\u5F3A" : attractivenessOpposite.score > 50 ? "\u5BF9\u5F02\u6027\u6709\u4E00\u5B9A\u5438\u5F15\u529B" : "\u5BF9\u5F02\u6027\u5438\u5F15\u529B\u4E00\u822C";
+      attractivenessSame.description = attractivenessSame.score > 70 ? "\u5BF9\u540C\u6027\u5438\u5F15\u529B\u5F3A" : attractivenessSame.score > 50 ? "\u5BF9\u540C\u6027\u6709\u4E00\u5B9A\u5438\u5F15\u529B" : "\u5BF9\u540C\u6027\u5438\u5F15\u529B\u4E00\u822C";
+      const description = `\u6574\u4F53\u6837\u8C8C\u8BC4\u5206\u4E3A${appearanceScore}\u5206\u3002${characteristics.join("\uFF0C")}\u3002${attractivenessOpposite.description}\uFF0C${attractivenessSame.description}\u3002`;
+      return {
+        appearanceScore,
+        characteristics,
+        skin,
+        body,
+        attractivenessOpposite,
+        attractivenessSame,
+        description
+      };
+    }
+    module.exports = { analyzeSelfAppearance };
+  }
+});
+
+// analysis/svc2.js
+var require_svc2 = __commonJS({
+  "analysis/svc2.js"(exports, module) {
+    "use strict";
+    var GanRelation = require_ganRelation();
+    function analyzeEducationAndTalent(result) {
+      if (!result || !result.pillars) {
+        return {
+          educationScore: 0,
+          talentScore: 0,
+          educationLevel: "\u65E0\u6CD5\u5206\u6790",
+          talentLevel: "\u65E0\u6CD5\u5206\u6790",
+          description: "\u65E0\u6CD5\u5206\u6790\u5B66\u5386\u548C\u5929\u8D4B\uFF1A\u7F3A\u5C11\u516B\u5B57\u6570\u636E",
+          details: []
+        };
+      }
+      const pillars = result.pillars;
+      const gender = result.gender || "\u7537";
+      const dayGan = pillars.dayMasterGan || pillars.day.gan;
+      const shensha = result.shensha || {};
+      let educationScore = 50;
+      let talentScore = 50;
+      const details = [];
+      const shiShenAnalysis = analyzeShiShenForEducation(pillars, dayGan, gender);
+      educationScore += shiShenAnalysis.educationScore;
+      talentScore += shiShenAnalysis.talentScore;
+      details.push(shiShenAnalysis.description);
+      const shenshaAnalysis = analyzeShenshaForEducation(shensha);
+      educationScore += shenshaAnalysis.educationScore;
+      talentScore += shenshaAnalysis.talentScore;
+      details.push(shenshaAnalysis.description);
+      const naYinAnalysis = analyzeNaYinForTalent(pillars);
+      talentScore += naYinAnalysis.talentScore;
+      details.push(naYinAnalysis.description);
+      const wuxingAnalysis = analyzeWuXingForEducation(result, dayGan);
+      educationScore += wuxingAnalysis.educationScore;
+      talentScore += wuxingAnalysis.talentScore;
+      details.push(wuxingAnalysis.description);
+      educationScore = Math.max(0, Math.min(100, educationScore));
+      talentScore = Math.max(0, Math.min(100, talentScore));
+      const educationLevel = getEducationLevel(educationScore);
+      const talentLevel = getTalentLevel(talentScore);
+      const description = `\u5B66\u5386\u8BC4\u5206\u4E3A${Math.round(
+        educationScore
+      )}\u5206\uFF08${educationLevel}\uFF09\uFF0C\u5929\u8D4B\u8BC4\u5206\u4E3A${Math.round(
+        talentScore
+      )}\u5206\uFF08${talentLevel}\uFF09\u3002`;
+      return {
+        educationScore: Math.round(educationScore),
+        talentScore: Math.round(talentScore),
+        educationLevel,
+        talentLevel,
+        description,
+        details,
+        analysisMethod: "\u5B50\u5E73\u6CD5\u91CF\u5316\u5206\u6790",
+        factors: {
+          shiShen: shiShenAnalysis,
+          shensha: shenshaAnalysis,
+          naYin: naYinAnalysis,
+          wuxing: wuxingAnalysis
+        }
+      };
+    }
+    function analyzeShiShenForEducation(pillars, dayGan, gender) {
+      let educationScore = 0;
+      let talentScore = 0;
+      let description = "\u5341\u795E\u5206\u6790\uFF1A";
+      const shiShenMap = {
+        year: pillars.year.shiShenGan,
+        month: pillars.month.shiShenGan,
+        day: pillars.day.shiShenGan,
+        time: pillars.time.shiShenGan
+      };
+      const educationWeights = {
+        \u6B63\u5370: { score: 8, desc: "\u5B66\u4E60\u80FD\u529B\u5F3A\uFF0C\u6709\u5B66\u672F\u5929\u8D4B" },
+        \u504F\u5370: { score: 5, desc: "\u601D\u7EF4\u72EC\u7279\uFF0C\u9002\u5408\u7814\u7A76\u578B\u5B66\u4E60" },
+        \u6B63\u5B98: { score: 6, desc: "\u81EA\u5F8B\u6027\u5F3A\uFF0C\u9002\u5408\u6B63\u89C4\u6559\u80B2" },
+        \u4E03\u6740: { score: 3, desc: "\u5B66\u4E60\u538B\u529B\u5927\uFF0C\u4F46\u80FD\u6FC0\u53D1\u6F5C\u529B" },
+        \u6B63\u8D22: { score: 4, desc: "\u6CE8\u91CD\u5B9E\u7528\uFF0C\u9002\u5408\u5E94\u7528\u578B\u5B66\u4E60" },
+        \u504F\u8D22: { score: 2, desc: "\u5B66\u4E60\u76EE\u7684\u6027\u5F3A\uFF0C\u504F\u5411\u5B9E\u7528\u6280\u80FD" },
+        \u98DF\u795E: { score: 7, desc: "\u806A\u660E\u597D\u5B66\uFF0C\u6709\u827A\u672F\u5929\u8D4B" },
+        \u4F24\u5B98: { score: 4, desc: "\u601D\u7EF4\u6D3B\u8DC3\uFF0C\u9002\u5408\u521B\u9020\u6027\u5B66\u4E60" },
+        \u6BD4\u80A9: { score: 1, desc: "\u5B66\u4E60\u9700\u8981\u540C\u4F34\u6FC0\u52B1" },
+        \u52AB\u8D22: { score: -2, desc: "\u5B66\u4E60\u5BB9\u6613\u5206\u5FC3\uFF0C\u9700\u8981\u4E13\u6CE8" }
+      };
+      const talentWeights = {
+        \u6B63\u5370: { score: 6, desc: "\u6709\u5B66\u672F\u7814\u7A76\u5929\u8D4B" },
+        \u504F\u5370: { score: 8, desc: "\u6709\u7279\u6B8A\u624D\u80FD\u548C\u521B\u9020\u529B" },
+        \u6B63\u5B98: { score: 5, desc: "\u6709\u7BA1\u7406\u548C\u7EC4\u7EC7\u5929\u8D4B" },
+        \u4E03\u6740: { score: 7, desc: "\u6709\u7A81\u7834\u6027\u601D\u7EF4\u548C\u9886\u5BFC\u529B" },
+        \u6B63\u8D22: { score: 4, desc: "\u6709\u5546\u4E1A\u548C\u7406\u8D22\u5929\u8D4B" },
+        \u504F\u8D22: { score: 6, desc: "\u6709\u6295\u8D44\u548C\u6295\u673A\u5929\u8D4B" },
+        \u98DF\u795E: { score: 9, desc: "\u6709\u827A\u672F\u548C\u521B\u4F5C\u5929\u8D4B" },
+        \u4F24\u5B98: { score: 8, desc: "\u6709\u521B\u65B0\u548C\u6539\u9769\u5929\u8D4B" },
+        \u6BD4\u80A9: { score: 3, desc: "\u6709\u56E2\u961F\u5408\u4F5C\u5929\u8D4B" },
+        \u52AB\u8D22: { score: 2, desc: "\u6709\u7ADE\u4E89\u548C\u5192\u9669\u5929\u8D4B" }
+      };
+      const educationImpacts = [];
+      const talentImpacts = [];
+      Object.entries(shiShenMap).forEach(([position, shiShen]) => {
+        if (educationWeights[shiShen]) {
+          educationScore += educationWeights[shiShen].score;
+          const positionMap = {
+            year: "\u5E74",
+            month: "\u6708",
+            day: "\u65E5",
+            time: "\u65F6"
+          };
+          educationImpacts.push(
+            `${positionMap[position]}\u67F1${shiShen}\uFF1A${educationWeights[shiShen].desc}`
+          );
+        }
+        if (talentWeights[shiShen]) {
+          talentScore += talentWeights[shiShen].score;
+          const positionMap = {
+            year: "\u5E74",
+            month: "\u6708",
+            day: "\u65E5",
+            time: "\u65F6"
+          };
+          talentImpacts.push(
+            `${positionMap[position]}\u67F1${shiShen}\uFF1A${talentWeights[shiShen].desc}`
+          );
+        }
+      });
+      if (educationImpacts.length > 0) {
+        description += educationImpacts.join("\uFF1B");
+      }
+      if (talentImpacts.length > 0) {
+        description += talentImpacts.length > 0 ? "\uFF1B" + talentImpacts.join("\uFF1B") : "";
+      }
+      return { educationScore, talentScore, description };
+    }
+    function analyzeShenshaForEducation(shensha) {
+      let educationScore = 0;
+      let talentScore = 0;
+      let description = "\u795E\u715E\u5206\u6790\uFF1A";
+      const allShensha = [];
+      ["nian", "yue", "ri", "shi"].forEach((pillar) => {
+        if (shensha[pillar] && Array.isArray(shensha[pillar])) {
+          shensha[pillar].forEach((s) => allShensha.push(s));
+        }
+      });
+      const educationShensha = [
+        { name: "\u6587\u660C\u8D35\u4EBA", score: 10, desc: "\u5B66\u4E1A\u6709\u6210\uFF0C\u6587\u91C7\u51FA\u4F17" },
+        { name: "\u5B66\u5802", score: 8, desc: "\u5B66\u4E60\u73AF\u5883\u597D\uFF0C\u6709\u8BFB\u4E66\u8FD0" },
+        { name: "\u8BCD\u9986", score: 7, desc: "\u8BED\u8A00\u80FD\u529B\u5F3A\uFF0C\u9002\u5408\u6587\u79D1" },
+        { name: "\u592A\u6781\u8D35\u4EBA", score: 6, desc: "\u601D\u7EF4\u4E25\u8C28\uFF0C\u9002\u5408\u7406\u79D1" },
+        { name: "\u5929\u4E59\u8D35\u4EBA", score: 5, desc: "\u6709\u8D35\u4EBA\u76F8\u52A9\uFF0C\u5B66\u4E1A\u987A\u5229" }
+      ];
+      const talentShensha = [
+        { name: "\u534E\u76D6", score: 8, desc: "\u6709\u7279\u6B8A\u624D\u80FD\uFF0C\u827A\u672F\u5929\u8D4B" },
+        { name: "\u5C06\u661F", score: 7, desc: "\u6709\u9886\u5BFC\u624D\u80FD\uFF0C\u7EC4\u7EC7\u5929\u8D4B" },
+        { name: "\u91D1\u8206", score: 6, desc: "\u6709\u5546\u4E1A\u5934\u8111\uFF0C\u7406\u8D22\u5929\u8D4B" },
+        { name: "\u9A7F\u9A6C", score: 5, desc: "\u6709\u5F00\u62D3\u7CBE\u795E\uFF0C\u9002\u5E94\u529B\u5F3A" },
+        { name: "\u6843\u82B1", score: 4, desc: "\u6709\u827A\u672F\u6C14\u8D28\uFF0C\u521B\u9020\u529B\u5F3A" }
+      ];
+      const foundEducationShensha = [];
+      educationShensha.forEach((shen) => {
+        if (allShensha.some((s) => s.includes(shen.name))) {
+          educationScore += shen.score;
+          foundEducationShensha.push(shen.name);
+        }
+      });
+      const foundTalentShensha = [];
+      talentShensha.forEach((shen) => {
+        if (allShensha.some((s) => s.includes(shen.name))) {
+          talentScore += shen.score;
+          foundTalentShensha.push(shen.name);
+        }
+      });
+      if (foundEducationShensha.length > 0) {
+        description += `\u547D\u5E26${foundEducationShensha.join("\u3001")}\uFF0C\u6709\u5229\u4E8E\u5B66\u4E1A\u53D1\u5C55\uFF1B`;
+      }
+      if (foundTalentShensha.length > 0) {
+        description += `\u547D\u5E26${foundTalentShensha.join("\u3001")}\uFF0C\u5929\u8D4B\u5F02\u7980\uFF1B`;
+      }
+      if (foundEducationShensha.length === 0 && foundTalentShensha.length === 0) {
+        description += "\u65E0\u663E\u8457\u795E\u715E\u5F71\u54CD\uFF1B";
+      }
+      return { educationScore, talentScore, description };
+    }
+    function analyzeNaYinForTalent(pillars) {
+      let talentScore = 0;
+      let description = "\u7EB3\u97F3\u5206\u6790\uFF1A";
+      const naYinMap = {
+        year: pillars.year.naYin,
+        month: pillars.month.naYin,
+        day: pillars.day.naYin,
+        time: pillars.time.naYin
+      };
+      const naYinTalentMap = {
+        \u6D77\u4E2D\u91D1: { score: 6, desc: "\u5185\u655B\u6DF1\u6C89\uFF0C\u6709\u6DF1\u5EA6\u601D\u8003\u80FD\u529B" },
+        \u7089\u4E2D\u706B: { score: 7, desc: "\u70ED\u60C5\u5954\u653E\uFF0C\u6709\u521B\u9020\u529B\u548C\u8868\u73B0\u529B" },
+        \u5927\u6797\u6728: { score: 8, desc: "\u6210\u957F\u6027\u5F3A\uFF0C\u6709\u6301\u7EED\u53D1\u5C55\u6F5C\u529B" },
+        \u8DEF\u65C1\u571F: { score: 4, desc: "\u8E0F\u5B9E\u7A33\u91CD\uFF0C\u6709\u5B9E\u8DF5\u80FD\u529B" },
+        \u5251\u950B\u91D1: { score: 9, desc: "\u9510\u5229\u654F\u9510\uFF0C\u6709\u7A81\u7834\u6027\u601D\u7EF4" },
+        \u5C71\u5934\u706B: { score: 5, desc: "\u72EC\u7ACB\u6027\u5F3A\uFF0C\u6709\u72EC\u7279\u89C1\u89E3" },
+        \u6DA7\u4E0B\u6C34: { score: 6, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u6709\u9002\u5E94\u80FD\u529B" },
+        \u57CE\u5934\u571F: { score: 5, desc: "\u7A33\u91CD\u53EF\u9760\uFF0C\u6709\u7EC4\u7EC7\u80FD\u529B" },
+        \u767D\u814A\u91D1: { score: 7, desc: "\u7CBE\u81F4\u7EC6\u817B\uFF0C\u6709\u827A\u672F\u5929\u8D4B" },
+        \u6768\u67F3\u6728: { score: 6, desc: "\u67D4\u97E7\u6027\u5F3A\uFF0C\u6709\u534F\u8C03\u80FD\u529B" },
+        \u6CC9\u4E2D\u6C34: { score: 5, desc: "\u6E90\u8FDC\u6D41\u957F\uFF0C\u6709\u6301\u4E45\u529B" },
+        \u5C4B\u4E0A\u571F: { score: 4, desc: "\u5B89\u7A33\u4FDD\u5B88\uFF0C\u6709\u4F20\u7EDF\u601D\u7EF4" },
+        \u9739\u96F3\u706B: { score: 8, desc: "\u7206\u53D1\u529B\u5F3A\uFF0C\u6709\u521B\u65B0\u7CBE\u795E" },
+        \u677E\u67CF\u6728: { score: 7, desc: "\u575A\u97E7\u4E0D\u62D4\uFF0C\u6709\u6BC5\u529B" },
+        \u957F\u6D41\u6C34: { score: 6, desc: "\u6301\u7EED\u4E0D\u65AD\uFF0C\u6709\u5B66\u4E60\u8010\u529B" },
+        \u6C99\u4E2D\u91D1: { score: 5, desc: "\u9690\u85CF\u6F5C\u529B\uFF0C\u9700\u8981\u53D1\u6398" },
+        \u5C71\u4E0B\u706B: { score: 4, desc: "\u6E29\u6696\u548C\u7166\uFF0C\u6709\u4EBA\u9645\u4EA4\u5F80\u80FD\u529B" },
+        \u5E73\u5730\u6728: { score: 5, desc: "\u5E73\u7A33\u53D1\u5C55\uFF0C\u6709\u57FA\u7840\u80FD\u529B" },
+        \u58C1\u4E0A\u571F: { score: 3, desc: "\u4FDD\u5B88\u8C28\u614E\uFF0C\u9700\u8981\u7A81\u7834" },
+        \u91D1\u7B94\u91D1: { score: 8, desc: "\u5916\u8868\u534E\u4E3D\uFF0C\u6709\u8868\u73B0\u5929\u8D4B" },
+        \u4F5B\u706F\u706B: { score: 7, desc: "\u667A\u6167\u5149\u660E\uFF0C\u6709\u7075\u6027\u5929\u8D4B" },
+        \u5929\u6CB3\u6C34: { score: 9, desc: "\u5E7F\u9614\u65E0\u8FB9\uFF0C\u6709\u5B8F\u5927\u601D\u7EF4" },
+        \u5927\u9A7F\u571F: { score: 4, desc: "\u6C9F\u901A\u80FD\u529B\u5F3A\uFF0C\u6709\u4EA4\u6D41\u5929\u8D4B" },
+        \u9497\u948F\u91D1: { score: 6, desc: "\u7CBE\u81F4\u4F18\u96C5\uFF0C\u6709\u5BA1\u7F8E\u5929\u8D4B" },
+        \u6851\u67D8\u6728: { score: 5, desc: "\u5B9E\u7528\u6027\u5F3A\uFF0C\u6709\u52A8\u624B\u80FD\u529B" },
+        \u5927\u6EAA\u6C34: { score: 6, desc: "\u6D41\u52A8\u53D8\u5316\uFF0C\u6709\u9002\u5E94\u80FD\u529B" },
+        \u6C99\u4E2D\u571F: { score: 4, desc: "\u57FA\u7840\u624E\u5B9E\uFF0C\u6709\u5B9E\u8DF5\u80FD\u529B" },
+        \u5929\u4E0A\u706B: { score: 8, desc: "\u5FD7\u5411\u9AD8\u8FDC\uFF0C\u6709\u7406\u60F3\u8FFD\u6C42" },
+        \u77F3\u69B4\u6728: { score: 7, desc: "\u591A\u624D\u591A\u827A\uFF0C\u6709\u7EFC\u5408\u80FD\u529B" },
+        \u5927\u6D77\u6C34: { score: 9, desc: "\u5305\u5BB9\u4E07\u8C61\uFF0C\u6709\u5168\u5C40\u89C2" }
+      };
+      const talentImpacts = [];
+      let totalScore = 0;
+      let count = 0;
+      Object.entries(naYinMap).forEach(([position, naYin]) => {
+        if (naYinTalentMap[naYin]) {
+          const impact = naYinTalentMap[naYin];
+          totalScore += impact.score;
+          count++;
+          if (position === "month" || position === "day") {
+            const positionMap = {
+              year: "\u5E74",
+              month: "\u6708",
+              day: "\u65E5",
+              time: "\u65F6"
+            };
+            talentImpacts.push(`${positionMap[position]}\u67F1${naYin}\uFF1A${impact.desc}`);
+          }
+        }
+      });
+      if (count > 0) {
+        talentScore = Math.round(totalScore / count);
+      }
+      if (talentImpacts.length > 0) {
+        description += talentImpacts.join("\uFF1B");
+      } else {
+        description += "\u7EB3\u97F3\u5929\u8D4B\u7279\u5F81\u4E0D\u660E\u663E";
+      }
+      return { talentScore, description };
+    }
+    function analyzeWuXingForEducation(result, dayGan) {
+      let educationScore = 0;
+      let talentScore = 0;
+      let description = "\u4E94\u884C\u5206\u6790\uFF1A";
+      const wuXingPower = result.wuXingPower || {};
+      const wuXingValues = {
+        \u6728: wuXingPower["\u6728"] || 0,
+        \u706B: wuXingPower["\u706B"] || 0,
+        \u571F: wuXingPower["\u571F"] || 0,
+        \u91D1: wuXingPower["\u91D1"] || 0,
+        \u6C34: wuXingPower["\u6C34"] || 0
+      };
+      const values = Object.values(wuXingValues);
+      const maxValue = Math.max(...values);
+      const minValue = Math.min(...values);
+      const range = maxValue - minValue;
+      if (range <= 20) {
+        educationScore = 8;
+        description += "\u4E94\u884C\u5E73\u8861\uFF08\u5DEE\u503C\u226420\uFF09\uFF0C\u5B66\u4E60\u80FD\u529B\u5168\u9762\u5747\u8861";
+      } else if (range <= 40) {
+        educationScore = 4;
+        description += "\u4E94\u884C\u57FA\u672C\u5E73\u8861\uFF08\u5DEE\u503C20-40\uFF09\uFF0C\u5B66\u4E60\u80FD\u529B\u826F\u597D";
+      } else if (range <= 60) {
+        educationScore = 0;
+        description += "\u4E94\u884C\u7565\u6709\u504F\u9887\uFF08\u5DEE\u503C40-60\uFF09\uFF0C\u5B66\u4E60\u6709\u8F7B\u5FAE\u504F\u79D1";
+      } else {
+        educationScore = -5;
+        description += "\u4E94\u884C\u4E25\u91CD\u4E0D\u5E73\u8861\uFF08\u5DEE\u503C>60\uFF09\uFF0C\u5B66\u4E60\u6709\u660E\u663E\u504F\u79D1\u503E\u5411";
+      }
+      description += `\uFF08\u6728${wuXingValues["\u6728"]}% \u706B${wuXingValues["\u706B"]}% \u571F${wuXingValues["\u571F"]}% \u91D1${wuXingValues["\u91D1"]}% \u6C34${wuXingValues["\u6C34"]}%\uFF09`;
+      const dayGanWuXing = GanRelation.getWuXing(dayGan);
+      const dayGanTalentMap = {
+        \u6728: { score: 6, desc: "\u6709\u6210\u957F\u6027\u601D\u7EF4\uFF0C\u9002\u5408\u6301\u7EED\u5B66\u4E60" },
+        \u706B: { score: 7, desc: "\u6709\u70ED\u60C5\u548C\u521B\u9020\u529B\uFF0C\u9002\u5408\u521B\u65B0\u9886\u57DF" },
+        \u571F: { score: 5, desc: "\u8E0F\u5B9E\u7A33\u91CD\uFF0C\u9002\u5408\u57FA\u7840\u5B66\u79D1" },
+        \u91D1: { score: 8, desc: "\u601D\u7EF4\u4E25\u8C28\uFF0C\u9002\u5408\u7406\u5DE5\u79D1" },
+        \u6C34: { score: 6, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u9002\u5408\u4EA4\u53C9\u5B66\u79D1" }
+      };
+      if (dayGanTalentMap[dayGanWuXing]) {
+        talentScore += dayGanTalentMap[dayGanWuXing].score;
+        description += `\uFF1B\u65E5\u4E3B${dayGan}\u5C5E${dayGanWuXing}\uFF0C${dayGanTalentMap[dayGanWuXing].desc}`;
+      }
+      const maxWuXing = Object.entries(wuXingValues).reduce((max, [key, value]) => value > max.value ? { key, value } : max, { key: "", value: 0 });
+      if (maxWuXing.value > 30) {
+        const talentMap = {
+          \u6728: { score: 3, desc: "\u6709\u6587\u5B66\u827A\u672F\u5929\u8D4B" },
+          \u706B: { score: 4, desc: "\u6709\u9886\u5BFC\u8868\u8FBE\u80FD\u529B" },
+          \u571F: { score: 2, desc: "\u6709\u7EC4\u7EC7\u7BA1\u7406\u5929\u8D4B" },
+          \u91D1: { score: 5, desc: "\u6709\u903B\u8F91\u5206\u6790\u5929\u8D4B" },
+          \u6C34: { score: 3, desc: "\u6709\u667A\u6167\u601D\u8003\u5929\u8D4B" }
+        };
+        if (talentMap[maxWuXing.key]) {
+          talentScore += talentMap[maxWuXing.key].score;
+          description += `\uFF1B${maxWuXing.key}\u65FA\uFF08${maxWuXing.value}%\uFF09\uFF0C${talentMap[maxWuXing.key].desc}`;
+        }
+      }
+      return { educationScore, talentScore, description };
+    }
+    function getEducationLevel(score) {
+      if (score >= 90) return "\u535A\u58EB\u53CA\u4EE5\u4E0A";
+      if (score >= 80) return "\u7855\u58EB";
+      if (score >= 70) return "\u672C\u79D1";
+      if (score >= 60) return "\u5927\u4E13";
+      if (score >= 50) return "\u9AD8\u4E2D/\u4E2D\u4E13";
+      if (score >= 40) return "\u521D\u4E2D";
+      return "\u5C0F\u5B66\u53CA\u4EE5\u4E0B";
+    }
+    function getTalentLevel(score) {
+      if (score >= 90) return "\u5929\u624D\u7EA7\u522B";
+      if (score >= 80) return "\u5353\u8D8A\u5929\u8D4B";
+      if (score >= 70) return "\u4F18\u79C0\u5929\u8D4B";
+      if (score >= 60) return "\u826F\u597D\u5929\u8D4B";
+      if (score >= 50) return "\u666E\u901A\u5929\u8D4B";
+      if (score >= 40) return "\u7565\u6709\u5929\u8D4B";
+      return "\u5929\u8D4B\u4E00\u822C";
+    }
+    module.exports = {
+      analyzeEducationAndTalent
+    };
+  }
+});
+
+// analysis/svc3.js
+var require_svc3 = __commonJS({
+  "analysis/svc3.js"(exports, module) {
+    "use strict";
+    var GanRelation = require_ganRelation();
+    function analyzeGameTalent(result) {
+      if (!result || !result.pillars) {
+        return {
+          gameTalentScore: 0,
+          gameTalentLevel: "\u65E0\u6CD5\u5206\u6790",
+          description: "\u65E0\u6CD5\u5206\u6790\u6E38\u620F\u5929\u8D4B\uFF1A\u7F3A\u5C11\u516B\u5B57\u6570\u636E",
+          details: []
+        };
+      }
+      const pillars = result.pillars;
+      const gender = result.gender || "\u7537";
+      const dayGan = pillars.dayMasterGan || pillars.day.gan;
+      const shensha = result.shensha || {};
+      let gameTalentScore = 50;
+      const details = [];
+      const shiShenAnalysis = analyzeShiShenForGame(pillars, dayGan, gender);
+      gameTalentScore += shiShenAnalysis.gameTalentScore;
+      details.push(shiShenAnalysis.description);
+      const shenshaAnalysis = analyzeShenshaForGame(shensha);
+      gameTalentScore += shenshaAnalysis.gameTalentScore;
+      details.push(shenshaAnalysis.description);
+      const naYinAnalysis = analyzeNaYinForGame(pillars);
+      gameTalentScore += naYinAnalysis.gameTalentScore;
+      details.push(naYinAnalysis.description);
+      const wuxingAnalysis = analyzeWuXingForGame(result, dayGan);
+      gameTalentScore += wuxingAnalysis.gameTalentScore;
+      details.push(wuxingAnalysis.description);
+      gameTalentScore = Math.max(0, Math.min(100, gameTalentScore));
+      const gameTalentLevel = getGameTalentLevel(gameTalentScore);
+      const description = `\u6E38\u620F\u5929\u8D4B\u8BC4\u5206\u4E3A${Math.round(
+        gameTalentScore
+      )}\u5206\uFF08${gameTalentLevel}\uFF09\u3002`;
+      return {
+        gameTalentScore: Math.round(gameTalentScore),
+        gameTalentLevel,
+        description,
+        details,
+        analysisMethod: "\u5B50\u5E73\u6CD5\u6E38\u620F\u5929\u8D4B\u91CF\u5316\u5206\u6790",
+        factors: {
+          shiShen: shiShenAnalysis,
+          shensha: shenshaAnalysis,
+          naYin: naYinAnalysis,
+          wuxing: wuxingAnalysis
+        }
+      };
+    }
+    function analyzeShiShenForGame(pillars, dayGan, gender) {
+      let gameTalentScore = 0;
+      let description = "\u5341\u795E\u5206\u6790\uFF1A";
+      const shiShenMap = {
+        year: pillars.year.shiShenGan,
+        month: pillars.month.shiShenGan,
+        day: pillars.day.shiShenGan,
+        time: pillars.time.shiShenGan
+      };
+      const gameTalentWeights = {
+        \u6B63\u5370: { score: 3, desc: "\u5B66\u4E60\u80FD\u529B\u5F3A\uFF0C\u9002\u5408\u7B56\u7565\u7C7B\u6E38\u620F" },
+        \u504F\u5370: { score: 8, desc: "\u601D\u7EF4\u72EC\u7279\uFF0C\u9002\u5408\u89E3\u8C1C\u548C\u521B\u610F\u6E38\u620F" },
+        \u6B63\u5B98: { score: 5, desc: "\u81EA\u5F8B\u6027\u5F3A\uFF0C\u9002\u5408\u7ADE\u6280\u7C7B\u6E38\u620F" },
+        \u4E03\u6740: { score: 9, desc: "\u53CD\u5E94\u8FC5\u901F\uFF0C\u9002\u5408\u52A8\u4F5C\u548C\u5C04\u51FB\u6E38\u620F" },
+        \u6B63\u8D22: { score: 4, desc: "\u6CE8\u91CD\u5B9E\u7528\uFF0C\u9002\u5408\u6A21\u62DF\u7ECF\u8425\u6E38\u620F" },
+        \u504F\u8D22: { score: 7, desc: "\u5192\u9669\u7CBE\u795E\u5F3A\uFF0C\u9002\u5408\u5192\u9669\u548C\u8D4C\u535A\u7C7B\u6E38\u620F" },
+        \u98DF\u795E: { score: 6, desc: "\u521B\u610F\u4E30\u5BCC\uFF0C\u9002\u5408\u89D2\u8272\u626E\u6F14\u6E38\u620F" },
+        \u4F24\u5B98: { score: 8, desc: "\u601D\u7EF4\u6D3B\u8DC3\uFF0C\u9002\u5408\u7B56\u7565\u548C\u5361\u724C\u6E38\u620F" },
+        \u6BD4\u80A9: { score: 6, desc: "\u56E2\u961F\u5408\u4F5C\u5F3A\uFF0C\u9002\u5408\u56E2\u961F\u7ADE\u6280\u6E38\u620F" },
+        \u52AB\u8D22: { score: 7, desc: "\u7ADE\u4E89\u610F\u8BC6\u5F3A\uFF0C\u9002\u5408\u5BF9\u6218\u7C7B\u6E38\u620F" }
+      };
+      const gameTalentImpacts = [];
+      Object.entries(shiShenMap).forEach(([position, shiShen]) => {
+        if (gameTalentWeights[shiShen]) {
+          gameTalentScore += gameTalentWeights[shiShen].score;
+          const positionMap = {
+            year: "\u5E74",
+            month: "\u6708",
+            day: "\u65E5",
+            time: "\u65F6"
+          };
+          gameTalentImpacts.push(
+            `${positionMap[position]}\u67F1${shiShen}\uFF1A${gameTalentWeights[shiShen].desc}`
+          );
+        }
+      });
+      if (gameTalentImpacts.length > 0) {
+        description += gameTalentImpacts.join("\uFF1B");
+      } else {
+        description += "\u5341\u795E\u5BF9\u6E38\u620F\u5929\u8D4B\u5F71\u54CD\u4E0D\u660E\u663E";
+      }
+      return { gameTalentScore, description };
+    }
+    function analyzeShenshaForGame(shensha) {
+      let gameTalentScore = 0;
+      let description = "\u795E\u715E\u5206\u6790\uFF1A";
+      const allShensha = [];
+      ["nian", "yue", "ri", "shi"].forEach((pillar) => {
+        if (shensha[pillar] && Array.isArray(shensha[pillar])) {
+          shensha[pillar].forEach((s) => allShensha.push(s));
+        }
+      });
+      const gameTalentShensha = [
+        { name: "\u5C06\u661F", score: 8, desc: "\u6709\u9886\u5BFC\u624D\u80FD\uFF0C\u9002\u5408\u56E2\u961F\u6307\u6325" },
+        { name: "\u534E\u76D6", score: 7, desc: "\u6709\u7279\u6B8A\u624D\u80FD\uFF0C\u9002\u5408\u521B\u610F\u6E38\u620F" },
+        { name: "\u9A7F\u9A6C", score: 6, desc: "\u53CD\u5E94\u8FC5\u901F\uFF0C\u9002\u5408\u52A8\u4F5C\u6E38\u620F" },
+        { name: "\u6843\u82B1", score: 5, desc: "\u6709\u827A\u672F\u6C14\u8D28\uFF0C\u9002\u5408\u89D2\u8272\u626E\u6F14" },
+        { name: "\u5929\u4E59\u8D35\u4EBA", score: 4, desc: "\u6709\u8D35\u4EBA\u76F8\u52A9\uFF0C\u6E38\u620F\u8FD0\u6C14\u597D" },
+        { name: "\u592A\u6781\u8D35\u4EBA", score: 5, desc: "\u601D\u7EF4\u4E25\u8C28\uFF0C\u9002\u5408\u7B56\u7565\u6E38\u620F" },
+        { name: "\u6587\u660C\u8D35\u4EBA", score: 6, desc: "\u5B66\u4E60\u80FD\u529B\u5F3A\uFF0C\u6E38\u620F\u4E0A\u624B\u5FEB" },
+        { name: "\u91D1\u8206", score: 3, desc: "\u6709\u5546\u4E1A\u5934\u8111\uFF0C\u9002\u5408\u7ECF\u8425\u6E38\u620F" }
+      ];
+      const foundGameTalentShensha = [];
+      gameTalentShensha.forEach((shen) => {
+        if (allShensha.some((s) => s.includes(shen.name))) {
+          gameTalentScore += shen.score;
+          foundGameTalentShensha.push(shen.name);
+        }
+      });
+      if (foundGameTalentShensha.length > 0) {
+        description += `\u547D\u5E26${foundGameTalentShensha.join(
+          "\u3001"
+        )}\uFF0C\u6709\u5229\u4E8E\u6E38\u620F\u5929\u8D4B\u53D1\u5C55`;
+      } else {
+        description += "\u65E0\u663E\u8457\u795E\u715E\u5F71\u54CD\u6E38\u620F\u5929\u8D4B";
+      }
+      return { gameTalentScore, description };
+    }
+    function analyzeNaYinForGame(pillars) {
+      let gameTalentScore = 0;
+      let description = "\u7EB3\u97F3\u5206\u6790\uFF1A";
+      const naYinMap = {
+        year: pillars.year.naYin,
+        month: pillars.month.naYin,
+        day: pillars.day.naYin,
+        time: pillars.time.naYin
+      };
+      const naYinGameTalentMap = {
+        \u6D77\u4E2D\u91D1: { score: 5, desc: "\u5185\u655B\u6DF1\u6C89\uFF0C\u9002\u5408\u7B56\u7565\u601D\u8003\u6E38\u620F" },
+        \u7089\u4E2D\u706B: { score: 8, desc: "\u70ED\u60C5\u5954\u653E\uFF0C\u9002\u5408\u7ADE\u6280\u5BF9\u6218\u6E38\u620F" },
+        \u5927\u6797\u6728: { score: 6, desc: "\u6210\u957F\u6027\u5F3A\uFF0C\u9002\u5408\u89D2\u8272\u6210\u957F\u6E38\u620F" },
+        \u8DEF\u65C1\u571F: { score: 4, desc: "\u8E0F\u5B9E\u7A33\u91CD\uFF0C\u9002\u5408\u6A21\u62DF\u7ECF\u8425\u6E38\u620F" },
+        \u5251\u950B\u91D1: { score: 9, desc: "\u9510\u5229\u654F\u9510\uFF0C\u9002\u5408\u5C04\u51FB\u52A8\u4F5C\u6E38\u620F" },
+        \u5C71\u5934\u706B: { score: 7, desc: "\u72EC\u7ACB\u6027\u5F3A\uFF0C\u9002\u5408\u5355\u4EBA\u5192\u9669\u6E38\u620F" },
+        \u6DA7\u4E0B\u6C34: { score: 6, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u9002\u5408\u591A\u7C7B\u578B\u6E38\u620F" },
+        \u57CE\u5934\u571F: { score: 5, desc: "\u7A33\u91CD\u53EF\u9760\uFF0C\u9002\u5408\u56E2\u961F\u5408\u4F5C\u6E38\u620F" },
+        \u767D\u814A\u91D1: { score: 7, desc: "\u7CBE\u81F4\u7EC6\u817B\uFF0C\u9002\u5408\u753B\u9762\u7CBE\u7F8E\u6E38\u620F" },
+        \u6768\u67F3\u6728: { score: 5, desc: "\u67D4\u97E7\u6027\u5F3A\uFF0C\u9002\u5408\u9002\u5E94\u5404\u79CD\u6E38\u620F" },
+        \u6CC9\u4E2D\u6C34: { score: 4, desc: "\u6E90\u8FDC\u6D41\u957F\uFF0C\u9002\u5408\u6301\u4E45\u6027\u6E38\u620F" },
+        \u5C4B\u4E0A\u571F: { score: 3, desc: "\u5B89\u7A33\u4FDD\u5B88\uFF0C\u9002\u5408\u4F20\u7EDF\u6E38\u620F" },
+        \u9739\u96F3\u706B: { score: 9, desc: "\u7206\u53D1\u529B\u5F3A\uFF0C\u9002\u5408\u5FEB\u8282\u594F\u6E38\u620F" },
+        \u677E\u67CF\u6728: { score: 6, desc: "\u575A\u97E7\u4E0D\u62D4\uFF0C\u9002\u5408\u6311\u6218\u6027\u6E38\u620F" },
+        \u957F\u6D41\u6C34: { score: 5, desc: "\u6301\u7EED\u4E0D\u65AD\uFF0C\u9002\u5408\u957F\u65F6\u95F4\u6E38\u620F" },
+        \u6C99\u4E2D\u91D1: { score: 6, desc: "\u9690\u85CF\u6F5C\u529B\uFF0C\u9700\u8981\u53D1\u6398\u7684\u6E38\u620F\u5929\u8D4B" },
+        \u5C71\u4E0B\u706B: { score: 5, desc: "\u6E29\u6696\u548C\u7166\uFF0C\u9002\u5408\u793E\u4EA4\u7C7B\u6E38\u620F" },
+        \u5E73\u5730\u6728: { score: 4, desc: "\u5E73\u7A33\u53D1\u5C55\uFF0C\u9002\u5408\u4F11\u95F2\u6E38\u620F" },
+        \u58C1\u4E0A\u571F: { score: 2, desc: "\u4FDD\u5B88\u8C28\u614E\uFF0C\u6E38\u620F\u5929\u8D4B\u4E00\u822C" },
+        \u91D1\u7B94\u91D1: { score: 8, desc: "\u5916\u8868\u534E\u4E3D\uFF0C\u9002\u5408\u89C6\u89C9\u6548\u679C\u6E38\u620F" },
+        \u4F5B\u706F\u706B: { score: 7, desc: "\u667A\u6167\u5149\u660E\uFF0C\u9002\u5408\u89E3\u8C1C\u6E38\u620F" },
+        \u5929\u6CB3\u6C34: { score: 8, desc: "\u5E7F\u9614\u65E0\u8FB9\uFF0C\u9002\u5408\u5F00\u653E\u4E16\u754C\u6E38\u620F" },
+        \u5927\u9A7F\u571F: { score: 5, desc: "\u6C9F\u901A\u80FD\u529B\u5F3A\uFF0C\u9002\u5408\u591A\u4EBA\u6E38\u620F" },
+        \u9497\u948F\u91D1: { score: 6, desc: "\u7CBE\u81F4\u4F18\u96C5\uFF0C\u9002\u5408\u827A\u672F\u7C7B\u6E38\u620F" },
+        \u6851\u67D8\u6728: { score: 4, desc: "\u5B9E\u7528\u6027\u5F3A\uFF0C\u9002\u5408\u5B9E\u7528\u578B\u6E38\u620F" },
+        \u5927\u6EAA\u6C34: { score: 6, desc: "\u6D41\u52A8\u53D8\u5316\uFF0C\u9002\u5408\u591A\u53D8\u6E38\u620F" },
+        \u6C99\u4E2D\u571F: { score: 3, desc: "\u57FA\u7840\u624E\u5B9E\uFF0C\u9002\u5408\u57FA\u7840\u6E38\u620F" },
+        \u5929\u4E0A\u706B: { score: 9, desc: "\u5FD7\u5411\u9AD8\u8FDC\uFF0C\u9002\u5408\u9AD8\u96BE\u5EA6\u6E38\u620F" },
+        \u77F3\u69B4\u6728: { score: 7, desc: "\u591A\u624D\u591A\u827A\uFF0C\u9002\u5408\u7EFC\u5408\u7C7B\u6E38\u620F" },
+        \u5927\u6D77\u6C34: { score: 8, desc: "\u5305\u5BB9\u4E07\u8C61\uFF0C\u9002\u5408\u5404\u79CD\u6E38\u620F\u7C7B\u578B" }
+      };
+      const gameTalentImpacts = [];
+      let totalScore = 0;
+      let count = 0;
+      Object.entries(naYinMap).forEach(([position, naYin]) => {
+        if (naYinGameTalentMap[naYin]) {
+          const impact = naYinGameTalentMap[naYin];
+          totalScore += impact.score;
+          count++;
+          if (position === "time" || position === "day") {
+            const positionMap = {
+              year: "\u5E74",
+              month: "\u6708",
+              day: "\u65E5",
+              time: "\u65F6"
+            };
+            gameTalentImpacts.push(
+              `${positionMap[position]}\u67F1${naYin}\uFF1A${impact.desc}`
+            );
+          }
+        }
+      });
+      if (count > 0) {
+        gameTalentScore = Math.round(totalScore / count);
+      }
+      if (gameTalentImpacts.length > 0) {
+        description += gameTalentImpacts.join("\uFF1B");
+      } else {
+        description += "\u7EB3\u97F3\u5BF9\u6E38\u620F\u5929\u8D4B\u7279\u5F81\u4E0D\u660E\u663E";
+      }
+      return { gameTalentScore, description };
+    }
+    function analyzeWuXingForGame(result, dayGan) {
+      let gameTalentScore = 0;
+      let description = "\u4E94\u884C\u5206\u6790\uFF1A";
+      const wuXingPower = result.wuXingPower || {};
+      const wuXingValues = {
+        \u6728: wuXingPower["\u6728"] || 0,
+        \u706B: wuXingPower["\u706B"] || 0,
+        \u571F: wuXingPower["\u571F"] || 0,
+        \u91D1: wuXingPower["\u91D1"] || 0,
+        \u6C34: wuXingPower["\u6C34"] || 0
+      };
+      const values = Object.values(wuXingValues);
+      const maxValue = Math.max(...values);
+      const minValue = Math.min(...values);
+      const range = maxValue - minValue;
+      if (range <= 25) {
+        gameTalentScore = 6;
+        description += "\u4E94\u884C\u5E73\u8861\uFF08\u5DEE\u503C\u226425\uFF09\uFF0C\u6E38\u620F\u9002\u5E94\u80FD\u529B\u5F3A";
+      } else if (range <= 45) {
+        gameTalentScore = 3;
+        description += "\u4E94\u884C\u57FA\u672C\u5E73\u8861\uFF08\u5DEE\u503C25-45\uFF09\uFF0C\u6E38\u620F\u80FD\u529B\u826F\u597D";
+      } else if (range <= 65) {
+        gameTalentScore = 0;
+        description += "\u4E94\u884C\u7565\u6709\u504F\u9887\uFF08\u5DEE\u503C45-65\uFF09\uFF0C\u6E38\u620F\u6709\u504F\u597D\u7C7B\u578B";
+      } else {
+        gameTalentScore = -4;
+        description += "\u4E94\u884C\u4E25\u91CD\u4E0D\u5E73\u8861\uFF08\u5DEE\u503C>65\uFF09\uFF0C\u6E38\u620F\u7C7B\u578B\u504F\u597D\u660E\u663E";
+      }
+      description += `\uFF08\u6728${wuXingValues["\u6728"]}% \u706B${wuXingValues["\u706B"]}% \u571F${wuXingValues["\u571F"]}% \u91D1${wuXingValues["\u91D1"]}% \u6C34${wuXingValues["\u6C34"]}%\uFF09`;
+      const dayGanWuXing = GanRelation.getWuXing(dayGan);
+      const dayGanGameTalentMap = {
+        \u6728: { score: 5, desc: "\u6709\u7B56\u7565\u601D\u7EF4\uFF0C\u9002\u5408\u7B56\u7565\u6E38\u620F" },
+        \u706B: { score: 8, desc: "\u53CD\u5E94\u8FC5\u901F\uFF0C\u9002\u5408\u52A8\u4F5C\u7ADE\u6280\u6E38\u620F" },
+        \u571F: { score: 4, desc: "\u7A33\u91CD\u8E0F\u5B9E\uFF0C\u9002\u5408\u6A21\u62DF\u7ECF\u8425\u6E38\u620F" },
+        \u91D1: { score: 7, desc: "\u601D\u7EF4\u4E25\u8C28\uFF0C\u9002\u5408\u89E3\u8C1C\u7B56\u7565\u6E38\u620F" },
+        \u6C34: { score: 6, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u9002\u5408\u591A\u7C7B\u578B\u6E38\u620F" }
+      };
+      if (dayGanGameTalentMap[dayGanWuXing]) {
+        gameTalentScore += dayGanGameTalentMap[dayGanWuXing].score;
+        description += `\uFF1B\u65E5\u4E3B${dayGan}\u5C5E${dayGanWuXing}\uFF0C${dayGanGameTalentMap[dayGanWuXing].desc}`;
+      }
+      const maxWuXing = Object.entries(wuXingValues).reduce(
+        (max, [key, value]) => value > max.value ? { key, value } : max,
+        { key: "", value: 0 }
+      );
+      if (maxWuXing.value > 30) {
+        const gameTalentMap = {
+          \u6728: { score: 3, desc: "\u64C5\u957F\u7B56\u7565\u548C\u89D2\u8272\u626E\u6F14\u6E38\u620F" },
+          \u706B: { score: 5, desc: "\u64C5\u957F\u52A8\u4F5C\u548C\u7ADE\u6280\u5BF9\u6218\u6E38\u620F" },
+          \u571F: { score: 2, desc: "\u64C5\u957F\u6A21\u62DF\u548C\u7ECF\u8425\u7C7B\u6E38\u620F" },
+          \u91D1: { score: 4, desc: "\u64C5\u957F\u89E3\u8C1C\u548C\u7B56\u7565\u6E38\u620F" },
+          \u6C34: { score: 3, desc: "\u64C5\u957F\u591A\u7C7B\u578B\u548C\u793E\u4EA4\u6E38\u620F" }
+        };
+        if (gameTalentMap[maxWuXing.key]) {
+          gameTalentScore += gameTalentMap[maxWuXing.key].score;
+          description += `\uFF1B${maxWuXing.key}\u65FA\uFF08${maxWuXing.value}%\uFF09\uFF0C${gameTalentMap[maxWuXing.key].desc}`;
+        }
+      }
+      return { gameTalentScore, description };
+    }
+    function getGameTalentLevel(score) {
+      if (score >= 90) return "\u6E38\u620F\u5929\u624D\u7EA7\u522B";
+      if (score >= 80) return "\u5353\u8D8A\u6E38\u620F\u5929\u8D4B";
+      if (score >= 70) return "\u4F18\u79C0\u6E38\u620F\u5929\u8D4B";
+      if (score >= 60) return "\u826F\u597D\u6E38\u620F\u5929\u8D4B";
+      if (score >= 50) return "\u666E\u901A\u6E38\u620F\u5929\u8D4B";
+      if (score >= 40) return "\u7565\u6709\u6E38\u620F\u5929\u8D4B";
+      return "\u6E38\u620F\u5929\u8D4B\u4E00\u822C";
+    }
+    module.exports = {
+      analyzeGameTalent
+    };
+  }
+});
+
 // analysis/index.js
 var require_analysis = __commonJS({
   "analysis/index.js"(exports, module) {
@@ -13840,7 +15139,11 @@ var require_analysis = __commonJS({
     var { xiyongshen } = require_xcx_bazi_4();
     var YuanhaiZiping = require_yuanhaiZiping();
     var Ganzhi = require_ganzhi();
-    var { getStageByGanZhi: getZhangShengStage, ZHANG_SHENG_MAP, ZHANG_SHENG_STAGES } = require_zhangSheng();
+    var {
+      getStageByGanZhi: getZhangShengStage,
+      ZHANG_SHENG_MAP,
+      ZHANG_SHENG_STAGES
+    } = require_zhangSheng();
     function buildPillar(ec, scope) {
       return {
         gan: ec[`get${scope}Gan`](),
@@ -13878,15 +15181,30 @@ var require_analysis = __commonJS({
       pillars.day.hideGanAttr = buildHideGanAttr(ec, pillars.day.zhi);
       pillars.time.hideGanAttr = buildHideGanAttr(ec, pillars.time.zhi);
       pillars.year.ziZuo = getZhangShengStage(pillars.year.gan, pillars.year.zhi);
-      pillars.month.ziZuo = getZhangShengStage(pillars.month.gan, pillars.month.zhi);
+      pillars.month.ziZuo = getZhangShengStage(
+        pillars.month.gan,
+        pillars.month.zhi
+      );
       pillars.day.ziZuo = getZhangShengStage(pillars.day.gan, pillars.day.zhi);
       pillars.time.ziZuo = getZhangShengStage(pillars.time.gan, pillars.time.zhi);
       try {
         if (dayMasterGan) {
-          pillars.year.xingYunZhi = getZhangShengStage(dayMasterGan, pillars.year.zhi);
-          pillars.month.xingYunZhi = getZhangShengStage(dayMasterGan, pillars.month.zhi);
-          pillars.day.xingYunZhi = getZhangShengStage(dayMasterGan, pillars.day.zhi);
-          pillars.time.xingYunZhi = getZhangShengStage(dayMasterGan, pillars.time.zhi);
+          pillars.year.xingYunZhi = getZhangShengStage(
+            dayMasterGan,
+            pillars.year.zhi
+          );
+          pillars.month.xingYunZhi = getZhangShengStage(
+            dayMasterGan,
+            pillars.month.zhi
+          );
+          pillars.day.xingYunZhi = getZhangShengStage(
+            dayMasterGan,
+            pillars.day.zhi
+          );
+          pillars.time.xingYunZhi = getZhangShengStage(
+            dayMasterGan,
+            pillars.time.zhi
+          );
         }
       } catch (_) {
       }
@@ -13980,10 +15298,22 @@ var require_analysis = __commonJS({
     }
     function getPillarsList(result) {
       return [
-        { label: "year", gan: result.pillars.year.gan, zhi: result.pillars.year.zhi },
-        { label: "month", gan: result.pillars.month.gan, zhi: result.pillars.month.zhi },
+        {
+          label: "year",
+          gan: result.pillars.year.gan,
+          zhi: result.pillars.year.zhi
+        },
+        {
+          label: "month",
+          gan: result.pillars.month.gan,
+          zhi: result.pillars.month.zhi
+        },
         { label: "day", gan: result.pillars.day.gan, zhi: result.pillars.day.zhi },
-        { label: "time", gan: result.pillars.time.gan, zhi: result.pillars.time.zhi }
+        {
+          label: "time",
+          gan: result.pillars.time.gan,
+          zhi: result.pillars.time.zhi
+        }
       ];
     }
     function computeAllGanRelations(result) {
@@ -14037,8 +15367,11 @@ var require_analysis = __commonJS({
           const lnGz = ln.ganZhi || "";
           const lnGan = lnGz ? lnGz[0] : "";
           if (!lnGan) return;
-          pillarsList.forEach((p) => addRel(`liuNian[${idx}:${li}]`, lnGan, p.label, p.gan));
-          if (parentGan) addRel(`liuNian[${idx}:${li}]`, lnGan, `daYun[${idx}]`, parentGan);
+          pillarsList.forEach(
+            (p) => addRel(`liuNian[${idx}:${li}]`, lnGan, p.label, p.gan)
+          );
+          if (parentGan)
+            addRel(`liuNian[${idx}:${li}]`, lnGan, `daYun[${idx}]`, parentGan);
         });
       });
       return allGanRelations;
@@ -14049,10 +15382,27 @@ var require_analysis = __commonJS({
       const push = (fromLabel, fromGan, toLabel, toGan) => {
         if (!fromGan || !toGan) return;
         if (GanRelation.isWuHe(fromGan, toGan))
-          list.push({ type: "\u4E94\u5408", from: fromLabel, to: toLabel, self: fromGan, target: toGan, element: GanRelation.getWuHeElement(fromGan, toGan), desc: GanRelation.getWuHeDesc(fromGan, toGan) });
+          list.push({
+            type: "\u4E94\u5408",
+            from: fromLabel,
+            to: toLabel,
+            self: fromGan,
+            target: toGan,
+            element: GanRelation.getWuHeElement(fromGan, toGan),
+            desc: GanRelation.getWuHeDesc(fromGan, toGan)
+          });
         const keRel = GanRelation.getKeRelation(fromGan, toGan);
         if (keRel === "\u6211\u514B" || keRel === "\u514B\u6211")
-          list.push({ type: "\u76F8\u514B", from: fromLabel, to: toLabel, self: fromGan, target: toGan, relation: keRel, selfElement: GanRelation.getWuXing(fromGan), targetElement: GanRelation.getWuXing(toGan) });
+          list.push({
+            type: "\u76F8\u514B",
+            from: fromLabel,
+            to: toLabel,
+            self: fromGan,
+            target: toGan,
+            relation: keRel,
+            selfElement: GanRelation.getWuXing(fromGan),
+            targetElement: GanRelation.getWuXing(toGan)
+          });
       };
       for (let i = 0; i < pillarsList.length; i++) {
         for (let j = i + 1; j < pillarsList.length; j++) {
@@ -14085,17 +15435,51 @@ var require_analysis = __commonJS({
           };
           pillarsList.forEach((p) => {
             if (GanRelation.isWuHe(lnGan, p.gan))
-              push({ type: "\u4E94\u5408", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnGan, target: p.gan, element: GanRelation.getWuHeElement(lnGan, p.gan), desc: GanRelation.getWuHeDesc(lnGan, p.gan) });
+              push({
+                type: "\u4E94\u5408",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnGan,
+                target: p.gan,
+                element: GanRelation.getWuHeElement(lnGan, p.gan),
+                desc: GanRelation.getWuHeDesc(lnGan, p.gan)
+              });
             const keRel = GanRelation.getKeRelation(lnGan, p.gan);
             if (keRel === "\u6211\u514B" || keRel === "\u514B\u6211")
-              push({ type: "\u76F8\u514B", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnGan, target: p.gan, relation: keRel, selfElement: GanRelation.getWuXing(lnGan), targetElement: GanRelation.getWuXing(p.gan) });
+              push({
+                type: "\u76F8\u514B",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnGan,
+                target: p.gan,
+                relation: keRel,
+                selfElement: GanRelation.getWuXing(lnGan),
+                targetElement: GanRelation.getWuXing(p.gan)
+              });
           });
           if (parentGan) {
             if (GanRelation.isWuHe(lnGan, parentGan))
-              push({ type: "\u4E94\u5408", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnGan, target: parentGan, element: GanRelation.getWuHeElement(lnGan, parentGan), desc: GanRelation.getWuHeDesc(lnGan, parentGan) });
+              push({
+                type: "\u4E94\u5408",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnGan,
+                target: parentGan,
+                element: GanRelation.getWuHeElement(lnGan, parentGan),
+                desc: GanRelation.getWuHeDesc(lnGan, parentGan)
+              });
             const keRelDY = GanRelation.getKeRelation(lnGan, parentGan);
             if (keRelDY === "\u6211\u514B" || keRelDY === "\u514B\u6211")
-              push({ type: "\u76F8\u514B", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnGan, target: parentGan, relation: keRelDY, selfElement: GanRelation.getWuXing(lnGan), targetElement: GanRelation.getWuXing(parentGan) });
+              push({
+                type: "\u76F8\u514B",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnGan,
+                target: parentGan,
+                relation: keRelDY,
+                selfElement: GanRelation.getWuXing(lnGan),
+                targetElement: GanRelation.getWuXing(parentGan)
+              });
           }
         });
       });
@@ -14115,20 +15499,56 @@ var require_analysis = __commonJS({
       const addZhiRel = (fromLabel, fromZhi, toLabel, toZhi) => {
         if (!fromZhi || !toZhi) return;
         if (ZhiRelation.isLiuHe(fromZhi, toZhi)) {
-          pushZhi({ type: "\u516D\u5408", from: fromLabel, to: toLabel, self: fromZhi, target: toZhi, element: ZhiRelation.getLiuHeElement(fromZhi, toZhi), desc: ZhiRelation.getLiuHeDesc(fromZhi, toZhi) });
+          pushZhi({
+            type: "\u516D\u5408",
+            from: fromLabel,
+            to: toLabel,
+            self: fromZhi,
+            target: toZhi,
+            element: ZhiRelation.getLiuHeElement(fromZhi, toZhi),
+            desc: ZhiRelation.getLiuHeDesc(fromZhi, toZhi)
+          });
         }
         if (ZhiRelation.isChong(fromZhi, toZhi)) {
-          pushZhi({ type: "\u516D\u51B2", from: fromLabel, to: toLabel, self: fromZhi, target: toZhi, desc: ZhiRelation.getChongDesc(fromZhi, toZhi) });
+          pushZhi({
+            type: "\u516D\u51B2",
+            from: fromLabel,
+            to: toLabel,
+            self: fromZhi,
+            target: toZhi,
+            desc: ZhiRelation.getChongDesc(fromZhi, toZhi)
+          });
         }
         if (ZhiRelation.isXing(fromZhi, toZhi)) {
           const xType = ZhiRelation.getXingType(fromZhi, toZhi);
-          pushZhi({ type: xType, from: fromLabel, to: toLabel, self: fromZhi, target: toZhi, desc: ZhiRelation.getXingDesc(fromZhi, toZhi) });
+          pushZhi({
+            type: xType,
+            from: fromLabel,
+            to: toLabel,
+            self: fromZhi,
+            target: toZhi,
+            desc: ZhiRelation.getXingDesc(fromZhi, toZhi)
+          });
         }
         if (ZhiRelation.isHai(fromZhi, toZhi)) {
-          pushZhi({ type: "\u516D\u5BB3", from: fromLabel, to: toLabel, self: fromZhi, target: toZhi, desc: ZhiRelation.getHaiDesc(fromZhi, toZhi) });
+          pushZhi({
+            type: "\u516D\u5BB3",
+            from: fromLabel,
+            to: toLabel,
+            self: fromZhi,
+            target: toZhi,
+            desc: ZhiRelation.getHaiDesc(fromZhi, toZhi)
+          });
         }
         if (ZhiRelation.isPo(fromZhi, toZhi)) {
-          pushZhi({ type: "\u516D\u7834", from: fromLabel, to: toLabel, self: fromZhi, target: toZhi, desc: ZhiRelation.getPoDesc(fromZhi, toZhi) });
+          pushZhi({
+            type: "\u516D\u7834",
+            from: fromLabel,
+            to: toLabel,
+            self: fromZhi,
+            target: toZhi,
+            desc: ZhiRelation.getPoDesc(fromZhi, toZhi)
+          });
         }
       };
       for (let i = 0; i < pillarsList.length; i++) {
@@ -14142,7 +15562,9 @@ var require_analysis = __commonJS({
         const gz = dy.ganZhi || "";
         const dyZhi = gz ? gz[1] : "";
         if (!dyZhi) return;
-        pillarsList.forEach((p) => addZhiRel(`daYun[${idx}]`, dyZhi, p.label, p.zhi));
+        pillarsList.forEach(
+          (p) => addZhiRel(`daYun[${idx}]`, dyZhi, p.label, p.zhi)
+        );
       });
       (result.daYun || []).forEach((dy, idx) => {
         const parentGz = dy.ganZhi || "";
@@ -14151,8 +15573,11 @@ var require_analysis = __commonJS({
           const lnGz = ln.ganZhi || "";
           const lnZhi = lnGz ? lnGz[1] : "";
           if (!lnZhi) return;
-          pillarsList.forEach((p) => addZhiRel(`liuNian[${idx}:${li}]`, lnZhi, p.label, p.zhi));
-          if (parentZhi) addZhiRel(`liuNian[${idx}:${li}]`, lnZhi, `daYun[${idx}]`, parentZhi);
+          pillarsList.forEach(
+            (p) => addZhiRel(`liuNian[${idx}:${li}]`, lnZhi, p.label, p.zhi)
+          );
+          if (parentZhi)
+            addZhiRel(`liuNian[${idx}:${li}]`, lnZhi, `daYun[${idx}]`, parentZhi);
         });
       });
       return allZhiRelations;
@@ -14175,17 +15600,53 @@ var require_analysis = __commonJS({
         const B = b.zhi;
         if (!A || !B) return;
         if (ZhiRelation.isLiuHe(A, B))
-          push({ type: "\u516D\u5408", from, to, self: A, target: B, element: ZhiRelation.getLiuHeElement(A, B), desc: ZhiRelation.getLiuHeDesc(A, B) });
+          push({
+            type: "\u516D\u5408",
+            from,
+            to,
+            self: A,
+            target: B,
+            element: ZhiRelation.getLiuHeElement(A, B),
+            desc: ZhiRelation.getLiuHeDesc(A, B)
+          });
         if (ZhiRelation.isChong(A, B))
-          push({ type: "\u516D\u51B2", from, to, self: A, target: B, desc: ZhiRelation.getChongDesc(A, B) });
+          push({
+            type: "\u516D\u51B2",
+            from,
+            to,
+            self: A,
+            target: B,
+            desc: ZhiRelation.getChongDesc(A, B)
+          });
         if (ZhiRelation.isXing(A, B)) {
           const t = ZhiRelation.getXingType(A, B);
-          push({ type: t, from, to, self: A, target: B, desc: ZhiRelation.getXingDesc(A, B) });
+          push({
+            type: t,
+            from,
+            to,
+            self: A,
+            target: B,
+            desc: ZhiRelation.getXingDesc(A, B)
+          });
         }
         if (ZhiRelation.isHai(A, B))
-          push({ type: "\u516D\u5BB3", from, to, self: A, target: B, desc: ZhiRelation.getHaiDesc(A, B) });
+          push({
+            type: "\u516D\u5BB3",
+            from,
+            to,
+            self: A,
+            target: B,
+            desc: ZhiRelation.getHaiDesc(A, B)
+          });
         if (ZhiRelation.isPo(A, B))
-          push({ type: "\u516D\u7834", from, to, self: A, target: B, desc: ZhiRelation.getPoDesc(A, B) });
+          push({
+            type: "\u516D\u7834",
+            from,
+            to,
+            self: A,
+            target: B,
+            desc: ZhiRelation.getPoDesc(A, B)
+          });
       };
       for (let i = 0; i < pillarsList.length; i++) {
         for (let j = i + 1; j < pillarsList.length; j++) {
@@ -14216,36 +15677,112 @@ var require_analysis = __commonJS({
           };
           pillarsList.forEach((p) => {
             if (ZhiRelation.isLiuHe(lnZhi, p.zhi))
-              push({ type: "\u516D\u5408", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnZhi, target: p.zhi, element: ZhiRelation.getLiuHeElement(lnZhi, p.zhi), desc: ZhiRelation.getLiuHeDesc(lnZhi, p.zhi) });
+              push({
+                type: "\u516D\u5408",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnZhi,
+                target: p.zhi,
+                element: ZhiRelation.getLiuHeElement(lnZhi, p.zhi),
+                desc: ZhiRelation.getLiuHeDesc(lnZhi, p.zhi)
+              });
             if (ZhiRelation.isChong(lnZhi, p.zhi))
-              push({ type: "\u516D\u51B2", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnZhi, target: p.zhi, desc: ZhiRelation.getChongDesc(lnZhi, p.zhi) });
+              push({
+                type: "\u516D\u51B2",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnZhi,
+                target: p.zhi,
+                desc: ZhiRelation.getChongDesc(lnZhi, p.zhi)
+              });
             if (ZhiRelation.isXing(lnZhi, p.zhi)) {
               const t = ZhiRelation.getXingType(lnZhi, p.zhi);
-              push({ type: t, from: `liuNian[${idx}:${li}]`, to: p.label, self: lnZhi, target: p.zhi, desc: ZhiRelation.getXingDesc(lnZhi, p.zhi) });
+              push({
+                type: t,
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnZhi,
+                target: p.zhi,
+                desc: ZhiRelation.getXingDesc(lnZhi, p.zhi)
+              });
             }
             if (ZhiRelation.isHai(lnZhi, p.zhi))
-              push({ type: "\u516D\u5BB3", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnZhi, target: p.zhi, desc: ZhiRelation.getHaiDesc(lnZhi, p.zhi) });
+              push({
+                type: "\u516D\u5BB3",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnZhi,
+                target: p.zhi,
+                desc: ZhiRelation.getHaiDesc(lnZhi, p.zhi)
+              });
             if (ZhiRelation.isPo(lnZhi, p.zhi))
-              push({ type: "\u516D\u7834", from: `liuNian[${idx}:${li}]`, to: p.label, self: lnZhi, target: p.zhi, desc: ZhiRelation.getPoDesc(lnZhi, p.zhi) });
+              push({
+                type: "\u516D\u7834",
+                from: `liuNian[${idx}:${li}]`,
+                to: p.label,
+                self: lnZhi,
+                target: p.zhi,
+                desc: ZhiRelation.getPoDesc(lnZhi, p.zhi)
+              });
           });
           if (parentZhi) {
             if (ZhiRelation.isLiuHe(lnZhi, parentZhi))
-              push({ type: "\u516D\u5408", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnZhi, target: parentZhi, element: ZhiRelation.getLiuHeElement(lnZhi, parentZhi), desc: ZhiRelation.getLiuHeDesc(lnZhi, parentZhi) });
+              push({
+                type: "\u516D\u5408",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnZhi,
+                target: parentZhi,
+                element: ZhiRelation.getLiuHeElement(lnZhi, parentZhi),
+                desc: ZhiRelation.getLiuHeDesc(lnZhi, parentZhi)
+              });
             if (ZhiRelation.isChong(lnZhi, parentZhi))
-              push({ type: "\u516D\u51B2", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnZhi, target: parentZhi, desc: ZhiRelation.getChongDesc(lnZhi, parentZhi) });
+              push({
+                type: "\u516D\u51B2",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnZhi,
+                target: parentZhi,
+                desc: ZhiRelation.getChongDesc(lnZhi, parentZhi)
+              });
             if (ZhiRelation.isXing(lnZhi, parentZhi)) {
               const t = ZhiRelation.getXingType(lnZhi, parentZhi);
-              push({ type: t, from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnZhi, target: parentZhi, desc: ZhiRelation.getXingDesc(lnZhi, parentZhi) });
+              push({
+                type: t,
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnZhi,
+                target: parentZhi,
+                desc: ZhiRelation.getXingDesc(lnZhi, parentZhi)
+              });
             }
             if (ZhiRelation.isHai(lnZhi, parentZhi))
-              push({ type: "\u516D\u5BB3", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnZhi, target: parentZhi, desc: ZhiRelation.getHaiDesc(lnZhi, parentZhi) });
+              push({
+                type: "\u516D\u5BB3",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnZhi,
+                target: parentZhi,
+                desc: ZhiRelation.getHaiDesc(lnZhi, parentZhi)
+              });
             if (ZhiRelation.isPo(lnZhi, parentZhi))
-              push({ type: "\u516D\u7834", from: `liuNian[${idx}:${li}]`, to: `daYun[${idx}]`, self: lnZhi, target: parentZhi, desc: ZhiRelation.getPoDesc(lnZhi, parentZhi) });
+              push({
+                type: "\u516D\u7834",
+                from: `liuNian[${idx}:${li}]`,
+                to: `daYun[${idx}]`,
+                self: lnZhi,
+                target: parentZhi,
+                desc: ZhiRelation.getPoDesc(lnZhi, parentZhi)
+              });
           }
         });
       });
       return byYear;
     }
+    var { analyzeSpouseAppearance, analyzeFamilyBackground } = require_svc();
+    var { analyzeSelfAppearance } = require_svc1();
+    var { analyzeEducationAndTalent } = require_svc2();
+    var { analyzeGameTalent } = require_svc3();
     module.exports = {
       buildPillars,
       computeWuXingPowers,
@@ -14265,6 +15802,14 @@ var require_analysis = __commonJS({
       buildGanRelationsMingpan: Ganzhi.buildGanRelationsMingpan,
       buildZhiRelationsMingpan: Ganzhi.buildZhiRelationsMingpan,
       applyZiZuoZhangSheng: Ganzhi.applyZiZuoZhangSheng,
+      computeYinyangScore: YuanhaiZiping.computeYinyangScore,
+      analyzeFamilyBackground,
+      analyzeGameTalent,
+      analyzeSelfAppearance,
+      // 导出配偶长相分析功能
+      analyzeSpouseAppearance,
+      // 导出学历和天赋分析功能
+      analyzeEducationAndTalent,
       // 导出：十二长生查询与常量
       getZhangShengStage,
       ZHANG_SHENG_MAP,
@@ -18568,6 +20113,12 @@ var require_index = __commonJS({
       };
       result.yuanHaiZiping.shenQiang = Analysis.computeShenQiangScore(result);
       result.yuanHaiZiping.shidu = Analysis.computeShiduScore(result);
+      result.yuanHaiZiping.yinyang = Analysis.computeYinyangScore(result);
+      result.spouseAppearance = Analysis.analyzeSpouseAppearance(result);
+      result.familyBackground = Analysis.analyzeFamilyBackground(result);
+      result.selfAppearance = Analysis.analyzeSelfAppearance(result);
+      result.educationAndTalent = Analysis.analyzeEducationAndTalent(result);
+      result.gameTalent = Analysis.analyzeGameTalent(result);
       const __dur = Date.now() - __t0;
       result.meta = Object.assign({}, result.meta || {}, { durationMs: __dur, function: "getCurrentEightCharJSON" });
       console.log("\u6392\u76D8 getCurrentEightCharJSON \u8017\u65F6(ms):", __dur);
