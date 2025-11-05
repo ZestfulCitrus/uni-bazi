@@ -17,6 +17,11 @@
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
               }}</view
             >
+            <view class="cw pl8"
+              >湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
+                analysisResult.data.yuanHaiZiping.shidu.score
+              }}) 正常范围[-6,6]</view
+            >
           </view>
           <view class="result-qrcode">
             <uv-qrcode
@@ -138,6 +143,76 @@
         :text="item"
       ></uv-text>
     </view>
+    <view style="display: flex">
+      <view style="flex: 1">
+        <uv-text
+          align="center"
+          style="margin-top: 8rpx"
+          type="info"
+          text="神煞"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.current.liuNian"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" class="br1 mh32" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.current.daYun"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.nian"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.yue"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.ri"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+      <view style="flex: 1" align="center" type="info">
+        <uv-text
+          align="center"
+          type="info"
+          v-for="item in analysisResult.data.shensha.shi"
+          :text="item"
+          size="10"
+          style="margin-top: 4rpx"
+        ></uv-text>
+      </view>
+    </view>
     <DayunView
       style="margin-top: 16rpx"
       :analysisResult="analysisResult"
@@ -230,7 +305,11 @@
     >
       <uv-text
         mode="info"
-        :text="'大运喜忌：' + analysisResult.data.ret_Info?.dayunxiji"
+        :text="'身宫：' + analysisResult.data.ret_Info?.shengong"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="'五行力量：' + analysisResult.data.ret_Info?.wuxing"
       ></uv-text>
       <uv-text
         mode="info"
@@ -263,11 +342,12 @@
         padding: 8px;
       "
     >
-      <uv-text type="info" text="游戏天赋分析"></uv-text>
+      <uv-text type="info" text="三命通会"></uv-text>
       <uv-divider></uv-divider>
       <uv-text
         mode="info"
-        :text="analysisResult.data.ret_Info.game_talent"
+        v-for="item in analysisResult.data.ret_Info.SanMingTongHui"
+        :text="item"
       ></uv-text>
     </view>
     <view
@@ -282,11 +362,49 @@
         padding: 8px;
       "
     >
-      <uv-text type="info" text="运动天赋分析"></uv-text>
+      <uv-text type="info" text="三命通会"></uv-text>
       <uv-divider></uv-divider>
       <uv-text
         mode="info"
-        :text="analysisResult.data.ret_Info.sport_talent"
+        v-for="item in analysisResult.data.ret_Info.rishi"
+        :text="item"
+      ></uv-text>
+    </view>
+    <view
+      v-if="select_tag === 4"
+      style="
+        background-color: #f4f4f5;
+        border-radius: 8px;
+        border: 1px solid #f4f4f5;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 8px;
+      "
+    >
+      <uv-text type="info" text="太岁"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text
+        mode="info"
+        :text="
+          '太岁干支：' +
+          analysisResult.data.taiSui.taiSui.gan +
+          analysisResult.data.taiSui.taiSui.zhi
+        "
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="'太岁关系：' + analysisResult.data.taiSui.relation"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        :text="'风险等级：' + analysisResult.data.taiSui.riskLevel"
+      ></uv-text>
+      <uv-text mode="info" :text="'详细描述：'"></uv-text>
+      <uv-text
+        mode="info"
+        v-for="item, index in analysisResult.data.taiSui.details"
+        :text="(index + 1) + '.' + item"
       ></uv-text>
     </view>
     <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
@@ -357,10 +475,11 @@ const earthlyBranchesColorMap = {
 };
 
 const radios = [
-  { label: "基础命盘分析" },
-  { label: "测试分析" },
-  { label: "游戏天赋" },
-  { label: "运动天赋" },
+  { label: "命盘打分" },
+  { label: "喜用分析" },
+  { label: "日柱分析" },
+  { label: "时柱分析" },
+  { label: "流年太岁" },
 ];
 
 const radioClick = (index: any) => {
@@ -377,7 +496,16 @@ interface UserInfo {
 const analysisResult = reactive({
   data: {
     bazi: { TianGan: ["", "", "", ""], DiZhi: ["", "", "", ""] },
+    shensha: {
+      nian: [],
+      yue: [],
+      ri: [],
+      shi: [],
+      current: { liuNian: [], daYun: [], liuYue: [], liuRi: [] },
+    },
     ret_Info: {
+      SanMingTongHui: [""],
+      rishi: [""],
       basic_analysis_1: "",
       basic_analysis_2: "",
       gan_shens: ["", "", "--", ""],
@@ -403,7 +531,8 @@ const analysisResult = reactive({
         score: "",
       },
       xiYongShen: "",
-      dayunxiji: "",
+      shengong: "",
+      wuxing: "",
       sport_talent: "",
       game_talent: "",
       use_god: {
@@ -412,6 +541,29 @@ const analysisResult = reactive({
       },
       main_personality: "",
       dayunArr: [],
+    },
+    yuanHaiZiping: {
+      shidu: {
+        score: "",
+        judge: "",
+      },
+    },
+    taiSui: {
+      taiSui: {
+        gan: "庚",
+        zhi: "辰",
+      },
+      relation: "岁克日",
+      riskLevel: "中",
+      rescue: {
+        metal: true,
+        fire: false,
+        combineJiJia: false,
+        metalFrame: true,
+        fireFrame: false,
+        hasAny: true,
+      },
+      details: ["日干乙(木) vs 太岁庚 辰(金) → 岁克日"],
     },
   },
 });
@@ -501,6 +653,7 @@ const applyResult = (
     currentDay: currentDay,
   };
   const res = all.getCurrentEightCharJSON(params);
+  console.log(res);
   analysisResult.data = {
     bazi: {
       TianGan: [
@@ -516,7 +669,11 @@ const applyResult = (
         res.pillars.time.zhi,
       ],
     },
+    shensha: res.shensha,
+    yuanHaiZiping: res.yuanHaiZiping,
     ret_Info: {
+      SanMingTongHui: res.analysis.SanMingTongHui,
+      rishi: res.analysis.rishi,
       basic_analysis_1: "",
       basic_analysis_2: "",
       gan_shens: [
@@ -563,9 +720,7 @@ const applyResult = (
         "(" +
         res.spouseAppearance.score +
         ")",
-      judge_education:
-        res.educationAndTalent.description +
-        "天赋高聪明不等于高学历，高学历不等于天赋高",
+      judge_education: res.educationAndTalent.description,
       data: [],
       appearance: {
         details: res.selfAppearance.description,
@@ -574,11 +729,12 @@ const applyResult = (
         score: res.selfAppearance.appearanceScore,
       },
       xiYongShen: "*",
-      dayunxiji: "*",
+      shengong: res.shenGong + "(" + res.shenGongNaYin + ")",
+      wuxing: `金：${res.wuXingPower["金"]}，水：${res.wuXingPower["水"]}，木：${res.wuXingPower["木"]}，火：${res.wuXingPower["火"]}，土：${res.wuXingPower["土"]}`,
       sport_talent: "*",
       game_talent: "*",
       use_god: {
-        useful_god: "*",
+        useful_god: res.analysis.XiYongShen[0],
         useful_god_min: "*",
       },
       main_personality: "",
@@ -603,19 +759,9 @@ const applyResult = (
         ];
       }),
     },
+    taiSui: res.yuanHaiZiping.taiSui,
   };
 };
-
-onLoad(async (option) => {
-  loading.value = true;
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentDay = new Date().getDate();
-  applyResult(currentYear, currentMonth, currentDay);
-  loading.value = false;
-  await openPop();
-});
-
 const openPop = async () => {
   console.log(popups.value);
   if (popups.value) {
@@ -629,6 +775,16 @@ const openPop = async () => {
   }
 };
 
+onLoad(async (option) => {
+  loading.value = true;
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentDay = new Date().getDate();
+  applyResult(currentYear, currentMonth, currentDay);
+  loading.value = false;
+  await openPop();
+});
+
 const finish = (e) => {
   console.log("输入结束，当前值为：" + e);
   if (e === "123456") {
@@ -637,8 +793,10 @@ const finish = (e) => {
   }
 };
 
-// onMounted(async () => {
-//   await openPop();
-//   setTimeout(() => { openPop() }, 1000)
-// })
+onMounted(async () => {
+  await openPop();
+  setTimeout(() => {
+    openPop();
+  }, 1000);
+});
 </script>

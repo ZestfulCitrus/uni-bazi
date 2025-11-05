@@ -14262,7 +14262,7 @@ var require_svc = __commonJS({
         const yueLingImpact = {
           \u6B63\u5370: { score: 6, desc: "\u6708\u4EE4\u6B63\u5370\uFF0C\u7236\u6BCD\u91CD\u89C6\u6559\u80B2\uFF0C\u5BB6\u5EAD\u6587\u5316\u6C1B\u56F4\u6D53\u539A" },
           \u504F\u5370: { score: 4, desc: "\u6708\u4EE4\u504F\u5370\uFF0C\u7236\u6BCD\u53EF\u80FD\u6709\u7279\u6B8A\u6280\u827A\u6216\u601D\u60F3" },
-          \u6B63\u5B98: { score: 5, desc: "\u6708\u4EE4\u6B63\u5B98\uFF0C\u7236\u6BCD\u6709\u793E\u4F1A\u5730\u4F4D\uFF0C\u4ECE\u4E8B\u516C\u52A1\u5DE5\u4F5C" },
+          \u6B63\u5B98: { score: 5, desc: "\u6708\u4EE4\u6B63\u5B98\uFF0C\u7236\u6BCD\u6709\u793E\u4F1A\u5730\u4F4D\uFF0C\u4ECE\u4E8B\u516C\u52A1\uFF0C\u7BA1\u7406\u5DE5\u4F5C" },
           \u4E03\u6740: { score: -2, desc: "\u6708\u4EE4\u4E03\u6740\uFF0C\u5BB6\u5EAD\u73AF\u5883\u8F83\u4E25\u683C\u6216\u6709\u538B\u529B" },
           \u6B63\u8D22: { score: 6, desc: "\u6708\u4EE4\u6B63\u8D22\uFF0C\u7236\u6BCD\u7ECF\u6D4E\u6761\u4EF6\u4F18\u8D8A" },
           \u504F\u8D22: { score: 4, desc: "\u6708\u4EE4\u504F\u8D22\uFF0C\u7236\u6BCD\u53EF\u80FD\u6709\u989D\u5916\u6536\u5165\u6216\u6295\u8D44" },
@@ -14362,7 +14362,8 @@ var require_svc = __commonJS({
     }
     module.exports = {
       analyzeSpouseAppearance,
-      analyzeFamilyBackground
+      analyzeFamilyBackground,
+      analyzeMonthPillarForFamily
     };
   }
 });
@@ -14372,7 +14373,7 @@ var require_svc1 = __commonJS({
   "analysis/svc1.js"(exports, module) {
     function analyzeSelfAppearance(result) {
       const { gender, pillars, shensha } = result;
-      let appearanceScore = gender === "\u5973" ? 65 : 55;
+      let appearanceScore = gender === "\u5973" ? 55 : 45;
       const characteristics = [];
       const attractivenessOpposite = { score: 0, description: "" };
       const attractivenessSame = { score: 0, description: "" };
@@ -14501,7 +14502,7 @@ var require_svc1 = __commonJS({
       attractivenessSame.score = Math.min(attractivenessSame.score + Math.floor(appearanceScore * 0.7), 100);
       attractivenessOpposite.description = attractivenessOpposite.score > 70 ? "\u5BF9\u5F02\u6027\u5438\u5F15\u529B\u5F3A" : attractivenessOpposite.score > 50 ? "\u5BF9\u5F02\u6027\u6709\u4E00\u5B9A\u5438\u5F15\u529B" : "\u5BF9\u5F02\u6027\u5438\u5F15\u529B\u4E00\u822C";
       attractivenessSame.description = attractivenessSame.score > 70 ? "\u5BF9\u540C\u6027\u5438\u5F15\u529B\u5F3A" : attractivenessSame.score > 50 ? "\u5BF9\u540C\u6027\u6709\u4E00\u5B9A\u5438\u5F15\u529B" : "\u5BF9\u540C\u6027\u5438\u5F15\u529B\u4E00\u822C";
-      const description = `\u6574\u4F53\u6837\u8C8C\u8BC4\u5206\u4E3A${appearanceScore}\u5206\u3002${characteristics.join("\uFF0C")}\u3002${attractivenessOpposite.description}\uFF0C${attractivenessSame.description}\u3002`;
+      const description = `\u6574\u4F53\u6837\u8C8C\u8BC4\u5206\u4E3A${appearanceScore}\u5206\u3002`;
       return {
         appearanceScore,
         characteristics,
@@ -14556,13 +14557,26 @@ var require_svc2 = __commonJS({
       details.push(wuxingAnalysis.description);
       educationScore = Math.max(0, Math.min(100, educationScore));
       talentScore = Math.max(0, Math.min(100, talentScore));
-      const educationLevel = getEducationLevel(educationScore);
+      if (result.input.year < 1920) {
+        educationScore -= 20;
+      } else if (result.input.year < 1960) {
+        educationScore -= 40;
+      } else if (result.input.year < 1970) {
+        educationScore -= 30;
+      } else if (result.input.year < 1980) {
+        educationScore -= 20;
+      } else if (result.input.year < 1990) {
+        educationScore -= 10;
+      }
+      const educationLevel = getEducationLevel(
+        educationScore * 0.7 + talentScore * 0.3
+      );
       const talentLevel = getTalentLevel(talentScore);
       const description = `\u5B66\u5386\u8BC4\u5206\u4E3A${Math.round(
-        educationScore
+        educationScore * 0.7 + talentScore * 0.3
       )}\u5206\uFF08${educationLevel}\uFF09\uFF0C\u5929\u8D4B\u8BC4\u5206\u4E3A${Math.round(
         talentScore
-      )}\u5206\uFF08${talentLevel}\uFF09\u3002`;
+      )}\u5206\uFF08${talentLevel}\uFF09\u3002\u5929\u8D4B \u2260 \u5B66\u5386`;
       return {
         educationScore: Math.round(educationScore),
         talentScore: Math.round(talentScore),
@@ -14754,7 +14768,9 @@ var require_svc2 = __commonJS({
               day: "\u65E5",
               time: "\u65F6"
             };
-            talentImpacts.push(`${positionMap[position]}\u67F1${naYin}\uFF1A${impact.desc}`);
+            talentImpacts.push(
+              `${positionMap[position]}\u67F1${naYin}\uFF1A${impact.desc}`
+            );
           }
         }
       });
@@ -14810,7 +14826,10 @@ var require_svc2 = __commonJS({
         talentScore += dayGanTalentMap[dayGanWuXing].score;
         description += `\uFF1B\u65E5\u4E3B${dayGan}\u5C5E${dayGanWuXing}\uFF0C${dayGanTalentMap[dayGanWuXing].desc}`;
       }
-      const maxWuXing = Object.entries(wuXingValues).reduce((max, [key, value]) => value > max.value ? { key, value } : max, { key: "", value: 0 });
+      const maxWuXing = Object.entries(wuXingValues).reduce(
+        (max, [key, value]) => value > max.value ? { key, value } : max,
+        { key: "", value: 0 }
+      );
       if (maxWuXing.value > 30) {
         const talentMap = {
           \u6728: { score: 3, desc: "\u6709\u6587\u5B66\u827A\u672F\u5929\u8D4B" },
@@ -14827,10 +14846,10 @@ var require_svc2 = __commonJS({
       return { educationScore, talentScore, description };
     }
     function getEducationLevel(score) {
-      if (score >= 90) return "\u535A\u58EB\u53CA\u4EE5\u4E0A";
-      if (score >= 80) return "\u7855\u58EB";
-      if (score >= 70) return "\u672C\u79D1";
-      if (score >= 60) return "\u5927\u4E13";
+      if (score >= 95) return "\u535A\u58EB\u53CA\u4EE5\u4E0A";
+      if (score >= 79) return "\u7855\u58EB";
+      if (score >= 69) return "\u672C\u79D1";
+      if (score >= 59) return "\u5927\u4E13";
       if (score >= 50) return "\u9AD8\u4E2D/\u4E2D\u4E13";
       if (score >= 40) return "\u521D\u4E2D";
       return "\u5C0F\u5B66\u53CA\u4EE5\u4E0B";
@@ -15289,7 +15308,7 @@ var require_analysis = __commonJS({
     }
     function buildAnalysisTexts(pillars) {
       const rishiKey = pillars.day.value + pillars.time.value;
-      const splitByBr = (s) => typeof s === "string" ? s.split(/<br\s*\/?/i).map((t) => t.trim()).filter(Boolean) : [];
+      const splitByBr = (s) => typeof s === "string" ? s.split("<br>").map((t) => t.trim()).filter(Boolean) : [];
       return {
         rishi: splitByBr(rishi(rishiKey) || ""),
         SanMingTongHui: splitByBr(rixiangxi(pillars.day.value) || ""),
@@ -19858,7 +19877,15 @@ var require_index = __commonJS({
       const curY = Number.isInteger(currentYear) ? currentYear : now.getFullYear();
       const curM = Number.isInteger(currentMonth) ? currentMonth : now.getMonth() + 1;
       const curD = Number.isInteger(currentDay) ? currentDay : now.getDate();
-      const ec = getEightCharObject({ year, month, day, hour, minute, second, sect });
+      const ec = getEightCharObject({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        sect
+      });
       const result = {
         input: { year, month, day, hour, minute, second },
         current: { year: curY, month: curM, day: curD },
@@ -19874,21 +19901,24 @@ var require_index = __commonJS({
       result.mingGongNaYin = ec.getMingGongNaYin();
       result.shenGong = ec.getShenGong();
       result.shenGongNaYin = ec.getShenGongNaYin();
-      const { wuXingPower } = Analysis.computeWuXingPowers(result.pillars, typeof wuXingConfig === "object" && wuXingConfig || {});
+      const { wuXingPower } = Analysis.computeWuXingPowers(
+        result.pillars,
+        typeof wuXingConfig === "object" && wuXingConfig || {}
+      );
       result.wuXingPower = wuXingPower;
       const { yun, daYun, xiaoYun } = Analysis.buildYunStruct(ec, gender, yunSect);
       result.yun = yun;
       const SS_SHORT = {
-        "\u6B63\u8D22": "\u8D22",
-        "\u504F\u8D22": "\u624D",
-        "\u6B63\u5370": "\u5370",
-        "\u504F\u5370": "\u67AD",
-        "\u6BD4\u80A9": "\u6BD4",
-        "\u52AB\u8D22": "\u52AB",
-        "\u98DF\u795E": "\u98DF",
-        "\u4F24\u5B98": "\u4F24",
-        "\u6B63\u5B98": "\u5B98",
-        "\u4E03\u6740": "\u6740"
+        \u6B63\u8D22: "\u8D22",
+        \u504F\u8D22: "\u624D",
+        \u6B63\u5370: "\u5370",
+        \u504F\u5370: "\u67AD",
+        \u6BD4\u80A9: "\u6BD4",
+        \u52AB\u8D22: "\u52AB",
+        \u98DF\u795E: "\u98DF",
+        \u4F24\u5B98: "\u4F24",
+        \u6B63\u5B98: "\u5B98",
+        \u4E03\u6740: "\u6740"
       };
       const toShortSS = (name) => SS_SHORT[name] || name || "";
       const getMainHideGan = (zhi) => {
@@ -19984,17 +20014,35 @@ var require_index = __commonJS({
           if (result.currentYun.daYun && result.currentYun.daYun.ganZhi) {
             const dyGan = result.currentYun.daYun.ganZhi[0];
             const dyZhi = result.currentYun.daYun.ganZhi[1];
-            result.currentYun.daYun.shiShen = GanRelation.getRelation(dayMasterGan, dyGan);
+            result.currentYun.daYun.shiShen = GanRelation.getRelation(
+              dayMasterGan,
+              dyGan
+            );
             if (dyZhi) {
-              result.currentYun.daYun.zhiHideGanShiShen = getZhiHiddenGans(dyZhi).map((h) => ({ gan: h.gan, qiLevel: h.qiLevel, shiShen: GanRelation.getRelation(dayMasterGan, h.gan) }));
+              result.currentYun.daYun.zhiHideGanShiShen = getZhiHiddenGans(
+                dyZhi
+              ).map((h) => ({
+                gan: h.gan,
+                qiLevel: h.qiLevel,
+                shiShen: GanRelation.getRelation(dayMasterGan, h.gan)
+              }));
             }
           }
           if (result.currentYun.liuNian && result.currentYun.liuNian.ganZhi) {
             const lnGan = result.currentYun.liuNian.ganZhi[0];
             const lnZhi = result.currentYun.liuNian.ganZhi[1];
-            result.currentYun.liuNian.shiShen = GanRelation.getRelation(dayMasterGan, lnGan);
+            result.currentYun.liuNian.shiShen = GanRelation.getRelation(
+              dayMasterGan,
+              lnGan
+            );
             if (lnZhi) {
-              result.currentYun.liuNian.zhiHideGanShiShen = getZhiHiddenGans(lnZhi).map((h) => ({ gan: h.gan, qiLevel: h.qiLevel, shiShen: GanRelation.getRelation(dayMasterGan, h.gan) }));
+              result.currentYun.liuNian.zhiHideGanShiShen = getZhiHiddenGans(
+                lnZhi
+              ).map((h) => ({
+                gan: h.gan,
+                qiLevel: h.qiLevel,
+                shiShen: GanRelation.getRelation(dayMasterGan, h.gan)
+              }));
             }
           }
         }
@@ -20018,7 +20066,11 @@ var require_index = __commonJS({
             const mZhi = monthGanZhi[1];
             liuYue.shiShen = GanRelation.getRelation(dayMasterGan, mGan);
             if (mZhi) {
-              liuYue.zhiHideGanShiShen = getZhiHiddenGans(mZhi).map((h) => ({ gan: h.gan, qiLevel: h.qiLevel, shiShen: GanRelation.getRelation(dayMasterGan, h.gan) }));
+              liuYue.zhiHideGanShiShen = getZhiHiddenGans(mZhi).map((h) => ({
+                gan: h.gan,
+                qiLevel: h.qiLevel,
+                shiShen: GanRelation.getRelation(dayMasterGan, h.gan)
+              }));
             }
           }
         } catch (_) {
@@ -20036,7 +20088,11 @@ var require_index = __commonJS({
             const dZhi = dayGanZhi[1];
             liuRi.shiShen = GanRelation.getRelation(dayMasterGan, dGan);
             if (dZhi) {
-              liuRi.zhiHideGanShiShen = getZhiHiddenGans(dZhi).map((h) => ({ gan: h.gan, qiLevel: h.qiLevel, shiShen: GanRelation.getRelation(dayMasterGan, h.gan) }));
+              liuRi.zhiHideGanShiShen = getZhiHiddenGans(dZhi).map((h) => ({
+                gan: h.gan,
+                qiLevel: h.qiLevel,
+                shiShen: GanRelation.getRelation(dayMasterGan, h.gan)
+              }));
             }
           }
         } catch (_) {
@@ -20109,7 +20165,12 @@ var require_index = __commonJS({
           includeZhi: true,
           yongShenTenGods: result?.yongShen?.tenGods || []
         }),
-        taiSui: Analysis.analyzeYuanHaiZiPingTaiSui(result.pillars)
+        taiSui: Analysis.analyzeYuanHaiZiPingTaiSui(result.pillars, {
+          taiSui: {
+            gan: result.currentYun.liuNian.ganZhi[0],
+            zhi: result.currentYun.liuNian.ganZhi[1]
+          }
+        })
       };
       result.yuanHaiZiping.shenQiang = Analysis.computeShenQiangScore(result);
       result.yuanHaiZiping.shidu = Analysis.computeShiduScore(result);
@@ -20120,7 +20181,10 @@ var require_index = __commonJS({
       result.educationAndTalent = Analysis.analyzeEducationAndTalent(result);
       result.gameTalent = Analysis.analyzeGameTalent(result);
       const __dur = Date.now() - __t0;
-      result.meta = Object.assign({}, result.meta || {}, { durationMs: __dur, function: "getCurrentEightCharJSON" });
+      result.meta = Object.assign({}, result.meta || {}, {
+        durationMs: __dur,
+        function: "getCurrentEightCharJSON"
+      });
       console.log("\u6392\u76D8 getCurrentEightCharJSON \u8017\u65F6(ms):", __dur);
       return result;
     }
