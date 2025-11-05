@@ -158,7 +158,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.current.liuNian"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
@@ -168,7 +168,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.current.daYun"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
@@ -178,7 +178,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.nian"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
@@ -188,7 +188,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.yue"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
@@ -198,7 +198,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.ri"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
@@ -208,7 +208,7 @@
           type="info"
           v-for="item in analysisResult.data.shensha.shi"
           :text="item"
-          size="8"
+          size="6"
           style="margin-top: 4rpx"
         ></uv-text>
       </view>
