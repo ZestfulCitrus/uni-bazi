@@ -11740,9 +11740,9 @@ var require_zhiHideGan = __commonJS({
   }
 });
 
-// data/xcx_bazi_1.js
-var require_xcx_bazi_1 = __commonJS({
-  "data/xcx_bazi_1.js"(exports, module) {
+// data/bazi_1.js
+var require_bazi_1 = __commonJS({
+  "data/bazi_1.js"(exports, module) {
     function rishi(a) {
       var jieguo = {
         \u7532\u5B50\u7532\u5B50: "\u751F\u4E8E\u7532\u65E5\u7532\u5B50\u65F6\uFF0C\u867D\u7136\u5B50\u4F4D\u4F7F\u7532\u5904\u8D25\u5730(\u6C90\u6D74)\uFF0C\u4F46\u6697\u4E2D\u6709\u7678\u6C34\u751F\u53D1\u5370\u7EF6\u62A4\u8EAB\uFF0C\u66F4\u6709\u5B98\u661F\u751F\u5176\u5370\u7EF6\uFF0C\u5982\u679C\u6709\u5DF1\u571F\u514B\u6C34\uFF0C\u7834\u574F\u5370\u7EF6\u7684\u751F\u6210\uFF0C\u4E14\u751F\u9022\u6708\u4EE4\uFF0C\u6B64\u547D\u663E\u8D35\uFF0C\u5426\u5219\uFF0C\u4E5F\u53EA\u6709\u5F92\u6709\u865A\u540D\u800C\u5DF2\u3002<br>\u751F\u4E8E\u7532\u5B50\u65E5\u7532\u5B50\u65F6\uFF0C\u5165\u5B50\u9065\u5DF3\u683C\uFF0C\u5982\u679C\u5E74\u6708\u67F1\u6CA1\u6709\u5E9A\u7533\u8F9B\u9149\uFF0C\u800C\u6709\u4E11\u76F8\u5408\uFF0C\u6709\u5348\u76F8\u51B2\uFF0C\u547D\u4E3B\u79BB\u4E61\u522B\u7956\uFF0C\u81EA\u8C0B\u51FA\u8DEF\uFF0C\u65B9\u80FD\u5174\u65FA\u3002\u5982\u679C\u5E74\u6708\u652F\u90FD\u662F\u5BC5\uFF0C\u5374\u53C8\u884C\u7533\u9149\u8FD0\uFF0C\u5148\u662F\u5927\u5BCC\uFF0C\u540E\u4F1A\u7834\u8D22\u3002\u5E74\u6708\u652F\u6709\u5B50\u536F\u4EA5\u672A\uFF0C\u4E14\u884C\u897F\u65B9\u8FD0\uFF0C\u663E\u8D35\u3002\u751F\u4E8E\u7532\u8FB0\u6708\u4E5F\u663E\u8D35\u3002\u751F\u4E8E\u9149\u6708\uFF0C\u5F53\u4EE5\u6B63\u5B98\u683C\u8BBA\uFF0C\u5927\u8D35\u751F\u4E8E\u5DF3\u6708\u6216\u5348\u620C\u6708\uFF0C\u8863\u7984\u5E73\u5E38\u3002\u751F\u4E8E\u5348\u6708\uFF0C\u7532\u6B63\u5904\u6B7B\u5730\uFF0C\u4E14\u5B50\u5348\u76F8\u51B2\uFF0C\u5341\u5206\u4E0D\u5409\u3002\u751F\u4E8E\u4E59\u536F\u6708\u6216\u4E59\u5DF3\u6708\uFF0C\u5F53\u662F\u8FDD\u6CD5\u53D7\u5211\u3002",
@@ -12473,9 +12473,9 @@ var require_xcx_bazi_1 = __commonJS({
   }
 });
 
-// data/xcx_bazi_2.js
-var require_xcx_bazi_2 = __commonJS({
-  "data/xcx_bazi_2.js"(exports, module) {
+// data/bazi_2.js
+var require_bazi_2 = __commonJS({
+  "data/bazi_2.js"(exports, module) {
     function rixiangxi(a) {
       var jieguo = {
         \u4E19\u620C: "[\u4E19\u620C][\u4E2D\u7B49]\u5750\u706B\u5E93\uFF0C\u8EAB\u65FA\uFF0C\u706B\u5149\u71A0\u71A0\uFF0C\u806A\u660E\u6F02\u4EAE\u3002<br>\u3010\u7B80\u5355\u4ECB\u7ECD\u3011\u70ED\u60C5\u8C6A\u723D,\u81EA\u4FE1\u597D\u80DC,\u5584\u8A00\u5065\u8C08,\u6B20\u7F3A\u6C89\u7740,\u4F46\u60C5\u7EEA\u4E0D\u7A33,\u51B2\u52A8\u6613\u6012,\u7F3A\u4E4F\u4ED4\u7EC6\u3001\u8BA4\u771F\u3002<br>\u3010\u6574\u4F53\u5206\u6790\u3011\u6027\u60C5\u6E29\u548C\uFF0C\u6280\u827A\u62A4\u8EAB\uFF0C\u8863\u7984\u4E0D\u6101\uFF0C\u8C6A\u6770\u548C\u987A\uFF0C\u81EA\u80FD\u6709\u8D22\uFF1B\u72EC\u7ACB\u5BB6\u4E1A\uFF1B\u524D\u8FD0\u4E0D\u5468\uFF0C\u5229\u76CA\u4E0D\u987A\uFF0C\u4E2D\u5E74\u64CD\u52B3\uFF0C\u94B1\u8D22\u6709\u8FDB\uFF1B\u665A\u5E74\u8363\u534E\u3002\u5973\u4EBA\u4E2D\u5E74\u5954\u6CE2\uFF0C\u8F9B\u82E6\u6C42\u8D22\uFF0C\u8001\u5E74\u7A0D\u5FAE\uFF1F\u8840\u8D22\u53D1\u65FA\uFF0C\u73CD\u60DC\u4E3A\u76FC\uFF1F<br>\u3010\u6027\u683C\u5206\u6790\u3011\u4E19\u662F\u5A01\u52BF\u731B\u70C8\u7684\u9633\u4E4B\u706B,\u718A\u718A\u7684\u71C3\u70E7\u80FD\u4EE4\u94C1\u4E3A\u4E4B\u7194\u5316\u3002\u56E0\u6B64,\u4E19\u65E5\u51FA\u751F\u7684\u4EBA\u7CBE\u529B\u5145\u6C9B,\u731B\u52BF\u6240\u81F3\u4E4B\u5904\u53EF\u5F97\u6743\u5A01\u4E0E\u540D\u58F0,\u4F1A\u503E\u51FA\u6240\u6709\u7684\u70ED\u60C5\u8FFD\u6C42\u81EA\u5DF1\u7684\u7406\u60F3\u3002\u5149\u660E\u6B63\u5927\u7684\u4E19\u6709\u4E0D\u80FD\u9690\u7792\u4E8B\u7269\u7684\u77ED\u5904,\u56E0\u800C\u6709\u65F6\u4F1A\u8052\u566A\u7684\u8BC9\u8BF4\u6216\u503E\u5410\u81EA\u5DF1\u7684\u5FC3\u4E8B\u3002\u4E19\u7684\u6027\u683C\u5C31\u50CF\u706B\u4E00\u6837,\u77AC\u95F4\u71C3\u70E7\u53C8\u500F\u5730\u6D88\u706D,\u6B64\u5916,\u7531\u4E8E\u81EA\u8BA4\u624D\u667A\u8FC7\u4EBA,\u591A\u534A\u6210\u61D2\u60F0\u8005,\u603B\u60F3\u81EA\u5DF1\u62E5\u6709\u6EE1\u8154\u7684\u70ED\u60C5\u5C31\u5DF2\u8DB3\u591F,\u6BCB\u987B\u8BA4\u771F\u52AA\u529B\u3002\u4E19\u620C\u65E5\u751F\u7684\u4EBA\u6709\u6E29\u548C\u7684\u54C1\u683C,\u91CD\u89C6\u52E4\u52C9,\u7136\u800C\u4F3C\u6709\u591A\u7BA1\u95F2\u4E8B\u7684\u7656\u597D\u3002<br>\u3010\u7231\u60C5\u5206\u6790\u3011\u547D\u4E3B\u5728\u604B\u7231\u65B9\u9762\u90FD\u4E00\u4E9B\u5171\u540C\u7684\u5730\u65B9\uFF0C\u5728\u611F\u60C5\u4E0A\uFF0C\u60A8\u6709\u77E5\u6027\u7684\u9B45\u529B\uFF0C\u7A0D\u5E26\u5FE7\u90C1\u7684\u6C14\u8D28\uFF0C\u5F88\u53D7\u5F02\u6027\u7684\u6B22\u8FCE\u3002\u53EF\u4EE5\u8BF4\uFF0C\u60A8\u662F\u4E2A\u70ED\u60C5\u7684\u604B\u4EBA\uFF0C\u56E0\u60A8\u5177\u6709\u679C\u6562\u7684\u884C\u52A8\u529B\uFF0C\u82E5\u9047\u5230\u559C\u6B22\u7684\u4EBA\uFF0C\u81EA\u5DF1\u5E38\u4F1A\u4E3B\u52A8\u9080\u7EA6\u5BF9\u65B9\u3002\u800C\u4E14\uFF0C\u60A8\u7684\u6843\u82B1\u8FD0\u4E00\u822C\u90FD\u4E0D\u9519\uFF0C\u5BB9\u6613\u4E0E\u5F02\u6027\u63A5\u89E6\u5E76\u719F\u7EDC\uFF0C\u5E38\u6709\u673A\u4F1A\u4E0E\u5F02\u6027\u7EA6\u4F1A\u6216\u53C2\u52A0\u6D3B\u52A8\u3002\u60A8\u4E5F\u662F\u4E2A\u6D6A\u6F2B\u7684\u604B\u4EBA\uFF0C\u4E0E\u522B\u4EBA\u7EA6\u4F1A\u6216\u76F8\u5904\u65F6\u603B\u80FD\u5236\u9020\u7EDD\u5999\u7684\u6C14\u6C1B\uFF0C\u7ED9\u5BF9\u65B9\u5E26\u6765\u5F88\u591A\u6B22\u4E50\u548C\u60CA\u559C\uFF0C\u8FD9\u79CD\u7279\u6027\u4F7F\u60A8\u5728\u60C5\u573A\u4E0A\u65E0\u5F80\u4E0D\u5229\u3002\u4F46\u662F\u60A8\u63A8\u5D07\u8F83\u4E3A\u81EA\u7531\u7684\u604B\u7231\u89C2\uFF0C\u8FD9\u4F7F\u60A8\u751A\u5C11\u6709\u4ECE\u4E00\u5F02\u6027\u800C\u7EC8\u7684\u5FC3\u6001\uFF0C\u66F4\u5E0C\u671B\u81EA\u5DF1\u7684\u4EBA\u751F\u6709\u7ECF\u5386\u51E0\u6BB5\u8F70\u8F70\u70C8\u70C8\u7684\u7231\u60C5\uFF0C\u6709\u4E86\u4E00\u5B9A\u7684\u800C\u7ECF\u5386\u540E\u624D\u80FD\u5B89\u5B9A\u4E0B\u6765\u3002\u5A5A\u59FB\u611F\u60C5\u547D\u683C\u5728\u611F\u60C5\u4E2D\uFF0C\u60A8\u6709\u72EC\u65AD\u72EC\u884C\u7684\u6027\u683C\uFF0C\u559C\u6B22\u6709\u70B9\u523A\u6FC0\u548C\u6D6A\u6F2B\u7684\u611F\u60C5\u6A21\u5F0F\uFF0C\u4E3B\u89C2\u610F\u8BC6\u6BD4\u8F83\u5F3A\uFF0C\u6027\u683C\u6709\u70B9\u987D\u56FA\uFF0C\u5728\u611F\u60C5\u4E2D\u60A8\u6709\u4FDD\u7559\u4E2A\u4EBA\u5A01\u4E25\u7684\u4E60\u60EF\uFF0C\u9700\u8981\u4F34\u4FA3\u65F6\u523B\u7EDD\u5BF9\u7684\u5C0A\u91CD\u751A\u81F3\u8FFD\u5D07\u3002\u800C\u611F\u60C5\u8BB2\u6C42\u4E24\u4E2A\u4EBA\u7684\u878D\u5408\uFF0C\u5728\u611F\u60C5\u4E2D\u60A8\u4E0E\u53E6\u4E00\u534A\u7684\u76F8\u5904\u6709\u8F83\u591A\u78B0\u649E\uFF0C\u81EA\u5DF1\u4E0D\u613F\u610F\u4E3A\u53E6\u4E00\u534A\u800C\u6539\u53D8\u6216\u505A\u51FA\u59A5\u534F\uFF0C\u4E89\u5435\u8F83\u591A\uFF0C\u5F71\u54CD\u5BF9\u611F\u60C5\u7684\u57F9\u517B\u3002\u56E0\u6B64\uFF0C\u5373\u4FBF\u60A8\u7684\u5F02\u6027\u7F18\u4E0D\u9519\uFF0C\u4F46\u4E00\u65E6\u8FDB\u5165\u5173\u7CFB\uFF0C\u611F\u60C5\u5C31\u5BB9\u6613\u4E0D\u987A\uFF0C\u9700\u8981\u53CA\u65F6\u8C03\u6574\u81EA\u5DF1\u7684\u6027\u683C\u3002<br>\u3010\u5546\u4E1A\u5206\u6790\u3011\u8FD9\u79CD\u4EBA\u5C31\u8C61\u718A\u718A\u71C3\u70E7\u7684\u70C8\u706B\uFF0C\u5929\u751F\u62E5\u6709\u5F88\u597D\u7684\u8BF4\u670D\u529B\u3002\u4E19\u6027\u8D28\u7684\u4EBA\u6700\u9002\u5408\u4ECE\u4E8B\u63A8\u9500\u5458\u5DE5\u4F5C\uFF0C\u53EA\u8981\u6293\u4F4F\u673A\u4F1A\uFF0C\u5C31\u4F1A\u731B\u70C8\u5730\u53D1\u6325\u4F18\u79C0\u7684\u53E3\u624D\u8BF4\u670D\u4ED6\u4EBA\u6210\u529F\u3002\u4F9D\u6B64\u770B\u6765\uFF0C\u4E19\u5F88\u9002\u5408\u5F8B\u5E08\u3001\u6559\u80B2\u5BB6\u6216\u5B97\u6559\u5BB6\u7B49\u804C\u4E1A\u3002\u9047\u4E0A\u8FD9\u79CD\u4EBA\uFF0C\u5C31\u8FDE\u95ED\u5F97\u518D\u7D27\u7684\u8D1D\u58F3\uFF0C\u88AB\u5982\u6B64\u70ED\u60C5\u7684\u731B\u706B\u4E00\u70D8\uFF0C\u4E5F\u4F1A\u5728\u4E0D\u77E5\u4E0D\u89C9\u4E2D\u6253\u5F00\u76D6\u5B50\u3002\u6B64\u5916\uFF0C\u9700\u8981\u8000\u773C\u624D\u534E\u7684\u827A\u672F\u5BB6\u6216\u827A\u4EBA\u4E5F\u662F\u4E19\u65E5\u751F\u7684\u4EBA\u7684\u7279\u957F\uFF0C\u4ED6\u4EEC\u90FD\u6709\u5929\u624D\u6027\u7684\u53D1\u5C55\uFF0C\u5982\u65E5\u672C\u6B4C\u661F\u7F8E\u7A7A\u4E91\u96C0\u5728\u5C11\u5973\u65F6\u4EE3\u5C31\u5DF2\u767B\u4E0A\u6B4C\u8C23\u754C\u7684\u5973\u738B\u5B9D\u5EA7\uFF0C\u65E5\u672C\u6F2B\u753B\u9AD8\u624B\u624B\u51A2\u6CBB\u866B\u4E5F\u662F\u6B64\u578B\u7684\u660E\u4F8B\u3002\u7531\u706B\u7684\u6697\u793A\u6765\u770B\uFF0C\u4F7F\u7528\u706B\u7684\u70F9\u996A\u5DE5\u4F5C\u975E\u5E38\u5408\u9002\uFF0C\u996E\u98DF\u4E8B\u4E1A\u867D\u4E0E\u6C34\u76F8\u5173\uFF0C\u4F46\u5F88\u591A\u706B\u7684\u4EBA\u4E5F\u6D3B\u8DC3\u5728\u8FD9\u4E2A\u4E1A\u754C\u4E2D\uFF0C\u9AD8\u70ED\u70E7\u571F\u7684\u9676\u827A\u5BB6\u4E5F\u662F\u5408\u9002\u7684\u5DE5\u4F5C\u65B9\u5411\uFF0C\u5904\u7406\u9505\u7089\u4E0E\u5185\u71C3\u673A\u7684\u5DE5\u4F5C\u4E0E\u706B\u6027\u8D28\u76F8\u5408\u3002\u706B\u53C8\u6709\u80FD\u6E90\u7684\u610F\u5473\uFF0C\u6240\u4EE5\u74E6\u65AF\u3001\u77F3\u6CB9\u3001\u7164\u70AD\u7B49\u4E1A\u754C\uFF0C\u6216\u7535\u529B\u76F8\u5173\u4E8B\u4E1A\u90FD\u5F88\u53EF\u884C\u3002\u6B64\u5916\uFF0C\u7535\u5668\u6216\u5149\u5B66\u4E8B\u4E1A\u4E5F\u542B\u706B\u6027\uFF0C\u662F\u4E19\u9002\u5408\u4ECE\u4E8B\u7684\u804C\u4E1A\u3002\u5C31\u70ED\u60C5\u7684\u4E2A\u6027\u800C\u8A00\uFF0C\u8FD0\u52A8\u5458\u53EF\u5C3D\u60C5\u53D1\u6325\uFF0C\u5C24\u5176\u662F\u4E01\u5E74\u7684\u4EBA\u751F\u6765\u5C31\u6709\u7ADE\u4E89\u6027\u66F4\u662F\u5B8C\u7F8E\u7684\u9009\u62E9\u3002<br>\u3010\u8D22\u8FD0\u5206\u6790\u3011\u4E19\u65E5\u751F\u7684\u4EBA\u5929\u751F\u70ED\u60C5\u6D0B\u6EA2\u3001\u884C\u52A8\u5954\u653E\uFF0C\u6240\u4EE5\u8EAB\u4E0A\u5F88\u96BE\u653E\u7740\u94B1\u4E0D\u7528\uFF0C\u8FD9\u79CD\u7C7B\u578B\u7684\u4EBA\u8BA4\u4E3A\u94B1\u662F\u7ED9\u4EBA\u7528\u7684\uFF0C\u8D5A\u5F97\u591A\u7528\u7684\u66F4\u51F6\uFF0C\u5728\u767E\u8D27\u516C\u53F8\u770B\u4E2D\u7684\u88C5\u9970\u54C1\uFF0C\u4F1A\u6BEB\u4E0D\u72B9\u8C6B\u7684\u4E70\u56DE\u5BB6\u3002\u4E0D\u8FC7\u8FD9\u79CD\u60C5\u5F62\u53CD\u800C\u5BF9\u4E19\u6709\u5229\uFF0C\u5982\u679C\u52C9\u5F3A\u50A8\u84C4\uFF0C\u81F4\u4F7F\u81EA\u7531\u81EA\u5728\u7684\u884C\u52A8\u53D7\u963B\uFF0C\u6C14\u52BF\u524A\u5F31\uFF0C\u6613\u751F\u5371\u9669\u3002\u5D07\u5C1A\u81EA\u7136\u7684\u4E19\u82E5\u80FD\u53D1\u6325\u81EA\u7531\u7684\u7279\u6027\uFF0C\u81EA\u529B\u66F4\u751F\u4EE5\u5E94\u4ED8\u5F00\u9500\uFF0C\u624D\u662F\u6700\u7406\u60F3\u7684\u751F\u6D3B\u65B9\u5F0F\uFF0C\u4E00\u65E6\u60DC\u7269\u540E\uFF0C\u4F1A\u4E27\u5931\u706B\u4E4B\u5144\u7684\u7279\u6027\uFF0C\u5149\u534E\u5C3D\u5931\u3002\u4E19\u65E5\u7684\u4EBA\u8981\u60F3\u7EF4\u6301\u65E0\u865E\u7684\u751F\u6D3B\uFF0C\u6700\u597D\u59CB\u7EC8\u8BA9\u8EAB\u8FB9\u5145\u6EE1\u534E\u4E3D\u7684\u6C14\u6C1B\uFF0C\u4E07\u4E00\u751F\u6765\u5C0F\u6C14\uFF0C\u6B20\u7F3A\u548C\u4EBA\u4EA4\u9645\u5219\u6B64\u661F\u7684\u5149\u8F89\u6D88\u5931\uFF0C\u6700\u540E\u7A77\u795E\u5C06\u627E\u4E0A\u95E8\u6765\uFF0C\u81EA\u7531\u7684\u91D1\u94B1\u89C2\u624D\u80FD\u652F\u6301\u4E19\u6D3B\u529B\u5145\u6C9B\u5730\u4EAB\u53D7\u4EBA\u751F\u3002<br>\u3010\u5065\u5EB7\u5206\u6790\u3011\u4E19\u65E5\u751F\u7684\u4EBA\u592A\u8FC7\u653E\u7EB5\u81EA\u5DF1\uFF0C\u6839\u672C\u4E0D\u4F1A\u6709\u6240\u4FDD\u7559\uFF0C\u56E0\u6B64\u8FD9\u79CD\u7C7B\u578B\u7684\u4EBA\u574F\u81EA\u5DF1\u8EAB\u4F53\u7684\u5927\u6709\u4EBA\u5728\u3002\u5C31\u8C61\u8FDE\u7EED\u7684\u5F7B\u591C\u5DE5\u4F5C\u3001\u9157\u9152\u7B49\u8D85\u51FA\u6781\u9650\u4E4B\u5916\u7684\u4E8B\uFF0C\u5BFC\u81F4\u8EAB\u4F53\u62A5\u9500\u3002\u4E19\u65E5\u751F\u7684\u4EBA\u5BB9\u6613\u7F79\u60A3\u7684\u75BE\u75C5\u6709\u5FC3\u810F\u75C5\u3001\u773C\u75C5\u3001\u80C3\u80A0\u75C5\u3001\u80BA\u75C5\u3001\u795E\u7ECF\u75DB\u3001\u5987\u79D1\u75C5\u7B49\u3002\u7279\u522B\u662F\u58EC\u5E74\u51FA\u751F\u7684\u4EBA\uFF0C\u7531\u4E8E\u751F\u547D\u4E4B\u706B\u6B63\u9762\u88AB\u6C34\u6D47\u4E0B\uFF0C\u6240\u4EE5\u6050\u6709\u91CD\u75BE\u3002\u6B64\u5916\uFF0C\u620A\u5E74\u751F\u7684\u4EBA\u5E73\u5E38\u7684\u8EAB\u4F53\u67D0\u5904\u4F1A\u88AB\u75BE\u75C5\u4FB5\u8680\uFF0C\u987B\u591A\u7559\u610F\u3002",
@@ -12546,9 +12546,9 @@ var require_xcx_bazi_2 = __commonJS({
   }
 });
 
-// data/xcx_bazi_4.js
-var require_xcx_bazi_4 = __commonJS({
-  "data/xcx_bazi_4.js"(exports, module) {
+// data/bazi_4.js
+var require_bazi_4 = __commonJS({
+  "data/bazi_4.js"(exports, module) {
     function xiyongshen(a) {
       var jieguo = {
         \u7532\u5B50: "\u6728\u6027\u751F\u5BD2,\u4E01(\u706B)\u5148\u5E9A(\u91D1)\u540E,\u4E19(\u706B)\u4E3A\u4F50,\u5FC5\u987B\u652F\u89C1\u5DF3\u5BC5,\u65B9\u4E3A\u8D35\u683C\u3002",
@@ -14300,11 +14300,7 @@ var require_svc = __commonJS({
         if (Array.isArray(value)) {
           allShensha.push(...value);
         } else if (typeof value === "object" && value !== null) {
-          for (const subKey in value) {
-            if (Array.isArray(value[subKey])) {
-              allShensha.push(...value[subKey]);
-            }
-          }
+          return;
         }
       }
       const positiveShensha = [
@@ -15139,8 +15135,493 @@ var require_svc3 = __commonJS({
       if (score >= 40) return "\u7565\u6709\u6E38\u620F\u5929\u8D4B";
       return "\u6E38\u620F\u5929\u8D4B\u4E00\u822C";
     }
+    function analyzeWealthLevel(result) {
+      if (!result || !result.pillars) {
+        return {
+          wealthScore: 0,
+          wealthLevel: "\u65E0\u6CD5\u5206\u6790",
+          description: "\u65E0\u6CD5\u5206\u6790\u8D22\u5BCC\u7B49\u7EA7\uFF1A\u7F3A\u5C11\u516B\u5B57\u6570\u636E",
+          details: []
+        };
+      }
+      const pillars = result.pillars;
+      const gender = result.gender || "\u7537";
+      const dayGan = pillars.dayMasterGan || pillars.day.gan;
+      const shensha = result.shensha || {};
+      let wealthScore = 50;
+      const details = [];
+      const wealthPatternAnalysis = analyzeWealthPattern(pillars, dayGan, gender);
+      wealthScore += wealthPatternAnalysis.wealthScore;
+      details.push(wealthPatternAnalysis.description);
+      const shenshaAnalysis = analyzeShenshaForWealth(shensha);
+      wealthScore += shenshaAnalysis.wealthScore;
+      details.push(shenshaAnalysis.description);
+      const naYinAnalysis = analyzeNaYinForWealth(pillars);
+      wealthScore += naYinAnalysis.wealthScore;
+      details.push(naYinAnalysis.description);
+      const wuxingAnalysis = analyzeWuXingForWealth(result, dayGan);
+      wealthScore += wuxingAnalysis.wealthScore;
+      details.push(wuxingAnalysis.description);
+      wealthScore = Math.max(0, Math.min(100, wealthScore));
+      const wealthLevel = getWealthLevel(wealthScore);
+      const description = `\u8D22\u5BCC\u7B49\u7EA7\u8BC4\u5206\u4E3A${Math.round(
+        wealthScore
+      )}\u5206\uFF08${wealthLevel}\uFF09\u3002`;
+      return {
+        wealthScore: Math.round(wealthScore),
+        wealthLevel,
+        description,
+        details,
+        analysisMethod: "\u5B50\u5E73\u6CD5\u8D22\u5BCC\u7B49\u7EA7\u91CF\u5316\u5206\u6790",
+        factors: {
+          wealthPattern: wealthPatternAnalysis,
+          shensha: shenshaAnalysis,
+          naYin: naYinAnalysis,
+          wuxing: wuxingAnalysis
+        }
+      };
+    }
+    function analyzeWealthPattern(pillars, dayGan, gender) {
+      let wealthScore = 0;
+      let description = "\u8D22\u5BCC\u683C\u5C40\u5206\u6790\uFF1A";
+      const wealthPatterns = [
+        {
+          name: "\u98DF\u4F24\u751F\u8D22",
+          level: "100\u4E07",
+          condition: "\u8EAB\u65FA",
+          score: 65,
+          desc: "\u98DF\u4F24\u751F\u8D22\uFF0C\u901A\u8FC7\u6280\u80FD\u548C\u521B\u610F\u521B\u9020\u8D22\u5BCC"
+        },
+        {
+          name: "\u8D22\u6765\u5236\u5370",
+          level: "1000\u4E07+",
+          condition: "\u5370\u4E3A\u5FCC",
+          score: 75,
+          desc: "\u8D22\u661F\u5236\u5370\uFF0C\u8D22\u5BCC\u80FD\u5316\u89E3\u963B\u788D"
+        },
+        {
+          name: "\u5370\u7984\u76F8\u968F",
+          level: "1000\u4E07+",
+          condition: "\u7984\u4E0D\u80FD\u574F",
+          score: 78,
+          desc: "\u5370\u7984\u76F8\u968F\uFF0C\u6709\u7A33\u5B9A\u6536\u5165\u548C\u5730\u4F4D"
+        },
+        {
+          name: "\u4F24\u5B98\u914D\u5370",
+          level: "1000\u4E07+",
+          condition: "\u4F24\u5B98\u8981\u65FA",
+          score: 76,
+          desc: "\u4F24\u5B98\u914D\u5370\uFF0C\u624D\u534E\u4E0E\u667A\u6167\u7ED3\u5408\u521B\u9020\u8D22\u5BCC"
+        },
+        {
+          name: "\u98DF\u795E\u5236\u6740",
+          level: "1000\u4E07+",
+          condition: "\u6740\u5F53\u8D22\u770B",
+          score: 77,
+          desc: "\u98DF\u795E\u5236\u6740\uFF0C\u901A\u8FC7\u5316\u89E3\u538B\u529B\u83B7\u5F97\u8D22\u5BCC"
+        },
+        {
+          name: "\u4F24\u5B98\u67B6\u6740",
+          level: "5000\u4E07+",
+          condition: "\u6740\u5F53\u8D22\u770B",
+          score: 85,
+          desc: "\u4F24\u5B98\u67B6\u6740\uFF0C\u9AD8\u98CE\u9669\u9AD8\u56DE\u62A5\u7684\u8D22\u5BCC\u683C\u5C40"
+        },
+        {
+          name: "\u6740\u5370\u76F8\u751F",
+          level: "5000\u4E07+",
+          condition: "\u5370\u8981\u65FA",
+          score: 86,
+          desc: "\u6740\u5370\u76F8\u751F\uFF0C\u6743\u529B\u4E0E\u667A\u6167\u7ED3\u5408\u521B\u9020\u5927\u8D22\u5BCC"
+        },
+        {
+          name: "\u5B98\u5236\u6BD4\u52AB",
+          level: "8000\u4E07+",
+          condition: "\u5B98\u5728\u5BB6\u5185",
+          score: 92,
+          desc: "\u5B98\u5236\u6BD4\u52AB\uFF0C\u901A\u8FC7\u7BA1\u7406\u4ED6\u4EBA\u83B7\u5F97\u5DE8\u5927\u8D22\u5BCC"
+        },
+        {
+          name: "\u4F24\u5B98\u4F24\u5C3D",
+          level: "3000\u4E07+",
+          condition: "\u4F24\u5B98\u65FA",
+          score: 82,
+          desc: "\u4F24\u5B98\u4F24\u5C3D\uFF0C\u624D\u534E\u6781\u81F4\u53D1\u6325\u521B\u9020\u8D22\u5BCC"
+        },
+        {
+          name: "\u81EA\u5750\u8D22\u5E93",
+          level: "1000\u4E07+",
+          condition: "\u8EAB\u65FA",
+          score: 74,
+          desc: "\u81EA\u5750\u8D22\u5E93\uFF0C\u6709\u7A33\u5B9A\u7684\u8D22\u5BCC\u79EF\u7D2F\u80FD\u529B"
+        }
+      ];
+      const detectedPatterns = [];
+      const hasWealthStar = checkWealthStar(pillars, dayGan, gender);
+      const hasShiShang = checkShiShang(pillars, dayGan);
+      const hasGuanSha = checkGuanSha(pillars, dayGan, gender);
+      const hasYinStar = checkYinStar(pillars, dayGan);
+      if (hasWealthStar && hasShiShang) {
+        detectedPatterns.push("\u98DF\u4F24\u751F\u8D22");
+      }
+      if (hasWealthStar && hasYinStar) {
+        detectedPatterns.push("\u8D22\u6765\u5236\u5370");
+      }
+      if (hasYinStar && checkLu(pillars, dayGan)) {
+        detectedPatterns.push("\u5370\u7984\u76F8\u968F");
+      }
+      if (hasShiShang && hasYinStar) {
+        detectedPatterns.push("\u4F24\u5B98\u914D\u5370");
+      }
+      if (hasShiShang && hasGuanSha) {
+        detectedPatterns.push("\u98DF\u795E\u5236\u6740");
+      }
+      if (checkShangGuan(pillars, dayGan) && hasGuanSha) {
+        detectedPatterns.push("\u4F24\u5B98\u67B6\u6740");
+      }
+      if (hasGuanSha && hasYinStar) {
+        detectedPatterns.push("\u6740\u5370\u76F8\u751F");
+      }
+      if (hasGuanSha && checkBiJie(pillars, dayGan)) {
+        detectedPatterns.push("\u5B98\u5236\u6BD4\u52AB");
+      }
+      if (checkShangGuan(pillars, dayGan) && checkShangGuanWang(pillars, dayGan) && !hasYinStar) {
+        detectedPatterns.push("\u4F24\u5B98\u4F24\u5C3D");
+      }
+      if (checkZiZuoCaiKu(pillars, dayGan)) {
+        detectedPatterns.push("\u81EA\u5750\u8D22\u5E93");
+      }
+      let maxPatternScore = 0;
+      let bestPattern = null;
+      detectedPatterns.forEach((patternName) => {
+        const pattern = wealthPatterns.find((p) => p.name === patternName);
+        if (pattern && pattern.score > maxPatternScore) {
+          maxPatternScore = pattern.score;
+          bestPattern = pattern;
+        }
+      });
+      if (bestPattern) {
+        wealthScore = maxPatternScore - 50;
+        description += `\u5177\u5907${bestPattern.name}\u683C\u5C40\uFF0C\u8D22\u5BCC\u91CF\u7EA7${bestPattern.level}\uFF0C${bestPattern.desc}`;
+      } else {
+        description += "\u672A\u68C0\u6D4B\u5230\u660E\u663E\u8D22\u5BCC\u683C\u5C40\uFF0C\u8D22\u5BCC\u6F5C\u529B\u4E00\u822C";
+      }
+      return { wealthScore, description };
+    }
+    function checkWealthStar(pillars, dayGan, gender) {
+      const wealthStars = gender === "\u7537" ? ["\u6B63\u8D22", "\u504F\u8D22"] : ["\u6B63\u5B98", "\u4E03\u6740"];
+      for (const pillar of Object.values(pillars)) {
+        if (wealthStars.includes(pillar.shiShenGan)) {
+          return true;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (wealthStars.includes(hideGan.shiShen)) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function checkShiShang(pillars, dayGan) {
+      const shiShang = ["\u98DF\u795E", "\u4F24\u5B98"];
+      for (const pillar of Object.values(pillars)) {
+        if (shiShang.includes(pillar.shiShenGan)) {
+          return true;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (shiShang.includes(hideGan.shiShen)) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function checkGuanSha(pillars, dayGan, gender) {
+      const guanSha = gender === "\u7537" ? ["\u6B63\u5B98", "\u4E03\u6740"] : ["\u6B63\u8D22", "\u504F\u8D22"];
+      for (const pillar of Object.values(pillars)) {
+        if (guanSha.includes(pillar.shiShenGan)) {
+          return true;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (guanSha.includes(hideGan.shiShen)) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function checkYinStar(pillars, dayGan) {
+      const yinStars = ["\u6B63\u5370", "\u504F\u5370"];
+      for (const pillar of Object.values(pillars)) {
+        if (yinStars.includes(pillar.shiShenGan)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function checkLu(pillars, dayGan) {
+      const luPositions = {
+        "\u7532": "\u5BC5",
+        "\u4E59": "\u536F",
+        "\u4E19": "\u5DF3",
+        "\u4E01": "\u5348",
+        "\u620A": "\u5DF3",
+        "\u5DF1": "\u5348",
+        "\u5E9A": "\u7533",
+        "\u8F9B": "\u9149",
+        "\u58EC": "\u4EA5",
+        "\u7678": "\u5B50"
+      };
+      const luZhi = luPositions[dayGan];
+      if (!luZhi) return false;
+      for (const pillar of Object.values(pillars)) {
+        if (pillar.zhi === luZhi) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function checkShangGuan(pillars, dayGan) {
+      for (const pillar of Object.values(pillars)) {
+        if (pillar.shiShenGan === "\u4F24\u5B98") {
+          return true;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (hideGan.shiShen === "\u4F24\u5B98") {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function checkShangGuanWang(pillars, dayGan) {
+      let shangGuanCount = 0;
+      for (const pillar of Object.values(pillars)) {
+        if (pillar.shiShenGan === "\u4F24\u5B98") {
+          shangGuanCount++;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (hideGan.shiShen === "\u4F24\u5B98") {
+              shangGuanCount++;
+            }
+          }
+        }
+      }
+      return shangGuanCount >= 2;
+    }
+    function checkBiJie(pillars, dayGan) {
+      const biJie = ["\u6BD4\u80A9", "\u52AB\u8D22"];
+      for (const pillar of Object.values(pillars)) {
+        if (biJie.includes(pillar.shiShenGan)) {
+          return true;
+        }
+        if (pillar.hideGanAttr) {
+          for (const hideGan of pillar.hideGanAttr) {
+            if (biJie.includes(hideGan.shiShen)) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    function checkZiZuoCaiKu(pillars, dayGan) {
+      const caiKuZhi = ["\u8FB0", "\u620C", "\u4E11", "\u672A"];
+      const dayZhi = pillars.day.zhi;
+      if (!caiKuZhi.includes(dayZhi)) {
+        return false;
+      }
+      const dayGanShiShen = pillars.day.shiShenGan;
+      const caiXing = ["\u6B63\u8D22", "\u504F\u8D22"];
+      return caiXing.includes(dayGanShiShen);
+    }
+    function analyzeShenshaForWealth(shensha) {
+      let wealthScore = 0;
+      let description = "\u795E\u715E\u5206\u6790\uFF1A";
+      const allShensha = [];
+      ["nian", "yue", "ri", "shi"].forEach((pillar) => {
+        if (shensha[pillar] && Array.isArray(shensha[pillar])) {
+          shensha[pillar].forEach((s) => allShensha.push(s));
+        }
+      });
+      const wealthShensha = [
+        { name: "\u5929\u4E59\u8D35\u4EBA", score: 8, desc: "\u6709\u8D35\u4EBA\u76F8\u52A9\uFF0C\u8D22\u5BCC\u673A\u4F1A\u591A" },
+        { name: "\u592A\u6781\u8D35\u4EBA", score: 6, desc: "\u6709\u667A\u6167\uFF0C\u80FD\u628A\u63E1\u8D22\u5BCC\u673A\u4F1A" },
+        { name: "\u798F\u661F\u8D35\u4EBA", score: 7, desc: "\u798F\u6C14\u597D\uFF0C\u8D22\u5BCC\u81EA\u7136\u6765" },
+        { name: "\u7984\u795E", score: 9, desc: "\u6709\u7A33\u5B9A\u6536\u5165\u548C\u8D22\u5BCC\u79EF\u7D2F" },
+        { name: "\u5C06\u661F", score: 5, desc: "\u6709\u9886\u5BFC\u624D\u80FD\uFF0C\u80FD\u7BA1\u7406\u8D22\u5BCC" },
+        { name: "\u91D1\u8206", score: 8, desc: "\u6709\u5546\u4E1A\u5934\u8111\uFF0C\u8D22\u5BCC\u8FD0\u597D" },
+        { name: "\u5929\u53A8", score: 6, desc: "\u6709\u98DF\u7984\uFF0C\u8D22\u5BCC\u7A33\u5B9A" },
+        { name: "\u5929\u5FB7\u8D35\u4EBA", score: 7, desc: "\u6709\u5FB7\u884C\uFF0C\u8D22\u5BCC\u957F\u4E45" },
+        { name: "\u6708\u5FB7\u8D35\u4EBA", score: 6, desc: "\u6709\u8D35\u4EBA\uFF0C\u8D22\u5BCC\u673A\u4F1A\u591A" }
+      ];
+      const foundWealthShensha = [];
+      wealthShensha.forEach((shen) => {
+        if (allShensha.some((s) => s.includes(shen.name))) {
+          wealthScore += shen.score;
+          foundWealthShensha.push(shen.name);
+        }
+      });
+      if (foundWealthShensha.length > 0) {
+        description += `\u547D\u5E26${foundWealthShensha.join("\u3001")}\uFF0C\u6709\u5229\u4E8E\u8D22\u5BCC\u79EF\u7D2F`;
+      } else {
+        description += "\u65E0\u663E\u8457\u795E\u715E\u5F71\u54CD\u8D22\u5BCC";
+      }
+      return { wealthScore, description };
+    }
+    function analyzeNaYinForWealth(pillars) {
+      let wealthScore = 0;
+      let description = "\u7EB3\u97F3\u5206\u6790\uFF1A";
+      const naYinMap = {
+        year: pillars.year.naYin,
+        month: pillars.month.naYin,
+        day: pillars.day.naYin,
+        time: pillars.time.naYin
+      };
+      const naYinWealthMap = {
+        \u6D77\u4E2D\u91D1: { score: 6, desc: "\u5185\u655B\u6DF1\u6C89\uFF0C\u8D22\u5BCC\u79EF\u7D2F\u7A33\u5B9A" },
+        \u7089\u4E2D\u706B: { score: 7, desc: "\u70ED\u60C5\u5954\u653E\uFF0C\u8D22\u5BCC\u521B\u9020\u80FD\u529B\u5F3A" },
+        \u5927\u6797\u6728: { score: 5, desc: "\u6210\u957F\u6027\u5F3A\uFF0C\u8D22\u5BCC\u9010\u6B65\u589E\u957F" },
+        \u8DEF\u65C1\u571F: { score: 4, desc: "\u8E0F\u5B9E\u7A33\u91CD\uFF0C\u8D22\u5BCC\u79EF\u7D2F\u7F13\u6162" },
+        \u5251\u950B\u91D1: { score: 8, desc: "\u9510\u5229\u654F\u9510\uFF0C\u8D22\u5BCC\u673A\u4F1A\u628A\u63E1\u5F3A" },
+        \u5C71\u5934\u706B: { score: 6, desc: "\u72EC\u7ACB\u6027\u5F3A\uFF0C\u9002\u5408\u521B\u4E1A\u81F4\u5BCC" },
+        \u6DA7\u4E0B\u6C34: { score: 5, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u8D22\u5BCC\u6765\u6E90\u591A\u6837" },
+        \u57CE\u5934\u571F: { score: 7, desc: "\u7A33\u91CD\u53EF\u9760\uFF0C\u8D22\u5BCC\u57FA\u7840\u624E\u5B9E" },
+        \u767D\u814A\u91D1: { score: 6, desc: "\u7CBE\u81F4\u7EC6\u817B\uFF0C\u9002\u5408\u7CBE\u7EC6\u884C\u4E1A" },
+        \u6768\u67F3\u6728: { score: 4, desc: "\u67D4\u97E7\u6027\u5F3A\uFF0C\u9002\u5E94\u5404\u79CD\u8D22\u5BCC\u673A\u4F1A" },
+        \u6CC9\u4E2D\u6C34: { score: 5, desc: "\u6E90\u8FDC\u6D41\u957F\uFF0C\u8D22\u5BCC\u6301\u4E45\u6027\u597D" },
+        \u5C4B\u4E0A\u571F: { score: 3, desc: "\u5B89\u7A33\u4FDD\u5B88\uFF0C\u8D22\u5BCC\u589E\u957F\u6709\u9650" },
+        \u9739\u96F3\u706B: { score: 9, desc: "\u7206\u53D1\u529B\u5F3A\uFF0C\u6709\u66B4\u5BCC\u673A\u4F1A" },
+        \u677E\u67CF\u6728: { score: 6, desc: "\u575A\u97E7\u4E0D\u62D4\uFF0C\u8D22\u5BCC\u79EF\u7D2F\u6301\u4E45" },
+        \u957F\u6D41\u6C34: { score: 7, desc: "\u6301\u7EED\u4E0D\u65AD\uFF0C\u8D22\u5BCC\u6E90\u6E90\u4E0D\u65AD" },
+        \u6C99\u4E2D\u91D1: { score: 5, desc: "\u9690\u85CF\u6F5C\u529B\uFF0C\u8D22\u5BCC\u9700\u8981\u53D1\u6398" },
+        \u5C71\u4E0B\u706B: { score: 5, desc: "\u6E29\u6696\u548C\u7166\uFF0C\u8D22\u5BCC\u7A33\u5B9A\u589E\u957F" },
+        \u5E73\u5730\u6728: { score: 4, desc: "\u5E73\u7A33\u53D1\u5C55\uFF0C\u8D22\u5BCC\u589E\u957F\u5E73\u7A33" },
+        \u58C1\u4E0A\u571F: { score: 2, desc: "\u4FDD\u5B88\u8C28\u614E\uFF0C\u8D22\u5BCC\u6F5C\u529B\u4E00\u822C" },
+        \u91D1\u7B94\u91D1: { score: 8, desc: "\u5916\u8868\u534E\u4E3D\uFF0C\u9002\u5408\u9AD8\u5229\u6DA6\u884C\u4E1A" },
+        \u4F5B\u706F\u706B: { score: 6, desc: "\u667A\u6167\u5149\u660E\uFF0C\u9760\u667A\u6167\u521B\u9020\u8D22\u5BCC" },
+        \u5929\u6CB3\u6C34: { score: 8, desc: "\u5E7F\u9614\u65E0\u8FB9\uFF0C\u8D22\u5BCC\u673A\u4F1A\u5E7F\u9614" },
+        \u5927\u9A7F\u571F: { score: 5, desc: "\u6C9F\u901A\u80FD\u529B\u5F3A\uFF0C\u9002\u5408\u8D38\u6613\u81F4\u5BCC" },
+        \u9497\u948F\u91D1: { score: 7, desc: "\u7CBE\u81F4\u4F18\u96C5\uFF0C\u9002\u5408\u9AD8\u7AEF\u884C\u4E1A" },
+        \u6851\u67D8\u6728: { score: 4, desc: "\u5B9E\u7528\u6027\u5F3A\uFF0C\u8D22\u5BCC\u6765\u6E90\u5B9E\u5728" },
+        \u5927\u6EAA\u6C34: { score: 6, desc: "\u6D41\u52A8\u53D8\u5316\uFF0C\u8D22\u5BCC\u673A\u4F1A\u591A\u53D8" },
+        \u6C99\u4E2D\u571F: { score: 3, desc: "\u57FA\u7840\u624E\u5B9E\uFF0C\u8D22\u5BCC\u57FA\u7840\u7A33\u56FA" },
+        \u5929\u4E0A\u706B: { score: 9, desc: "\u5FD7\u5411\u9AD8\u8FDC\uFF0C\u6709\u5927\u8D22\u5BCC\u6F5C\u529B" },
+        \u77F3\u69B4\u6728: { score: 7, desc: "\u591A\u624D\u591A\u827A\uFF0C\u8D22\u5BCC\u6765\u6E90\u591A\u6837" },
+        \u5927\u6D77\u6C34: { score: 8, desc: "\u5305\u5BB9\u4E07\u8C61\uFF0C\u8D22\u5BCC\u673A\u4F1A\u4F17\u591A" }
+      };
+      const wealthImpacts = [];
+      let totalScore = 0;
+      let count = 0;
+      Object.entries(naYinMap).forEach(([position, naYin]) => {
+        if (naYinWealthMap[naYin]) {
+          const impact = naYinWealthMap[naYin];
+          totalScore += impact.score;
+          count++;
+          if (position === "day" || position === "time") {
+            const positionMap = {
+              year: "\u5E74",
+              month: "\u6708",
+              day: "\u65E5",
+              time: "\u65F6"
+            };
+            wealthImpacts.push(
+              `${positionMap[position]}\u67F1${naYin}\uFF1A${impact.desc}`
+            );
+          }
+        }
+      });
+      if (count > 0) {
+        wealthScore = Math.round(totalScore / count);
+      }
+      if (wealthImpacts.length > 0) {
+        description += wealthImpacts.join("\uFF1B");
+      } else {
+        description += "\u7EB3\u97F3\u5BF9\u8D22\u5BCC\u7279\u5F81\u4E0D\u660E\u663E";
+      }
+      return { wealthScore, description };
+    }
+    function analyzeWuXingForWealth(result, dayGan) {
+      let wealthScore = 0;
+      let description = "\u4E94\u884C\u5206\u6790\uFF1A";
+      const wuXingPower = result.wuXingPower || {};
+      const wuXingValues = {
+        \u6728: wuXingPower["\u6728"] || 0,
+        \u706B: wuXingPower["\u706B"] || 0,
+        \u571F: wuXingPower["\u571F"] || 0,
+        \u91D1: wuXingPower["\u91D1"] || 0,
+        \u6C34: wuXingPower["\u6C34"] || 0
+      };
+      const values = Object.values(wuXingValues);
+      const maxValue = Math.max(...values);
+      const minValue = Math.min(...values);
+      const range = maxValue - minValue;
+      if (range <= 25) {
+        wealthScore = 6;
+        description += "\u4E94\u884C\u5E73\u8861\uFF08\u5DEE\u503C\u226425\uFF09\uFF0C\u8D22\u5BCC\u7BA1\u7406\u80FD\u529B\u5F3A";
+      } else if (range <= 45) {
+        wealthScore = 3;
+        description += "\u4E94\u884C\u57FA\u672C\u5E73\u8861\uFF08\u5DEE\u503C25-45\uFF09\uFF0C\u8D22\u5BCC\u80FD\u529B\u826F\u597D";
+      } else if (range <= 65) {
+        wealthScore = 0;
+        description += "\u4E94\u884C\u7565\u6709\u504F\u9887\uFF08\u5DEE\u503C45-65\uFF09\uFF0C\u8D22\u5BCC\u6709\u504F\u597D\u9886\u57DF";
+      } else {
+        wealthScore = -4;
+        description += "\u4E94\u884C\u4E25\u91CD\u4E0D\u5E73\u8861\uFF08\u5DEE\u503C>65\uFF09\uFF0C\u8D22\u5BCC\u9886\u57DF\u504F\u597D\u660E\u663E";
+      }
+      description += `\uFF08\u6728${wuXingValues["\u6728"]}% \u706B${wuXingValues["\u706B"]}% \u571F${wuXingValues["\u571F"]}% \u91D1${wuXingValues["\u91D1"]}% \u6C34${wuXingValues["\u6C34"]}%\uFF09`;
+      const dayGanWuXing = GanRelation.getWuXing(dayGan);
+      const dayGanWealthMap = {
+        \u6728: { score: 5, desc: "\u6709\u7B56\u7565\u601D\u7EF4\uFF0C\u9002\u5408\u6295\u8D44\u7406\u8D22" },
+        \u706B: { score: 8, desc: "\u884C\u52A8\u529B\u5F3A\uFF0C\u9002\u5408\u521B\u4E1A\u81F4\u5BCC" },
+        \u571F: { score: 4, desc: "\u7A33\u91CD\u8E0F\u5B9E\uFF0C\u9002\u5408\u7A33\u5B9A\u884C\u4E1A" },
+        \u91D1: { score: 7, desc: "\u601D\u7EF4\u4E25\u8C28\uFF0C\u9002\u5408\u91D1\u878D\u884C\u4E1A" },
+        \u6C34: { score: 6, desc: "\u7075\u6D3B\u53D8\u901A\uFF0C\u9002\u5408\u591A\u79CD\u884C\u4E1A" }
+      };
+      if (dayGanWealthMap[dayGanWuXing]) {
+        wealthScore += dayGanWealthMap[dayGanWuXing].score;
+        description += `\uFF1B\u65E5\u4E3B${dayGan}\u5C5E${dayGanWuXing}\uFF0C${dayGanWealthMap[dayGanWuXing].desc}`;
+      }
+      const maxWuXing = Object.entries(wuXingValues).reduce(
+        (max, [key, value]) => value > max.value ? { key, value } : max,
+        { key: "", value: 0 }
+      );
+      if (maxWuXing.value > 30) {
+        const wealthMap = {
+          \u6728: { score: 3, desc: "\u64C5\u957F\u89C4\u5212\u548C\u6295\u8D44" },
+          \u706B: { score: 5, desc: "\u64C5\u957F\u521B\u4E1A\u548C\u9500\u552E" },
+          \u571F: { score: 2, desc: "\u64C5\u957F\u7A33\u5B9A\u7ECF\u8425" },
+          \u91D1: { score: 4, desc: "\u64C5\u957F\u91D1\u878D\u548C\u7BA1\u7406" },
+          \u6C34: { score: 3, desc: "\u64C5\u957F\u8D38\u6613\u548C\u6D41\u901A" }
+        };
+        if (wealthMap[maxWuXing.key]) {
+          wealthScore += wealthMap[maxWuXing.key].score;
+          description += `\uFF1B${maxWuXing.key}\u65FA\uFF08${maxWuXing.value}%\uFF09\uFF0C${wealthMap[maxWuXing.key].desc}`;
+        }
+      }
+      return { wealthScore, description };
+    }
+    function getWealthLevel(score) {
+      if (score >= 90) return "\u4EBF\u4E07\u5BCC\u7FC1\u7EA7\u522B";
+      if (score >= 80) return "\u5343\u4E07\u5BCC\u7FC1\u7EA7\u522B";
+      if (score >= 70) return "\u767E\u4E07\u5BCC\u7FC1\u7EA7\u522B";
+      if (score >= 60) return "\u4E2D\u4EA7\u9636\u7EA7\u504F\u4E0A";
+      if (score >= 50) return "\u4E2D\u4EA7\u9636\u7EA7";
+      if (score >= 40) return "\u5C0F\u5EB7\u6C34\u5E73";
+      return "\u666E\u901A\u6C34\u5E73";
+    }
     module.exports = {
-      analyzeGameTalent
+      analyzeGameTalent,
+      analyzeWealthLevel
     };
   }
 });
@@ -15153,9 +15634,9 @@ var require_analysis = __commonJS({
     var { getZhiHiddenGans } = require_zhiHideGan();
     var GanRelation = require_ganRelation();
     var ZhiRelation = require_zhiRelation();
-    var { rishi } = require_xcx_bazi_1();
-    var { rixiangxi } = require_xcx_bazi_2();
-    var { xiyongshen } = require_xcx_bazi_4();
+    var { rishi } = require_bazi_1();
+    var { rixiangxi } = require_bazi_2();
+    var { xiyongshen } = require_bazi_4();
     var YuanhaiZiping = require_yuanhaiZiping();
     var Ganzhi = require_ganzhi();
     var {
@@ -19822,9 +20303,9 @@ var require_index = __commonJS({
   "index.js"(exports, module) {
     var { getEightCharObject, LunarUtil, Solar } = require_lunar_javascript();
     var { getZhiHiddenGans } = require_zhiHideGan();
-    var { rishi } = require_xcx_bazi_1();
-    var { rixiangxi } = require_xcx_bazi_2();
-    var { xiyongshen } = require_xcx_bazi_4();
+    var { rishi } = require_bazi_1();
+    var { rixiangxi } = require_bazi_2();
+    var { xiyongshen } = require_bazi_4();
     var GanRelation = require_ganRelation();
     var ZhiRelation = require_zhiRelation();
     var wuXingConfig;
