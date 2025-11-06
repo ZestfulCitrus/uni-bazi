@@ -14300,7 +14300,7 @@ var require_svc = __commonJS({
         if (Array.isArray(value)) {
           allShensha.push(...value);
         } else if (typeof value === "object" && value !== null) {
-          return;
+          continue;
         }
       }
       const positiveShensha = [
