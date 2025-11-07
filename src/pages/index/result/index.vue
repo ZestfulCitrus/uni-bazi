@@ -13,19 +13,24 @@
           <view>
             <view class="cw pl8"
               >出生日期：{{ userInfo.birthdayDisplay }}
-              {{ userInfo.sex }} 黄帝纪年
-              {{
-                all.Lunar.fromDate(
-                  new Date(parseInt(userInfo.birthday))
-                ).getYear() + 2697
-              }}
-              年出生</view
-            >
+              {{ userInfo.sex }}
+            </view>
+            <view class="cw pl8"
+                >黄帝纪年：
+                {{
+                  all.Lunar.fromDate(
+                    new Date(parseInt(userInfo.birthday))
+                  ).getYear() + 2697
+                }}
+                年出生</view
+              >
             <view class="cw pl8"
               >旺衰参考：{{
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
               }}
-              ===== 阴阳：{{ analysisResult.data.yuanHaiZiping.yinyang.judge }}</view
+              ===== 阴阳：{{
+                analysisResult.data.yuanHaiZiping.yinyang.judge
+              }}</view
             >
             <view class="cw pl8"
               >湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
