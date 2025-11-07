@@ -23,13 +23,6 @@
               }}) 正常范围[-6,6]</view
             >
           </view>
-          <view class="result-qrcode">
-            <uv-qrcode
-              ref="qrcode"
-              size="60px"
-              :value="`https://space.bilibili.com/3546581452196143`"
-            ></uv-qrcode>
-          </view>
         </view>
       </view>
     </view>
@@ -124,20 +117,104 @@
         :text="item"
       ></uv-text>
     </view>
-    <view class="table-title bg-light">
-      <uv-text align="center" type="info" text="副星"></uv-text>
-      <uv-text
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.liunianzhishen[0]"
-      ></uv-text>
-      <uv-text
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.dayunzhishen[0]"
-      ></uv-text>
-      <uv-text
+    <view class="bg-light" style="display: flex">
+      <view style="flex: 1" size="13">
+        <uv-text align="center" type="info" text="副星"></uv-text>
+      </view>
+      <view style="flex: 1">
+        <view
+          align="center"
+          style="display: flex; justify-content: center"
+          v-for="item in analysisResult.data.ret_Info?.currentYear
+            ?.liunianzhishen"
+        >
+          <view style="margin-right: 4rpx">
+            <uv-text
+              align="center"
+              size="13"
+              :type="heavenlyStemsColorMap[item.gan]"
+              :text="item.gan"
+            ></uv-text>
+          </view>
+          <view>
+            <uv-text
+              size="13"
+              align="center"
+              type="info"
+              :text="item.shiShen"
+            ></uv-text>
+          </view>
+        </view>
+      </view>
+      <view style="flex: 1">
+        <view
+          align="center"
+          style="display: flex; justify-content: center"
+          v-for="item in analysisResult.data.ret_Info?.currentYear
+            ?.dayunzhishen"
+        >
+          <view style="margin-right: 4rpx">
+            <uv-text
+              size="13"
+              align="center"
+              :type="heavenlyStemsColorMap[item.gan]"
+              :text="item.gan"
+            ></uv-text>
+          </view>
+          <view>
+            <uv-text
+              size="13"
+              align="center"
+              type="info"
+              :text="item.shiShen"
+            ></uv-text>
+          </view>
+        </view>
+      </view>
+      <view
         v-for="item in analysisResult.data.ret_Info.zhi_shens"
+        style="flex: 1"
+      >
+        <view
+          v-for="jtem in item"
+          style="display: flex; justify-content: center"
+          align="center"
+          type="info"
+        >
+          <view style="margin-right: 4rpx">
+            <uv-text
+              size="13"
+              align="center"
+              :type="heavenlyStemsColorMap[jtem.gan]"
+              :text="jtem.gan"
+            ></uv-text>
+          </view>
+          <view>
+            <uv-text
+              size="13"
+              align="center"
+              type="info"
+              :text="jtem.shiShen"
+            ></uv-text
+          ></view>
+        </view>
+      </view>
+    </view>
+    <view class="table-column">
+      <uv-text align="center" type="info" text="空亡"></uv-text>
+      <uv-text
+        align="center"
+        type="info"
+        :text="analysisResult.data.ret_Info?.currentYear?.liunianXunkong"
+      ></uv-text>
+      <uv-text
+        class="br1 mh32"
+        align="center"
+        type="info"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayunXunkong"
+      ></uv-text>
+      <uv-text
+        v-for="item in analysisResult.data.ret_Info.xunkong"
         align="center"
         type="info"
         :text="item"
@@ -309,6 +386,10 @@
       ></uv-text>
       <uv-text
         mode="info"
+        :text="'胎元：' + analysisResult.data.ret_Info?.taiYuan"
+      ></uv-text>
+      <uv-text
+        mode="info"
         :text="'五行力量：' + analysisResult.data.ret_Info?.wuxing"
       ></uv-text>
       <uv-text
@@ -403,8 +484,8 @@
       <uv-text mode="info" :text="'详细描述：'"></uv-text>
       <uv-text
         mode="info"
-        v-for="item, index in analysisResult.data.taiSui.details"
-        :text="(index + 1) + '.' + item"
+        v-for="(item, index) in analysisResult.data.taiSui.details"
+        :text="index + 1 + '.' + item"
       ></uv-text>
     </view>
     <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
@@ -509,16 +590,24 @@ const analysisResult = reactive({
       basic_analysis_1: "",
       basic_analysis_2: "",
       gan_shens: ["", "", "--", ""],
-      zhi_shens: ["", "", "", ""],
+      xunkong: ["", "", "", ""],
+      zhi_shens: [
+        [{ shiShen: "", gan: "" }],
+        [{ shiShen: "", gan: "" }],
+        [{ shiShen: "", gan: "" }],
+        [{ shiShen: "", gan: "" }],
+      ],
       isStrong: false,
       wealth_level: "",
       currentYear: {
         dayun: ["", ""],
         dayunganshen: "",
-        dayunzhishen: ["", "", ""],
+        dayunzhishen: [{ shiShen: "", gan: "" }],
         liunian: ["", ""],
         liunianganshen: "",
-        liunianzhishen: ["", "", ""],
+        liunianzhishen: [{ shiShen: "", gan: "" }],
+        dayunXunkong: "",
+        liunianXunkong: "",
       },
       family_background: "",
       spouse_appearance: "",
@@ -532,6 +621,7 @@ const analysisResult = reactive({
       },
       xiYongShen: "",
       shengong: "",
+      taiYuan: "",
       wuxing: "",
       sport_talent: "",
       game_talent: "",
@@ -683,36 +773,36 @@ const applyResult = (
         res.pillars.time.shiShenGan,
       ],
       zhi_shens: [
-        res.pillars.year.shiShenZhi[0],
-        res.pillars.month.shiShenZhi[0],
-        res.pillars.day.shiShenZhi[0],
-        res.pillars.time.shiShenZhi[0],
+        res.pillars.year.hideGanAttr,
+        res.pillars.month.hideGanAttr,
+        res.pillars.day.hideGanAttr,
+        res.pillars.time.hideGanAttr,
       ],
       isStrong:
         res.yuanHaiZiping.shenQiang.score >=
         res.yuanHaiZiping.shenQiang.threshold,
       wealth_level: "",
+      xunkong: [
+        res.pillars.year.xunKong,
+        res.pillars.month.xunKong,
+        res.pillars.day.xunKong,
+        res.pillars.time.xunKong,
+      ],
       currentYear: {
         dayun: [
           res.currentYun.daYun?.ganZhi?.[0],
           res.currentYun.daYun?.ganZhi?.[1],
         ],
         dayunganshen: res.currentYun.daYun?.shiShen,
-        dayunzhishen: [
-          res.currentYun.daYun?.zhiHideGanShiShen?.[0].shiShen,
-          "",
-          "",
-        ],
+        dayunzhishen: res.currentYun.daYun?.zhiHideGanShiShen,
         liunian: [
           res.currentYun.liuNian.ganZhi[0],
           res.currentYun.liuNian.ganZhi[1],
         ],
         liunianganshen: res.currentYun.liuNian?.shiShen,
-        liunianzhishen: [
-          res.currentYun.liuNian?.zhiHideGanShiShen[0].shiShen,
-          "",
-          "",
-        ],
+        liunianzhishen: res.currentYun.liuNian?.zhiHideGanShiShen,
+        dayunXunkong: res.currentYun.daYun?.xunKong,
+        liunianXunkong: res.currentYun.liuNian?.xunKong,
       },
       family_background: `${res.familyBackground.description} (${res.familyBackground.score})`,
       spouse_appearance:
@@ -730,6 +820,7 @@ const applyResult = (
       },
       xiYongShen: "*",
       shengong: res.shenGong + "(" + res.shenGongNaYin + ")",
+      taiYuan: res.taiYuan + "(" + res.taiYuanNaYin + ")",
       wuxing: `金：${res.wuXingPower["金"]}，水：${res.wuXingPower["水"]}，木：${res.wuXingPower["木"]}，火：${res.wuXingPower["火"]}，土：${res.wuXingPower["土"]}`,
       sport_talent: "*",
       game_talent: "*",
