@@ -322,8 +322,7 @@
       title=""
       style="margin: 8px 8px 0 8px"
       type="warning"
-      description="以下程序函数仅属于测试阶段，大家千万图一乐，预测结果仅供娱乐！有问题可以直接在b站评论, 误差如果过大，可以直接把盘发给我无偿简批！"
-      closable
+      description="软件参考《三命通会》、《渊海子平》、《子平真诠》等书籍使用程序量化计算，本软件仅供娱乐、学习用途，有问题可以直接在b站评论或者私信作者。"
     ></uv-alert>
 
     <view
@@ -496,9 +495,9 @@
   </view>
   <uv-popup ref="popups" :close-on-click-overlay="false" overlayOpacity="0.7">
     <uv-alert
-      title="拒绝白嫖"
+      title="关注不迷路，查看B站主页简介获取验证码"
       type="warning"
-      description="关注UP后,查看主页获取验证码即可继续查看~"
+      description="验证码可能在版本更新后替换，一次验证后可以无限次使用"
     ></uv-alert>
     <view
       style="
