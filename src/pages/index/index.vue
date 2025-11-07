@@ -222,7 +222,13 @@ const handleCardClick = (item) => {
 };
 
 onLoad((option) => {
-  console.log(option?.step);
   step.value = option?.step ? parseInt(option?.step) : 1;
+  if (option?.birthday) {
+    userInfo.birthday = `${option.birthday}`;
+    userInfo.birthdayDisplay = formatTimestampDisplay(parseInt(option.birthday));
+  }
+  if (option?.sex) {
+    userInfo.sex = option.sex;
+  }
 });
 </script>

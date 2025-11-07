@@ -11,7 +11,16 @@
         <view class="star yellow"></view>
         <view class="info-card">
           <view>
-            <view class="cw pl8">出生日期：{{ userInfo.birthdayDisplay }}</view>
+            <view class="cw pl8"
+              >出生日期：{{ userInfo.birthdayDisplay }}
+              {{ userInfo.sex }} 黄帝纪年
+              {{
+                all.Lunar.fromDate(
+                  new Date(parseInt(userInfo.birthday))
+                ).getYear() + 2697
+              }}
+              年出生</view
+            >
             <view class="cw pl8"
               >旺衰参考：{{
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
@@ -424,7 +433,11 @@
     >
       <uv-text
         type="info"
-        :text="analysisResult.data.bazi.TianGan[2]+analysisResult.data.bazi.DiZhi[2] + '日柱三命通会精论'"
+        :text="
+          analysisResult.data.bazi.TianGan[2] +
+          analysisResult.data.bazi.DiZhi[2] +
+          '日柱三命通会精论'
+        "
       ></uv-text>
       <uv-divider></uv-divider>
       <uv-text

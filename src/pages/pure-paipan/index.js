@@ -20301,7 +20301,7 @@ var require_shensha = __commonJS({
 // index.js
 var require_index = __commonJS({
   "index.js"(exports, module) {
-    var { getEightCharObject, LunarUtil, Solar } = require_lunar_javascript();
+    var { getEightCharObject, LunarUtil, Solar, Lunar } = require_lunar_javascript();
     var { getZhiHiddenGans } = require_zhiHideGan();
     var { rishi } = require_bazi_1();
     var { rixiangxi } = require_bazi_2();
@@ -20671,7 +20671,8 @@ var require_index = __commonJS({
     }
     module.exports = {
       fromBaZi,
-      getCurrentEightCharJSON
+      getCurrentEightCharJSON,
+      Lunar
     };
     module.exports.default = module.exports;
   }
