@@ -24,13 +24,15 @@
             <view class="cw pl8"
               >旺衰参考：{{
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
-              }}</view
+              }}
+              阴阳：{{ analysisResult.data.yuanHaiZiping.yinyang.judge }}</view
             >
             <view class="cw pl8"
               >湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
                 analysisResult.data.yuanHaiZiping.shidu.score
               }}) 正常范围[-6,6]</view
             >
+            <view class="cw pl8"></view>
           </view>
         </view>
       </view>
@@ -649,6 +651,10 @@ const analysisResult = reactive({
     },
     yuanHaiZiping: {
       shidu: {
+        score: "",
+        judge: "",
+      },
+      yinyang: {
         score: "",
         judge: "",
       },

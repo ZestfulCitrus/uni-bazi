@@ -11709,8 +11709,8 @@ var require_zhiHideGan = __commonJS({
       ],
       "\u672A": [
         { gan: "\u5DF1", qiLevel: "\u672C\u6C14" },
-        { gan: "\u4E59", qiLevel: "\u4E2D\u6C14" },
-        { gan: "\u4E01", qiLevel: "\u4F59\u6C14" }
+        { gan: "\u4E01", qiLevel: "\u4F59\u6C14" },
+        { gan: "\u4E59", qiLevel: "\u4E2D\u6C14" }
       ],
       "\u7533": [
         { gan: "\u5E9A", qiLevel: "\u672C\u6C14" },
@@ -13614,11 +13614,11 @@ var require_yuanhaiZiping = __commonJS({
         if (score >= 7) {
           judge = "\u7EAF\u9633";
         } else if (score >= 3) {
-          judge = "\u592A\u9633";
+          judge = "\u504F\u9633";
         } else if (score >= -2) {
           judge = "\u5E73\u8861";
         } else if (score >= -6) {
-          judge = "\u592A\u9634";
+          judge = "\u504F\u9634";
         } else {
           judge = "\u7EAF\u9634";
         }
