@@ -25,7 +25,7 @@
               >旺衰参考：{{
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
               }}
-              阴阳：{{ analysisResult.data.yuanHaiZiping.yinyang.judge }}</view
+              ===== 阴阳：{{ analysisResult.data.yuanHaiZiping.yinyang.judge }}</view
             >
             <view class="cw pl8"
               >湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
