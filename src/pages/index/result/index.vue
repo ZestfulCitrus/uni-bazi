@@ -424,7 +424,7 @@
     >
       <uv-text
         type="info"
-        :text="analysisResult.data.ret_Info?.shengong + '日柱三命通会精论'"
+        :text="analysisResult.data.bazi.TianGan[2]+analysisResult.data.bazi.DiZhi[2] + '日柱三命通会精论'"
       ></uv-text>
       <uv-divider></uv-divider>
       <uv-text
