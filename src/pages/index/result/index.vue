@@ -422,7 +422,10 @@
         padding: 8px;
       "
     >
-      <uv-text type="info" text="三命通会"></uv-text>
+      <uv-text
+        type="info"
+        :text="analysisResult.data.ret_Info?.shengong + '日柱三命通会精论'"
+      ></uv-text>
       <uv-divider></uv-divider>
       <uv-text
         mode="info"
