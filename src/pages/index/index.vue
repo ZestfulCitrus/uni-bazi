@@ -11,13 +11,23 @@
       <!-- 仅在桌面端显示二维码 -->
       <view class="result-qrcode" v-if="!isMobile">
         <view
-          ><view class="qrcode-title">请扫描二维码使用工具</view>
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+          "
+          ><view class="qrcode-title">玄烛命理是一款移动端排盘工具</view>
+          <view class="qrcode-title"
+            >请扫描二维码使用工具，或者使用手机浏览器打开</view
+          >
           <uv-qrcode
             ref="qrcode"
             size="140px"
             :value="`https://8char.space`"
-          ></uv-qrcode
-        ></view>
+          ></uv-qrcode>
+          <view class="qrcode-title"></view>
+        </view>
       </view>
       <uv-form
         v-if="isMobile"
