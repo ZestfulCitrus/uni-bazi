@@ -2,13 +2,30 @@
   <view>
     <uv-transition class="content" :show="step === 1">
       <uv-alert
+        v-if="isMobile"
         title=""
         type="warning"
         description="作者：B站账户：玄烛解八字。计算器的计算结果可以满足大多数场景，使用本工具的人默认您已经把预测结果当作娱乐。"
         closable
       ></uv-alert>
-
-      <uv-form labelPosition="left" :model="userInfo" :rules="rules" ref="form">
+      <!-- 仅在桌面端显示二维码 -->
+      <view class="result-qrcode" v-if="!isMobile">
+        <view
+          ><view class="qrcode-title">请扫描二维码使用工具</view>
+          <uv-qrcode
+            ref="qrcode"
+            size="140px"
+            :value="`https://8char.space`"
+          ></uv-qrcode
+        ></view>
+      </view>
+      <uv-form
+        v-if="isMobile"
+        labelPosition="left"
+        :model="userInfo"
+        :rules="rules"
+        ref="form"
+      >
         <uv-form-item
           label="性别"
           prop="sex"
@@ -68,7 +85,9 @@
             @click="handleCardClick(item)"
           >
             <view class="card-content">
-              <text class="birthday">{{ item.birthdayDisplay }}--{{ item.sex }}</text>
+              <text class="birthday"
+                >{{ item.birthdayDisplay }}--{{ item.sex }}</text
+              >
             </view>
             <uv-icon name="arrow-right" size="16"></uv-icon>
           </view>
@@ -221,11 +240,20 @@ const handleCardClick = (item) => {
   step.value = 2;
 };
 
+const isMobile = ref(false);
+
 onLoad((option) => {
+  // 判断是否为移动端
+  isMobile.value =
+    uni.getSystemInfoSync().platform === "ios" ||
+    uni.getSystemInfoSync().platform === "android";
+
   step.value = option?.step ? parseInt(option?.step) : 1;
   if (option?.birthday) {
     userInfo.birthday = `${option.birthday}`;
-    userInfo.birthdayDisplay = formatTimestampDisplay(parseInt(option.birthday));
+    userInfo.birthdayDisplay = formatTimestampDisplay(
+      parseInt(option.birthday)
+    );
   }
   if (option?.sex) {
     userInfo.sex = option.sex;

@@ -205,7 +205,16 @@
 }
 
 .result-qrcode{
-  height: 60px;
-  width: 60px;
-  margin-right: 8px;
+  height: 140px;
+  width: 100%;
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  .qrcode-title{
+    font-size: 14px;
+    color: #303133;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
 }
