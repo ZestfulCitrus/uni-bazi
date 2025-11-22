@@ -16,14 +16,14 @@
               {{ userInfo.sex }}
             </view>
             <view class="cw pl8"
-                >黄帝纪年：
-                {{
-                  all.Lunar.fromDate(
-                    new Date(parseInt(userInfo.birthday))
-                  ).getYear() + 2697
-                }}
-                年出生</view
-              >
+              >黄帝纪年：
+              {{
+                all.Lunar.fromDate(
+                  new Date(parseInt(userInfo.birthday))
+                ).getYear() + 2697
+              }}
+              年出生</view
+            >
             <view class="cw pl8"
               >旺衰参考：{{
                 analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
@@ -317,10 +317,13 @@
         style="
           margin-top: 8px;
           margin-bottom: 8px;
+          margin-left: 8px;
+          margin-right: 8px;
           display: flex;
-          justify-content: space-around;
+          justify-content: flex-start;
           flex-direction: row;
           flex-wrap: wrap;
+          gap: 4px;
         "
       >
         <uv-tags
@@ -510,6 +513,34 @@
         :text="index + 1 + '.' + item"
       ></uv-text>
     </view>
+    <view
+      v-if="select_tag === 5"
+      style="
+        background-color: #f4f4f5;
+        border-radius: 8px;
+        border: 1px solid #f4f4f5;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 8px;
+      "
+    >
+      <view style="display: flex; align-items: center; gap: 8rpx">
+        <uv-text
+          type="info"
+          text="请复制如下内容，选择deepseek等模型进行分析"
+        ></uv-text>
+      </view>
+      <uv-divider></uv-divider>
+      <uv-button
+        :plain="true"
+        type="primary"
+        icon="file-text"
+        @click="copyPrompt(analysisResult.data.ai)"
+        >复制</uv-button
+      >
+      <uv-text :text="analysisResult.data.ai"></uv-text>
+    </view>
     <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="分析依据"></uv-text>
       <uv-divider></uv-divider>
@@ -549,6 +580,96 @@ const loading = ref(false);
 const popups = ref();
 const select_tag = ref(0);
 const satoken = ref("");
+
+function convertBaziToPrompt(baziData) {
+  const {
+    pillars,
+    current,
+    currentYun,
+    wuXingPower,
+    analysis,
+    shensha,
+    familyBackground,
+    educationAndTalent,
+    gameTalent,
+    spouseAppearance,
+    selfAppearance,
+    yuanHaiZiping,
+  } = baziData;
+
+  const prompt = `
+作为一名精通易理、命理和子平法三命通会的玄学大师，请根据以下八字命盘信息进行详细分析：
+
+## 基本信息
+- 出生时间：${baziData.input.year}年${baziData.input.month}月${
+    baziData.input.day
+  }日 ${baziData.input.hour}时${baziData.input.minute}分
+- 当前时间：${baziData.current.year}年${baziData.current.month}月${
+    baziData.current.day
+  }日
+- 性别：${baziData.gender}
+- 八字四柱：${pillars.year.value} ${pillars.month.value} ${pillars.day.value} ${
+    pillars.time.value
+  }
+- 四柱天干十神：${pillars.year.shiShenGan} ${pillars.month.shiShenGan} ${
+    pillars.day.shiShenGan
+  } ${pillars.time.shiShenGan}
+- 四柱地支包含藏干十神：${pillars.year.shiShenZhi} ${
+    pillars.month.shiShenZhi
+  } ${pillars.day.shiShenZhi} ${pillars.time.shiShenZhi}
+
+## 五行力量分布
+${Object.entries(wuXingPower)
+  .map(([element, power]) => `${element}行：${power}%`)
+  .join(" | ")}
+
+## 当前运势（${currentYun.daYun.startYear}-${currentYun.daYun.endYear}年）
+- 大运：${currentYun.daYun.ganZhi.join("")}（天干十神：${
+    currentYun.daYun.shiShen
+  } 地支包含藏干十神：${currentYun.daYun.zhiHideGanShiShen.map(
+    (y) => y.shiShen
+  )}）
+- 流年：${currentYun.liuNian.ganZhi.join("")}（天干十神：${
+    currentYun.liuNian.shiShen
+  } 地支包含藏干十神：${currentYun.liuNian.zhiHideGanShiShen.map(
+    (y) => y.shiShen
+  )}）
+- 流月：${currentYun.liuYue.ganZhi.join("")}（天干十神：${
+    currentYun.liuYue.shiShen
+  } 地支包含藏干十神：${currentYun.liuYue.zhiHideGanShiShen.map(
+    (y) => y.shiShen
+  )}）
+
+## 专业命理特征
+- 身强身弱：${yuanHaiZiping.shenQiang.judge}（得分：${
+    yuanHaiZiping.shenQiang.score
+  }） 大于 29 为强
+- 冷暖_CTRL：${yuanHaiZiping.shidu.judge}（得分：${
+    yuanHaiZiping.shidu.score
+  }） 正常范围 ${yuanHaiZiping.shidu.normalRange}
+- 阴阳平衡：${yuanHaiZiping.yinyang.judge}
+- 用神建议：${analysis.XiYongShen.join("；")}
+
+## 神煞
+- 年：${shensha.nian?.join(",") || "无"}
+- 月：${shensha.yue?.join(",") || "无"}
+- 日：${shensha.ri?.join(",") || "无"}
+- 时：${shensha.shi?.join(",") || "无"}
+
+请基于以上信息，结合子平法、三命通会等传统命理学说，对此命盘进行全面分析，包括：
+1. 性格特点与人生格局
+2. 事业财运发展趋势
+3. 感情婚姻状况
+4. 健康注意事项
+5. 当前大运流年的具体影响
+6. 给出实用的生活建议
+
+请用专业、详实但易懂的语言进行解读。
+`;
+
+  return prompt;
+}
+
 const heavenlyStemsColorMap = {
   甲: "success", // 木 - 绿色
   乙: "success", // 木 - 绿色
@@ -583,6 +704,7 @@ const radios = [
   { label: "日柱分析" },
   { label: "时柱分析" },
   { label: "流年太岁" },
+  { label: "AI分析" },
 ];
 
 const radioClick = (index: any) => {
@@ -595,6 +717,18 @@ interface UserInfo {
   birthday: "";
   birthdayDisplay: "";
 }
+
+const copyPrompt = (text) => {
+  uni.setClipboardData({
+    data: text,
+    success: () => {
+      uni.showToast({
+        title: "复制成功",
+        icon: "success",
+      });
+    },
+  });
+};
 
 const analysisResult = reactive({
   data: {
@@ -681,6 +815,7 @@ const analysisResult = reactive({
       },
       details: ["日干乙(木) vs 太岁庚 辰(金) → 岁克日"],
     },
+    ai: "",
   },
 });
 
@@ -877,6 +1012,7 @@ const applyResult = (
       }),
     },
     taiSui: res.yuanHaiZiping.taiSui,
+    ai: convertBaziToPrompt(res),
   };
 };
 const openPop = async () => {
