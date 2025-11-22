@@ -822,8 +822,8 @@ const applyResult = (
         dayunganshen: res.currentYun.daYun?.shiShen,
         dayunzhishen: res.currentYun.daYun?.zhiHideGanShiShen,
         liunian: [
-          res.currentYun.liuNian.ganZhi[0],
-          res.currentYun.liuNian.ganZhi[1],
+          res.currentYun?.liuNian?.ganZhi[0],
+          res.currentYun?.liuNian?.ganZhi[1],
         ],
         liunianganshen: res.currentYun.liuNian?.shiShen,
         liunianzhishen: res.currentYun.liuNian?.zhiHideGanShiShen,

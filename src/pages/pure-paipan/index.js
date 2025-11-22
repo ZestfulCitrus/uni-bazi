@@ -20301,7 +20301,12 @@ var require_shensha = __commonJS({
 // index.js
 var require_index = __commonJS({
   "index.js"(exports, module) {
-    var { getEightCharObject, LunarUtil, Solar, Lunar } = require_lunar_javascript();
+    var {
+      getEightCharObject,
+      LunarUtil,
+      Solar,
+      Lunar
+    } = require_lunar_javascript();
     var { getZhiHiddenGans } = require_zhiHideGan();
     var { rishi } = require_bazi_1();
     var { rixiangxi } = require_bazi_2();
@@ -20641,18 +20646,22 @@ var require_index = __commonJS({
       Shensha.applyTianYiStar(result);
       Shensha.applyTianDeHe(result);
       result.analysis = Analysis.buildAnalysisTexts(result.pillars);
-      result.yuanHaiZiping = {
-        yueLing: Analysis.analyzeYuanHaiZiPingYueLing(result.pillars, {
-          includeZhi: true,
-          yongShenTenGods: result?.yongShen?.tenGods || []
-        }),
-        taiSui: Analysis.analyzeYuanHaiZiPingTaiSui(result.pillars, {
-          taiSui: {
-            gan: result.currentYun.liuNian.ganZhi[0],
-            zhi: result.currentYun.liuNian.ganZhi[1]
-          }
-        })
-      };
+      if (result.currentYun.liuNian && result.currentYun.liuNian.ganZhi) {
+        result.yuanHaiZiping = {
+          yueLing: Analysis.analyzeYuanHaiZiPingYueLing(result.pillars, {
+            includeZhi: true,
+            yongShenTenGods: result?.yongShen?.tenGods || []
+          }),
+          taiSui: Analysis.analyzeYuanHaiZiPingTaiSui(result.pillars, {
+            taiSui: {
+              gan: result.currentYun.liuNian.ganZhi[0],
+              zhi: result.currentYun.liuNian.ganZhi[1]
+            }
+          })
+        };
+      } else {
+        result.yuanHaiZiping = {};
+      }
       result.yuanHaiZiping.shenQiang = Analysis.computeShenQiangScore(result);
       result.yuanHaiZiping.shidu = Analysis.computeShiduScore(result);
       result.yuanHaiZiping.yinyang = Analysis.computeYinyangScore(result);
