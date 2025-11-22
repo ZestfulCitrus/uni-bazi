@@ -353,7 +353,7 @@
         padding: 8px;
       "
     >
-      <uv-text type="info" text="命盘分析结果 beta"></uv-text>
+      <uv-text type="info" text="八字打分"></uv-text>
       <uv-divider></uv-divider>
       <uv-text
         mode="info"
