@@ -317,13 +317,13 @@
         style="
           margin-top: 8px;
           margin-bottom: 8px;
-          margin-left: 8px;
-          margin-right: 8px;
+          margin-left: 4px;
+          margin-right: 4px;
           display: flex;
           justify-content: flex-start;
           flex-direction: row;
           flex-wrap: wrap;
-          gap: 4px;
+          gap: 2px;
         "
       >
         <uv-tags
@@ -704,7 +704,7 @@ const radios = [
   { label: "日柱分析" },
   { label: "时柱分析" },
   { label: "流年太岁" },
-  { label: "AI分析" },
+  { label: "AI提示词" },
 ];
 
 const radioClick = (index: any) => {
