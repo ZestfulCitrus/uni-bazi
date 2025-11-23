@@ -623,20 +623,20 @@ ${Object.entries(wuXingPower)
   .map(([element, power]) => `${element}行：${power}%`)
   .join(" | ")}
 
-## 当前运势（${currentYun.daYun.startYear}-${currentYun.daYun.endYear}年）
-- 大运：${currentYun.daYun.ganZhi.join("")}（天干十神：${
-    currentYun.daYun.shiShen
-  } 地支包含藏干十神：${currentYun.daYun.zhiHideGanShiShen.map(
+## 当前运势（${currentYun?.daYun?.startYear}-${currentYun?.daYun?.endYear}年）
+- 大运：${currentYun.daYun?.ganZhi?.join("")}（天干十神：${
+    currentYun.daYun?.shiShen
+  } 地支包含藏干十神：${currentYun.daYun?.zhiHideGanShiShen?.map(
     (y) => y.shiShen
   )}）
-- 流年：${currentYun.liuNian.ganZhi.join("")}（天干十神：${
-    currentYun.liuNian.shiShen
-  } 地支包含藏干十神：${currentYun.liuNian.zhiHideGanShiShen.map(
-    (y) => y.shiShen
+- 流年：${currentYun.liuNian?.ganZhi?.join("")}（天干十神：${
+    currentYun.liuNian?.shiShen
+  } 地支包含藏干十神：${currentYun.liuNian?.zhiHideGanShiShen?.map(
+    (y) => y?.shiShen
   )}）
-- 流月：${currentYun.liuYue.ganZhi.join("")}（天干十神：${
-    currentYun.liuYue.shiShen
-  } 地支包含藏干十神：${currentYun.liuYue.zhiHideGanShiShen.map(
+- 流月：${currentYun.liuYue?.ganZhi?.join("")}（天干十神：${
+    currentYun.liuYue?.shiShen
+  } 地支包含藏干十神：${currentYun.liuYue?.zhiHideGanShiShen?.map(
     (y) => y.shiShen
   )}）
 
