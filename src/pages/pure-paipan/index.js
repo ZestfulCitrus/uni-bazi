@@ -13752,15 +13752,32 @@ var require_ganzhi = __commonJS({
         if (!aGan || !bGan) return;
         if (GanRelation.isWuHe(aGan, bGan)) {
           const el = GanRelation.getWuHeElement(aGan, bGan);
-          if (el && el !== "\u65E0\u5408" && el !== "\u672A\u77E5") res.push({ from: fromLabel, to: toLabel, desc: `${aGan}${bGan}\u5408${el}` });
-          else res.push({ from: fromLabel, to: toLabel, desc: `${aGan}${bGan}\u76F8\u5408` });
+          if (el && el !== "\u65E0\u5408" && el !== "\u672A\u77E5")
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: `${aGan}${bGan}\u5408${el}`
+            });
+          else
+            res.push({ from: fromLabel, to: toLabel, desc: `${aGan}${bGan}\u76F8\u5408` });
           return;
         }
         const rel = GanRelation.getKeRelation(aGan, bGan);
         if (rel === "\u6211\u514B" || rel === "\u514B\u6211") {
           const selfEl = GanRelation.getWuXing(aGan);
           const targetEl = GanRelation.getWuXing(bGan);
-          res.push({ from: fromLabel, to: toLabel, desc: `${aGan}\u514B${bGan}(${selfEl}\u514B${targetEl})` });
+          if (res === "\u6211\u514B")
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: `${aGan}\u514B${bGan}(${selfEl}\u514B${targetEl})`
+            });
+          else
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: `${bGan}\u514B${aGan}(${targetEl}\u514B${selfEl})`
+            });
         }
       };
       for (let i = 0; i < items.length; i++) {
@@ -13804,15 +13821,25 @@ var require_ganzhi = __commonJS({
         if (aZhi === bZhi && isAliasSameContext(fromLabel, toLabel)) return;
         if (ZhiRelation.isLiuHe(aZhi, bZhi)) {
           const el = ZhiRelation.getLiuHeElement(aZhi, bZhi);
-          if (el) res.push({ from: fromLabel, to: toLabel, desc: `${aZhi}${bZhi}\u5408\u5316${el}` });
-          else res.push({ from: fromLabel, to: toLabel, desc: `${aZhi}${bZhi}\u516D\u5408` });
+          if (el)
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: `${aZhi}${bZhi}\u5408\u5316${el}`
+            });
+          else
+            res.push({ from: fromLabel, to: toLabel, desc: `${aZhi}${bZhi}\u516D\u5408` });
           return;
         }
         if (ZhiRelation.isChong(aZhi, bZhi)) {
           res.push({ from: fromLabel, to: toLabel, desc: `${aZhi}${bZhi}\u76F8\u51B2` });
         }
         if (ZhiRelation.isXing(aZhi, bZhi)) {
-          res.push({ from: fromLabel, to: toLabel, desc: ZhiRelation.getXingDescWithCategory(aZhi, bZhi) });
+          res.push({
+            from: fromLabel,
+            to: toLabel,
+            desc: ZhiRelation.getXingDescWithCategory(aZhi, bZhi)
+          });
         }
         if (ZhiRelation.isHai(aZhi, bZhi)) {
           res.push({ from: fromLabel, to: toLabel, desc: `${aZhi}${bZhi}\u76F8\u5BB3` });
@@ -13826,13 +13853,21 @@ var require_ganzhi = __commonJS({
         if (ZhiRelation.isGongSanHePair(aZhi, bZhi)) {
           const info = ZhiRelation.getGongSanHeInfo(aZhi, bZhi);
           if (info && !presentZhi.has(info.pivot)) {
-            res.push({ from: fromLabel, to: toLabel, desc: ZhiRelation.getGongSanHeDesc(aZhi, bZhi) });
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: ZhiRelation.getGongSanHeDesc(aZhi, bZhi)
+            });
           }
         }
         if (ZhiRelation.isGongSanHuiPair(aZhi, bZhi)) {
           const info = ZhiRelation.getGongSanHuiInfo(aZhi, bZhi);
           if (info && !presentZhi.has(info.pivot)) {
-            res.push({ from: fromLabel, to: toLabel, desc: ZhiRelation.getGongSanHuiDesc(aZhi, bZhi) });
+            res.push({
+              from: fromLabel,
+              to: toLabel,
+              desc: ZhiRelation.getGongSanHuiDesc(aZhi, bZhi)
+            });
           }
         }
       };
@@ -13874,7 +13909,9 @@ var require_ganzhi = __commonJS({
     }
     function applyZiZuoZhangSheng(result) {
       try {
-        const { getStageByGanZhi: getZhangShengStage2 } = require_zhangSheng();
+        const {
+          getStageByGanZhi: getZhangShengStage2
+        } = require_zhangSheng();
         const cur = result && result.currentYun;
         if (!cur) return;
         const dayMasterGan = result?.pillars?.day?.gan || result?.pillars?.dayMasterGan || null;
