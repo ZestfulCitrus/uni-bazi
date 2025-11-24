@@ -525,6 +525,31 @@
         padding: 8px;
       "
     >
+      <uv-text type="info" text="干支关系"></uv-text>
+      <uv-divider></uv-divider>
+      <uv-text
+        mode="info"
+        v-for="(item) in analysisResult.data.zhiRelations"
+        :text="item.to === '三合'?`${item.from.split('+').map(e=>relationMap[e] + '支').join('+')}${item.desc}`:`${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`"
+      ></uv-text>
+      <uv-text
+        mode="info"
+        v-for="item in analysisResult.data.ganRelations"
+        :text="`${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`"
+      ></uv-text>
+    </view>
+    <view
+      v-if="select_tag === 6"
+      style="
+        background-color: #f4f4f5;
+        border-radius: 8px;
+        border: 1px solid #f4f4f5;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 8px;
+      "
+    >
       <view style="display: flex; align-items: center; gap: 8rpx">
         <uv-text
           type="info"
@@ -595,6 +620,8 @@ function convertBaziToPrompt(baziData) {
     spouseAppearance,
     selfAppearance,
     yuanHaiZiping,
+    zhiRelations,
+    ganRelations,
   } = baziData;
 
   const prompt = `
@@ -640,6 +667,10 @@ ${Object.entries(wuXingPower)
     (y) => y.shiShen
   )}）
 
+## 干支关系
+- ${zhiRelations.map(item=>item.to === '三合'?`${item.from.split('+').map(e=>relationMap[e] + '支').join('+')}${item.desc}\n`:`${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`).join('\n- ')}
+- ${ganRelations.map(item=>`${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`).join('\n- ')}
+
 ## 专业命理特征
 - 身强身弱：${yuanHaiZiping.shenQiang.judge}（得分：${
     yuanHaiZiping.shenQiang.score
@@ -669,6 +700,8 @@ ${Object.entries(wuXingPower)
 
   return prompt;
 }
+
+const relationMap = {'year':'年','month':'月','ri':'日','time':'时','daYun':'大运','liuNian':'流年','liuYue':'流月','liuRi':'流日'}
 
 const heavenlyStemsColorMap = {
   甲: "success", // 木 - 绿色
@@ -704,6 +737,7 @@ const radios = [
   { label: "日柱分析" },
   { label: "时柱分析" },
   { label: "流年太岁" },
+  { label: "干支关系" },
   { label: "AI提示词" },
 ];
 
@@ -815,6 +849,8 @@ const analysisResult = reactive({
       },
       details: ["日干乙(木) vs 太岁庚 辰(金) → 岁克日"],
     },
+    zhiRelations: [],
+    ganRelations: [],
     ai: "",
   },
 });
@@ -891,7 +927,6 @@ const applyResult = (
   currentDay: number
 ) => {
   const dateObj = new Date(Number(props.userInfo.birthday));
-  console.log(props.userInfo.sex);
   const params = {
     year: dateObj.getUTCFullYear(),
     month: dateObj.getMonth() + 1,
@@ -1012,6 +1047,8 @@ const applyResult = (
       }),
     },
     taiSui: res.yuanHaiZiping.taiSui,
+    zhiRelations: res.zhiRelations,
+    ganRelations: res.ganRelations,
     ai: convertBaziToPrompt(res),
   };
 };
