@@ -5,7 +5,7 @@
         v-if="isMobile"
         title=""
         type="warning"
-        description="作者：B站账户：玄烛解八字。计算器的计算结果可以满足大多数场景，使用本工具的人默认您已经把预测结果当作娱乐。"
+        description="玄烛命理是一款来自东方神秘文化的移动端排盘程序，使用本工具的人默认您已经把预测结果当作娱乐，对分析结果需要持理智态度。"
         closable
       ></uv-alert>
       <!-- 仅在桌面端显示二维码 -->
@@ -73,16 +73,10 @@
           </template>
         </uv-form-item>
         <uv-button
-          type="primary"
           text="开始排盘"
+          color="#000"
           customStyle="margin-top: 10px"
           @click="submit"
-        ></uv-button>
-        <uv-button
-          type="error"
-          text="重置"
-          customStyle="margin-top: 10px"
-          @click="reset"
         ></uv-button>
 
         <!-- 用户信息列表卡片 -->
@@ -107,7 +101,7 @@
     <uv-transition :show="step === 2">
       <ResultPage :userInfo="userInfo" />
       <uv-button
-        type="primary"
+        color="#000"
         text="重新排盘"
         customStyle="margin-top: 10px"
         @click="reCall"

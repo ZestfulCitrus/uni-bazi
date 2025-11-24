@@ -328,6 +328,7 @@
       >
         <uv-tags
           v-for="(item, index) in radios"
+          type="info"
           :key="index"
           :text="item.label"
           :plain="select_tag !== index"
@@ -553,16 +554,15 @@
       <view style="display: flex; align-items: center; gap: 8rpx">
         <uv-text
           type="info"
-          text="请复制如下内容，选择deepseek等模型进行分析"
+          text="请复制如下内容，选择大模型进行分析，推荐使用deepseek模型"
         ></uv-text>
       </view>
       <uv-divider></uv-divider>
       <uv-button
         :plain="true"
-        type="primary"
-        icon="file-text"
+        type="info"
         @click="copyPrompt(analysisResult.data.ai)"
-        >复制</uv-button
+        >单击这里复制命理提示词</uv-button
       >
       <uv-text :text="analysisResult.data.ai"></uv-text>
     </view>
