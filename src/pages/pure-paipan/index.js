@@ -13766,7 +13766,7 @@ var require_ganzhi = __commonJS({
         if (rel === "\u6211\u514B" || rel === "\u514B\u6211") {
           const selfEl = GanRelation.getWuXing(aGan);
           const targetEl = GanRelation.getWuXing(bGan);
-          if (res === "\u6211\u514B")
+          if (rel === "\u6211\u514B")
             res.push({
               from: fromLabel,
               to: toLabel,
