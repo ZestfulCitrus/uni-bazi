@@ -96,10 +96,6 @@
             <uv-icon name="arrow-right" size="16"></uv-icon>
           </view>
         </view>
-        <view class="user-info-cards" style="display: flex; flex-direction: column; align-items: center;">
-          <uv-image src="/static/vxqrcode.png" :lazy-load="true" height="100" width="100"></uv-image>
-          <view class="card-title">作者微信：xzml8char 工作日晚5点以后统一回复，子时不问事 </view>
-        </view>
       </uv-form>
     </uv-transition>
     <uv-transition :show="step === 2">
