@@ -39,6 +39,7 @@
             >
             <view class="cw pl8"></view>
           </view>
+          <uv-qrcode style="margin-right: 16rpx;" ref="qrcode" size="60px" :value="`https:/8char.space`"></uv-qrcode>
         </view>
       </view>
     </view>
