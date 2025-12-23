@@ -508,14 +508,14 @@ ${Object.entries(wuXingPower)
 ${dayunArr.map(e => `${e.startYear - baziData.input.year}岁,${e.ganZhi},${e.ganshen},${e.zhishen}`).join('\n')}
 给我生成一个的jsonK线 生成举例：
 {
-  categories: ["8","18","28",...],
+  categories: [${dayunArr.map(e => `${e.startYear - baziData.input.year}`).join(",")}],
   series:[{
     name: "运势指数",
     data: [[70,40,65,20],[80,60,40,30],...]
  }]
 }
  
-其中，categories: ["8","18","28",...],，为8岁，18岁...以此类推，data中每个元素为[最高值，开始值，结束值，最低值]
+其中，categories:为年岁，data中每个元素为[开始值，结束值，最低值， 最高值]
 `;
   return prompt;
 }
