@@ -11,32 +11,25 @@
         <view class="star yellow"></view>
         <view class="info-card">
           <view>
-            <view class="cw pl8"
-              >出生日期：{{ userInfo.birthdayDisplay }}
+            <view class="cw pl8">出生日期：{{ userInfo.birthdayDisplay }}
               {{ userInfo.sex }}
             </view>
-            <view class="cw pl8"
-              >黄帝纪年：
+            <view class="cw pl8">黄帝纪年：
               {{
                 all.Lunar.fromDate(
                   new Date(parseInt(userInfo.birthday))
                 ).getYear() + 2697
               }}
-              年出生</view
-            >
-            <view class="cw pl8"
-              >旺衰参考：{{
-                analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
-              }}
+              年出生</view>
+            <view class="cw pl8">旺衰参考：{{
+              analysisResult.data.ret_Info.isStrong ? "身强" : "身弱"
+            }}
               ===== 阴阳：{{
                 analysisResult.data.yuanHaiZiping.yinyang.judge
-              }}</view
-            >
-            <view class="cw pl8"
-              >湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
-                analysisResult.data.yuanHaiZiping.shidu.score
-              }}) 正常范围[-6,6]</view
-            >
+              }}</view>
+            <view class="cw pl8">湿度：{{ analysisResult.data.yuanHaiZiping.shidu.judge }} ({{
+              analysisResult.data.yuanHaiZiping.shidu.score
+            }}) 正常范围[-6,6]</view>
             <view class="cw pl8"></view>
           </view>
           <view style="display: flex; align-items: center; flex-direction: column; margin-right: 16rpx;">
@@ -57,268 +50,114 @@
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="主星"></uv-text>
-      <uv-text
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.liunianganshen"
-      ></uv-text>
-      <uv-text
-        class="br1 mh32"
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.dayunganshen"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.ret_Info.gan_shens"
-        align="center"
-        type="info"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info?.currentYear?.liunianganshen"></uv-text>
+      <uv-text class="br1 mh32" align="center" type="info"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayunganshen"></uv-text>
+      <uv-text v-for="item in analysisResult.data.ret_Info.gan_shens" align="center" type="info" :text="item"></uv-text>
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="天干"></uv-text>
-      <uv-text
-        size="24"
-        align="center"
-        :type="
-          heavenlyStemsColorMap[
-            analysisResult.data.ret_Info?.currentYear?.liunian[0]
-          ]
-        "
-        :text="analysisResult.data.ret_Info?.currentYear?.liunian[0]"
-      ></uv-text>
-      <uv-text
-        size="24"
-        class="br1"
-        align="center"
-        :type="
-          heavenlyStemsColorMap[
-            analysisResult.data.ret_Info?.currentYear?.dayun[0]
-          ]
-        "
-        :text="analysisResult.data.ret_Info?.currentYear?.dayun[0]"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.bazi.TianGan"
-        size="24"
-        align="center"
-        :type="heavenlyStemsColorMap[item]"
-        :text="item"
-      ></uv-text>
+      <uv-text size="24" align="center" :type="heavenlyStemsColorMap[
+        analysisResult.data.ret_Info?.currentYear?.liunian[0]
+      ]
+        " :text="analysisResult.data.ret_Info?.currentYear?.liunian[0]"></uv-text>
+      <uv-text size="24" class="br1" align="center" :type="heavenlyStemsColorMap[
+        analysisResult.data.ret_Info?.currentYear?.dayun[0]
+      ]
+        " :text="analysisResult.data.ret_Info?.currentYear?.dayun[0]"></uv-text>
+      <uv-text v-for="item in analysisResult.data.bazi.TianGan" size="24" align="center"
+        :type="heavenlyStemsColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="地支"></uv-text>
-      <uv-text
-        size="24"
-        align="center"
-        :type="
-          earthlyBranchesColorMap[
-            analysisResult.data.ret_Info?.currentYear?.liunian[1]
-          ]
-        "
-        :text="analysisResult.data.ret_Info?.currentYear?.liunian[1]"
-      ></uv-text>
-      <uv-text
-        size="24"
-        class="br1"
-        align="center"
-        :type="
-          earthlyBranchesColorMap[
-            analysisResult.data.ret_Info?.currentYear?.dayun[1]
-          ]
-        "
-        :text="analysisResult.data.ret_Info?.currentYear?.dayun[1]"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.bazi.DiZhi"
-        size="24"
-        align="center"
-        :type="earthlyBranchesColorMap[item]"
-        :text="item"
-      ></uv-text>
+      <uv-text size="24" align="center" :type="earthlyBranchesColorMap[
+        analysisResult.data.ret_Info?.currentYear?.liunian[1]
+      ]
+        " :text="analysisResult.data.ret_Info?.currentYear?.liunian[1]"></uv-text>
+      <uv-text size="24" class="br1" align="center" :type="earthlyBranchesColorMap[
+        analysisResult.data.ret_Info?.currentYear?.dayun[1]
+      ]
+        " :text="analysisResult.data.ret_Info?.currentYear?.dayun[1]"></uv-text>
+      <uv-text v-for="item in analysisResult.data.bazi.DiZhi" size="24" align="center"
+        :type="earthlyBranchesColorMap[item]" :text="item"></uv-text>
     </view>
     <view class="bg-light" style="display: flex">
       <view style="flex: 1" size="13">
         <uv-text align="center" type="info" text="副星"></uv-text>
       </view>
       <view style="flex: 1">
-        <view
-          align="center"
-          style="display: flex; justify-content: center"
-          v-for="item in analysisResult.data.ret_Info?.currentYear
-            ?.liunianzhishen"
-        >
+        <view align="center" style="display: flex; justify-content: center" v-for="item in analysisResult.data.ret_Info?.currentYear
+          ?.liunianzhishen">
           <view style="margin-right: 4rpx">
-            <uv-text
-              align="center"
-              size="13"
-              :type="heavenlyStemsColorMap[item.gan]"
-              :text="item.gan"
-            ></uv-text>
+            <uv-text align="center" size="13" :type="heavenlyStemsColorMap[item.gan]" :text="item.gan"></uv-text>
           </view>
           <view>
-            <uv-text
-              size="13"
-              align="center"
-              type="info"
-              :text="item.shiShen"
-            ></uv-text>
+            <uv-text size="13" align="center" type="info" :text="item.shiShen"></uv-text>
           </view>
         </view>
       </view>
       <view style="flex: 1">
-        <view
-          align="center"
-          style="display: flex; justify-content: center"
-          v-for="item in analysisResult.data.ret_Info?.currentYear
-            ?.dayunzhishen"
-        >
+        <view align="center" style="display: flex; justify-content: center" v-for="item in analysisResult.data.ret_Info?.currentYear
+          ?.dayunzhishen">
           <view style="margin-right: 4rpx">
-            <uv-text
-              size="13"
-              align="center"
-              :type="heavenlyStemsColorMap[item.gan]"
-              :text="item.gan"
-            ></uv-text>
+            <uv-text size="13" align="center" :type="heavenlyStemsColorMap[item.gan]" :text="item.gan"></uv-text>
           </view>
           <view>
-            <uv-text
-              size="13"
-              align="center"
-              type="info"
-              :text="item.shiShen"
-            ></uv-text>
+            <uv-text size="13" align="center" type="info" :text="item.shiShen"></uv-text>
           </view>
         </view>
       </view>
-      <view
-        v-for="item in analysisResult.data.ret_Info.zhi_shens"
-        style="flex: 1"
-      >
-        <view
-          v-for="jtem in item"
-          style="display: flex; justify-content: center"
-          align="center"
-          type="info"
-        >
+      <view v-for="item in analysisResult.data.ret_Info.zhi_shens" style="flex: 1">
+        <view v-for="jtem in item" style="display: flex; justify-content: center" align="center" type="info">
           <view style="margin-right: 4rpx">
-            <uv-text
-              size="13"
-              align="center"
-              :type="heavenlyStemsColorMap[jtem.gan]"
-              :text="jtem.gan"
-            ></uv-text>
+            <uv-text size="13" align="center" :type="heavenlyStemsColorMap[jtem.gan]" :text="jtem.gan"></uv-text>
           </view>
           <view>
-            <uv-text
-              size="13"
-              align="center"
-              type="info"
-              :text="jtem.shiShen"
-            ></uv-text
-          ></view>
+            <uv-text size="13" align="center" type="info" :text="jtem.shiShen"></uv-text>
+          </view>
         </view>
       </view>
     </view>
     <view class="table-column">
       <uv-text align="center" type="info" text="空亡"></uv-text>
-      <uv-text
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.liunianXunkong"
-      ></uv-text>
-      <uv-text
-        class="br1 mh32"
-        align="center"
-        type="info"
-        :text="analysisResult.data.ret_Info?.currentYear?.dayunXunkong"
-      ></uv-text>
-      <uv-text
-        v-for="item in analysisResult.data.ret_Info.xunkong"
-        align="center"
-        type="info"
-        :text="item"
-      ></uv-text>
+      <uv-text align="center" type="info" :text="analysisResult.data.ret_Info?.currentYear?.liunianXunkong"></uv-text>
+      <uv-text class="br1 mh32" align="center" type="info"
+        :text="analysisResult.data.ret_Info?.currentYear?.dayunXunkong"></uv-text>
+      <uv-text v-for="item in analysisResult.data.ret_Info.xunkong" align="center" type="info" :text="item"></uv-text>
     </view>
     <view style="display: flex">
       <view style="flex: 1">
-        <uv-text
-          align="center"
-          style="margin-top: 8rpx"
-          type="info"
-          text="神煞"
-        ></uv-text>
+        <uv-text align="center" style="margin-top: 8rpx" type="info" text="神煞"></uv-text>
       </view>
       <view style="flex: 1" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.current.liuNian"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.current.liuNian" :text="item"
+          size="6" style="margin-top: 4rpx"></uv-text>
       </view>
       <view style="flex: 1" class="br1 mh32" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.current.daYun"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.current.daYun" :text="item"
+          size="6" style="margin-top: 4rpx"></uv-text>
       </view>
       <view style="flex: 1" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.nian"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.nian" :text="item" size="6"
+          style="margin-top: 4rpx"></uv-text>
       </view>
       <view style="flex: 1" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.yue"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.yue" :text="item" size="6"
+          style="margin-top: 4rpx"></uv-text>
       </view>
       <view style="flex: 1" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.ri"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.ri" :text="item" size="6"
+          style="margin-top: 4rpx"></uv-text>
       </view>
       <view style="flex: 1" align="center" type="info">
-        <uv-text
-          align="center"
-          type="info"
-          v-for="item in analysisResult.data.shensha.shi"
-          :text="item"
-          size="6"
-          style="margin-top: 4rpx"
-        ></uv-text>
+        <uv-text align="center" type="info" v-for="item in analysisResult.data.shensha.shi" :text="item" size="6"
+          style="margin-top: 4rpx"></uv-text>
       </view>
     </view>
-    <DayunView
-      style="margin-top: 16rpx"
-      :analysisResult="analysisResult"
-      :dayunArr="analysisResult.data.ret_Info?.dayunArr"
-      @applyResult="applyResult"
-    />
+    <DayunView style="margin-top: 16rpx" :analysisResult="analysisResult"
+      :dayunArr="analysisResult.data.ret_Info?.dayunArr" @applyResult="applyResult" />
     <view>
-      <view
-        style="
+      <view style="
           margin-top: 8px;
           margin-bottom: 8px;
           margin-left: 4px;
@@ -328,30 +167,16 @@
           flex-direction: row;
           flex-wrap: wrap;
           gap: 2px;
-        "
-      >
-        <uv-tags
-          v-for="(item, index) in radios"
-          type="info"
-          :key="index"
-          :text="item.label"
-          :plain="select_tag !== index"
-          :name="index"
-          @click="radioClick"
-        >
+        ">
+        <uv-tags v-for="(item, index) in radios" type="info" :key="index" :text="item.label"
+          :plain="select_tag !== index" :name="index" @click="radioClick">
         </uv-tags>
       </view>
     </view>
-    <uv-alert
-      title=""
-      style="margin: 8px 8px 0 8px"
-      type="warning"
-      description="软件参考《三命通会》、《渊海子平》、《子平真诠》等书籍使用程序量化计算，本软件仅供娱乐、学习用途，有问题可以直接在b站评论或者私信作者。"
-    ></uv-alert>
+    <uv-alert title="" style="margin: 8px 8px 0 8px" type="warning"
+      description="软件参考《三命通会》、《渊海子平》、《子平真诠》等书籍使用程序量化计算，本软件仅供娱乐、学习用途，有问题可以直接在b站评论或者私信作者。"></uv-alert>
 
-    <view
-      v-if="select_tag === 0"
-      style="
+    <view v-if="select_tag === 0" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -359,41 +184,22 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
+      ">
       <uv-text type="info" text="八字打分"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        :text="'家庭出身：' + analysisResult.data.ret_Info.family_background"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="analysisResult.data.ret_Info.wealth_level"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="
-          '自身样貌特征：' +
-          analysisResult.data.ret_Info.appearance.level +
-          '(' +
-          analysisResult.data.ret_Info.appearance.score +
-          ')'
-        "
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'配偶样貌：' + analysisResult.data.ret_Info.spouse_appearance"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'学历资质：' + analysisResult.data.ret_Info.judge_education"
-      ></uv-text>
+      <uv-text mode="info" :text="'家庭出身：' + analysisResult.data.ret_Info.family_background"></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.wealth_level"></uv-text>
+      <uv-text mode="info" :text="'自身样貌特征：' +
+        analysisResult.data.ret_Info.appearance.level +
+        '(' +
+        analysisResult.data.ret_Info.appearance.score +
+        ')'
+        "></uv-text>
+      <uv-text mode="info" :text="'配偶样貌：' + analysisResult.data.ret_Info.spouse_appearance"></uv-text>
+      <uv-text mode="info" :text="'学历资质：' + analysisResult.data.ret_Info.judge_education"></uv-text>
     </view>
 
-    <view
-      v-if="select_tag === 1"
-      style="
+    <view v-if="select_tag === 1" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -401,42 +207,17 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
-      <uv-text
-        mode="info"
-        :text="'身宫：' + analysisResult.data.ret_Info?.shengong"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'胎元：' + analysisResult.data.ret_Info?.taiYuan"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'五行力量：' + analysisResult.data.ret_Info?.wuxing"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="analysisResult.data.ret_Info.basic_analysis_2"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'参考喜用神：' + analysisResult.data.ret_Info.use_god.useful_god"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="
-          '逢喜用神特点：' + analysisResult.data.ret_Info.use_god.useful_god_min
-        "
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="analysisResult.data.ret_Info.main_personality"
-      ></uv-text>
+      ">
+      <uv-text mode="info" :text="'身宫：' + analysisResult.data.ret_Info?.shengong"></uv-text>
+      <uv-text mode="info" :text="'胎元：' + analysisResult.data.ret_Info?.taiYuan"></uv-text>
+      <uv-text mode="info" :text="'五行力量：' + analysisResult.data.ret_Info?.wuxing"></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.basic_analysis_2"></uv-text>
+      <uv-text mode="info" :text="'参考喜用神：' + analysisResult.data.ret_Info.use_god.useful_god"></uv-text>
+      <uv-text mode="info" :text="'逢喜用神特点：' + analysisResult.data.ret_Info.use_god.useful_god_min
+        "></uv-text>
+      <uv-text mode="info" :text="analysisResult.data.ret_Info.main_personality"></uv-text>
     </view>
-    <view
-      v-if="select_tag === 2"
-      style="
+    <view v-if="select_tag === 2" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -444,26 +225,15 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
-      <uv-text
-        type="info"
-        :text="
-          analysisResult.data.bazi.TianGan[2] +
-          analysisResult.data.bazi.DiZhi[2] +
-          '日柱三命通会精论'
-        "
-      ></uv-text>
+      ">
+      <uv-text type="info" :text="analysisResult.data.bazi.TianGan[2] +
+        analysisResult.data.bazi.DiZhi[2] +
+        '日柱三命通会精论'
+        "></uv-text>
       <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        v-for="item in analysisResult.data.ret_Info.SanMingTongHui"
-        :text="item"
-      ></uv-text>
+      <uv-text mode="info" v-for="item in analysisResult.data.ret_Info.SanMingTongHui" :text="item"></uv-text>
     </view>
-    <view
-      v-if="select_tag === 3"
-      style="
+    <view v-if="select_tag === 3" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -471,19 +241,12 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
+      ">
       <uv-text type="info" text="三命通会"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        v-for="item in analysisResult.data.ret_Info.rishi"
-        :text="item"
-      ></uv-text>
+      <uv-text mode="info" v-for="item in analysisResult.data.ret_Info.rishi" :text="item"></uv-text>
     </view>
-    <view
-      v-if="select_tag === 4"
-      style="
+    <view v-if="select_tag === 4" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -491,36 +254,20 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
+      ">
       <uv-text type="info" text="太岁"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        :text="
-          '太岁干支：' +
-          analysisResult.data.taiSui.taiSui.gan +
-          analysisResult.data.taiSui.taiSui.zhi
-        "
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'太岁关系：' + analysisResult.data.taiSui.relation"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        :text="'风险等级：' + analysisResult.data.taiSui.riskLevel"
-      ></uv-text>
+      <uv-text mode="info" :text="'太岁干支：' +
+        analysisResult.data.taiSui.taiSui.gan +
+        analysisResult.data.taiSui.taiSui.zhi
+        "></uv-text>
+      <uv-text mode="info" :text="'太岁关系：' + analysisResult.data.taiSui.relation"></uv-text>
+      <uv-text mode="info" :text="'风险等级：' + analysisResult.data.taiSui.riskLevel"></uv-text>
       <uv-text mode="info" :text="'详细描述：'"></uv-text>
-      <uv-text
-        mode="info"
-        v-for="(item, index) in analysisResult.data.taiSui.details"
-        :text="index + 1 + '.' + item"
-      ></uv-text>
+      <uv-text mode="info" v-for="(item, index) in analysisResult.data.taiSui.details"
+        :text="index + 1 + '.' + item"></uv-text>
     </view>
-    <view
-      v-if="select_tag === 5"
-      style="
+    <view v-if="select_tag === 5" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -528,24 +275,15 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
+      ">
       <uv-text type="info" text="干支关系"></uv-text>
       <uv-divider></uv-divider>
-      <uv-text
-        mode="info"
-        v-for="(item) in analysisResult.data.zhiRelations"
-        :text="item.to === '三合'?`${item.from.split('+').map(e=>relationMap[e] + '支').join('+')}${item.desc}`:`${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`"
-      ></uv-text>
-      <uv-text
-        mode="info"
-        v-for="item in analysisResult.data.ganRelations"
-        :text="`${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`"
-      ></uv-text>
+      <uv-text mode="info" v-for="(item) in analysisResult.data.zhiRelations"
+        :text="item.to === '三合' ? `${item.from.split('+').map(e => relationMap[e] + '支').join('+')}${item.desc}` : `${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`"></uv-text>
+      <uv-text mode="info" v-for="item in analysisResult.data.ganRelations"
+        :text="`${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`"></uv-text>
     </view>
-    <view
-      v-if="select_tag === 6"
-      style="
+    <view v-if="select_tag === 6" style="
         background-color: #f4f4f5;
         border-radius: 8px;
         border: 1px solid #f4f4f5;
@@ -553,22 +291,41 @@
         margin-left: 8px;
         margin-right: 8px;
         padding: 8px;
-      "
-    >
+      ">
       <view style="display: flex; align-items: center; gap: 8rpx">
-        <uv-text
-          type="info"
-          text="请复制如下内容，选择大模型进行分析，推荐使用deepseek模型"
-        ></uv-text>
+        <uv-text type="info" text="请复制如下内容，选择大模型进行分析，推荐使用deepseek模型"></uv-text>
       </view>
       <uv-divider></uv-divider>
-      <uv-button
-        :plain="true"
-        type="info"
-        @click="copyPrompt(analysisResult.data.ai)"
-        >单击这里复制命理提示词</uv-button
-      >
+      <uv-button :plain="true" type="info" @click="copyPrompt(analysisResult.data.ai)">单击这里复制命理提示词</uv-button>
       <uv-text :text="analysisResult.data.ai"></uv-text>
+    </view>
+    <view v-if="select_tag === 7" style="
+        background-color: #f4f4f5;
+        border-radius: 8px;
+        border: 1px solid #f4f4f5;
+        margin-top: 8px;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 8px;
+      ">
+      <view style="display: flex; align-items: center; gap: 8rpx">
+        <uv-text type="info" text="请复制如下内容，选择大模型进行分析，推荐使用deepseek模型"></uv-text>
+      </view>
+      <uv-divider></uv-divider>
+      <uv-button :plain="true" type="info" @click="copyPrompt(analysisResult.data.aik)">单击这里复制命理提示词</uv-button>
+      <uv-divider></uv-divider>
+
+      <view style="display: flex; align-items: center; gap: 8rpx">
+        <uv-text type="info" text="请将ai分析结果复制后放到下面"></uv-text>
+      </view>
+      <uv-textarea v-model="airesult" :maxlength="-1" placeholder="请输入AI分析数据"></uv-textarea>
+      <uv-divider></uv-divider>
+
+      <uv-button :plain="true" type="info" @click="getServerData">点这里画图得出结果</uv-button>
+    </view>
+    <view v-if="select_tag === 7" style="display:flex;justify-content: center;">
+      <canvas canvas-id="NQcoCZzFrKSLpWLTraRoIhxwhgdnrFne" id="NQcoCZzFrKSLpWLTraRoIhxwhgdnrFne" class="charts"
+        @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" />
     </view>
     <!-- <view style="background-color: #f4f4f5;border-radius: 8px; border: 1px solid #f4f4f5;margin-top: 8px;margin-left: 8px;margin-right: 8px;padding: 8px;">
       <uv-text type="info" text="分析依据"></uv-text>
@@ -577,20 +334,14 @@
     </view> -->
   </view>
   <uv-popup ref="popups" :close-on-click-overlay="false" overlayOpacity="0.7">
-    <uv-alert
-      title="关注后私信，自动回复验证码"
-      type="warning"
-      description="验证码可能在版本更新后替换，一次验证后可以无限次使用"
-    ></uv-alert>
-    <view
-      style="
+    <uv-alert title="关注后私信，自动回复验证码" type="warning" description="验证码可能在版本更新后替换，一次验证后可以无限次使用"></uv-alert>
+    <view style="
         width: 600rpx;
         padding: 16px;
         display: flex;
         justify-content: center;
         align-items: center;
-      "
-    >
+      ">
       <uv-code-input v-model="satoken" @finish="finish"></uv-code-input>
     </view>
   </uv-popup>
@@ -598,18 +349,19 @@
 
 <script setup lang="ts">
 import "./index.scss";
-import { onBackPress, onLoad } from "@dcloudio/uni-app";
+import { onBackPress, onLoad, onReady, } from "@dcloudio/uni-app";
 import config from "../../util/config";
 import api from "../../api";
 import { defineProps, onMounted, reactive, ref } from "vue";
 import DayunView from "./DayunView.vue";
 import all from "@/pages/pure-paipan/index.js";
+import uCharts from '@qiun/ucharts';
 
 const loading = ref(false);
 const popups = ref();
 const select_tag = ref(0);
 const satoken = ref("");
-
+const airesult = ref("")
 function convertBaziToPrompt(baziData) {
   const {
     pillars,
@@ -632,56 +384,46 @@ function convertBaziToPrompt(baziData) {
 作为一名精通易理、命理和子平法三命通会的玄学大师，请根据以下八字命盘信息进行详细分析：
 
 ## 基本信息
-- 出生时间：${baziData.input.year}年${baziData.input.month}月${
-    baziData.input.day
-  }日 ${baziData.input.hour}时${baziData.input.minute}分
-- 当前时间：${baziData.current.year}年${baziData.current.month}月${
-    baziData.current.day
-  }日
+- 出生时间：${baziData.input.year}年${baziData.input.month}月${baziData.input.day
+    }日 ${baziData.input.hour}时${baziData.input.minute}分
+- 当前时间：${baziData.current.year}年${baziData.current.month}月${baziData.current.day
+    }日
 - 性别：${baziData.gender}
-- 八字四柱：${pillars.year.value} ${pillars.month.value} ${pillars.day.value} ${
-    pillars.time.value
-  }
-- 四柱天干十神：${pillars.year.shiShenGan} ${pillars.month.shiShenGan} ${
-    pillars.day.shiShenGan
-  } ${pillars.time.shiShenGan}
-- 四柱地支包含藏干十神：${pillars.year.shiShenZhi} ${
-    pillars.month.shiShenZhi
-  } ${pillars.day.shiShenZhi} ${pillars.time.shiShenZhi}
+- 八字四柱：${pillars.year.value} ${pillars.month.value} ${pillars.day.value} ${pillars.time.value
+    }
+- 四柱天干十神：${pillars.year.shiShenGan} ${pillars.month.shiShenGan} ${pillars.day.shiShenGan
+    } ${pillars.time.shiShenGan}
+- 四柱地支包含藏干十神：${pillars.year.shiShenZhi} ${pillars.month.shiShenZhi
+    } ${pillars.day.shiShenZhi} ${pillars.time.shiShenZhi}
 
 ## 五行力量分布
 ${Object.entries(wuXingPower)
-  .map(([element, power]) => `${element}行：${power}%`)
-  .join(" | ")}
+      .map(([element, power]) => `${element}行：${power}%`)
+      .join(" | ")}
 
 ## 当前运势（${currentYun?.daYun?.startYear}-${currentYun?.daYun?.endYear}年）
-- 大运：${currentYun.daYun?.ganZhi?.join("")}（天干十神：${
-    currentYun.daYun?.shiShen
-  } 地支包含藏干十神：${currentYun.daYun?.zhiHideGanShiShen?.map(
-    (y) => y.shiShen
-  )}）
-- 流年：${currentYun.liuNian?.ganZhi?.join("")}（天干十神：${
-    currentYun.liuNian?.shiShen
-  } 地支包含藏干十神：${currentYun.liuNian?.zhiHideGanShiShen?.map(
-    (y) => y?.shiShen
-  )}）
-- 流月：${currentYun.liuYue?.ganZhi?.join("")}（天干十神：${
-    currentYun.liuYue?.shiShen
-  } 地支包含藏干十神：${currentYun.liuYue?.zhiHideGanShiShen?.map(
-    (y) => y.shiShen
-  )}）
+- 大运：${currentYun.daYun?.ganZhi?.join("")}（天干十神：${currentYun.daYun?.shiShen
+    } 地支包含藏干十神：${currentYun.daYun?.zhiHideGanShiShen?.map(
+      (y) => y.shiShen
+    )}）
+- 流年：${currentYun.liuNian?.ganZhi?.join("")}（天干十神：${currentYun.liuNian?.shiShen
+    } 地支包含藏干十神：${currentYun.liuNian?.zhiHideGanShiShen?.map(
+      (y) => y?.shiShen
+    )}）
+- 流月：${currentYun.liuYue?.ganZhi?.join("")}（天干十神：${currentYun.liuYue?.shiShen
+    } 地支包含藏干十神：${currentYun.liuYue?.zhiHideGanShiShen?.map(
+      (y) => y.shiShen
+    )}）
 
 ## 干支关系
-- ${zhiRelations.map(item=>item.to === '三合'?`${item.from.split('+').map(e=>relationMap[e] + '支').join('+')}${item.desc}\n`:`${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`).join('\n- ')}
-- ${ganRelations.map(item=>`${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`).join('\n- ')}
+- ${zhiRelations.map(item => item.to === '三合' ? `${item.from.split('+').map(e => relationMap[e] + '支').join('+')}${item.desc}\n` : `${relationMap[item.from]}支和${relationMap[item.to]}支 ${item.desc}`).join('\n- ')}
+- ${ganRelations.map(item => `${relationMap[item.from]}干和${relationMap[item.to]}干 ${item.desc}`).join('\n- ')}
 
 ## 专业命理特征
-- 身强身弱：${yuanHaiZiping.shenQiang.judge}（得分：${
-    yuanHaiZiping.shenQiang.score
-  }） 大于 29 为强
-- 冷暖_CTRL：${yuanHaiZiping.shidu.judge}（得分：${
-    yuanHaiZiping.shidu.score
-  }） 正常范围 ${yuanHaiZiping.shidu.normalRange}
+- 身强身弱：${yuanHaiZiping.shenQiang.judge}（得分：${yuanHaiZiping.shenQiang.score
+    }） 大于 29 为强
+- 冷暖_CTRL：${yuanHaiZiping.shidu.judge}（得分：${yuanHaiZiping.shidu.score
+    }） 正常范围 ${yuanHaiZiping.shidu.normalRange}
 - 阴阳平衡：${yuanHaiZiping.yinyang.judge}
 - 用神建议：${analysis.XiYongShen.join("；")}
 
@@ -705,7 +447,158 @@ ${Object.entries(wuXingPower)
   return prompt;
 }
 
-const relationMap = {'year':'年','month':'月','ri':'日','time':'时','daYun':'大运','liuNian':'流年','liuYue':'流月','liuRi':'流日'}
+function convertBaziToKPrompt(baziData) {
+  const {
+    pillars,
+    current,
+    currentYun,
+    wuXingPower,
+    analysis,
+    shensha,
+    familyBackground,
+    educationAndTalent,
+    gameTalent,
+    spouseAppearance,
+    selfAppearance,
+    yuanHaiZiping,
+    zhiRelations,
+    ganRelations,
+    dayunArr,
+  } = baziData;
+
+  const prompt = `
+作为一名精通易理、命理和子平法三命通会的玄学大师，请根据以下八字命盘信息进行详细分析：
+
+## 基本信息
+- 出生时间：${baziData.input.year}年${baziData.input.month}月${baziData.input.day
+    }日 ${baziData.input.hour}时${baziData.input.minute}分
+- 当前时间：${baziData.current.year}年${baziData.current.month}月${baziData.current.day
+    }日
+- 性别：${baziData.gender}
+- 八字四柱：${pillars.year.value} ${pillars.month.value} ${pillars.day.value} ${pillars.time.value
+    }
+- 四柱天干十神：${pillars.year.shiShenGan} ${pillars.month.shiShenGan} ${pillars.day.shiShenGan
+    } ${pillars.time.shiShenGan}
+- 四柱地支包含藏干十神：${pillars.year.shiShenZhi} ${pillars.month.shiShenZhi
+    } ${pillars.day.shiShenZhi} ${pillars.time.shiShenZhi}
+
+## 五行力量分布
+${Object.entries(wuXingPower)
+      .map(([element, power]) => `${element}行：${power}%`)
+      .join(" | ")}
+
+  
+## 神煞
+- 年：${shensha.nian?.join(",") || "无"}
+- 月：${shensha.yue?.join(",") || "无"}
+- 日：${shensha.ri?.join(",") || "无"}
+- 时：${shensha.shi?.join(",") || "无"}
+
+## 专业命理特征
+- 身强身弱：${yuanHaiZiping.shenQiang.judge}（得分：${yuanHaiZiping.shenQiang.score
+    }） 大于 29 为强
+- 冷暖_CTRL：${yuanHaiZiping.shidu.judge}（得分：${yuanHaiZiping.shidu.score
+    }） 正常范围 ${yuanHaiZiping.shidu.normalRange}
+- 阴阳平衡：${yuanHaiZiping.yinyang.judge}
+- 用神建议：${analysis.XiYongShen.join("；")}
+
+
+请基于以上信息，结合子平法、三命通会等传统命理学说，对此命盘进行全面分析，
+最后仅仅需要按照：大运序列
+${dayunArr.map(e => `${e.startYear - baziData.input.year}岁,${e.ganZhi},${e.ganshen},${e.zhishen}`).join('\n')}
+给我生成一个的jsonK线 生成举例：
+{
+  categories: ["8","18","28",...],
+  series:[{
+    name: "运势指数",
+    data: [[70,40,65,20],[80,60,40,30],...]
+ }]
+}
+ 
+其中，categories: ["8","18","28",...],，为8岁，18岁...以此类推，data中每个元素为[最高值，开始值，结束值，最低值]
+`;
+  return prompt;
+}
+
+
+const uChartsInstance = {};
+
+
+function drawCharts(id, data) {
+  const ctx = uni.createCanvasContext(id, this);
+  uChartsInstance[id] = new uCharts({
+    type: "candle",
+    context: ctx,
+    categories: data.categories,
+    series: data.series,
+    width: uni.upx2px(500),
+    height: uni.upx2px(250),
+    animation: true,
+    rotate: false,
+    rotateLock: false,
+    background: "#FFFFFF",
+    color: ["#1890FF", "#91CB74", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"],
+    padding: [15, 15, 0, 15],
+    dataLabel: false,
+    enableScroll: true,
+    enableMarkLine: true,
+    legend: {},
+    xAxis: {
+      labelCount: 14,
+      itemCount: 14,
+      disableGrid: false,
+      gridColor: "#CCCCCC",
+      gridType: "solid",
+      dashLength: 4,
+      scrollShow: false,
+      scrollAlign: "left",
+      scrollColor: "#A6A6A6",
+      scrollBackgroundColor: "#EFEBEF"
+    },
+    yAxis: {},
+    extra: {
+      candle: {
+        color: {
+          upLine: "#f04864",
+          upFill: "#f04864",
+          downLine: "#2fc25b",
+          downFill: "#2fc25b"
+        },
+      },
+      tooltip: {
+        showCategory: true
+      }
+    }
+  });
+}
+
+function touchstart(e) {
+  uChartsInstance[e.target.id].scrollStart(e);
+}
+
+function touchmove(e) {
+  uChartsInstance[e.target.id].scroll(e);
+}
+
+function touchend(e) {
+  uChartsInstance[e.target.id].scrollEnd(e);
+  uChartsInstance[e.target.id].touchLegend(e);
+  uChartsInstance[e.target.id].showToolTip(e);
+}
+function getServerData() {
+  try {
+    let res = JSON.parse(airesult.value)
+    drawCharts('NQcoCZzFrKSLpWLTraRoIhxwhgdnrFne', res);
+  } catch (e) {
+    uni.showToast({
+      title: "数据解析失败",
+    });
+  }
+};
+
+
+
+const relationMap = { 'year': '年', 'month': '月', 'ri': '日', 'time': '时', 'daYun': '大运', 'liuNian': '流年', 'liuYue': '流月', 'liuRi': '流日' }
 
 const heavenlyStemsColorMap = {
   甲: "success", // 木 - 绿色
@@ -743,6 +636,7 @@ const radios = [
   { label: "流年太岁" },
   { label: "干支关系" },
   { label: "AI提示词" },
+  { label: "人生K线" },
 ];
 
 const radioClick = (index: any) => {
@@ -856,6 +750,7 @@ const analysisResult = reactive({
     zhiRelations: [],
     ganRelations: [],
     ai: "",
+    aik: "",
   },
 });
 
@@ -1054,6 +949,7 @@ const applyResult = (
     zhiRelations: res.zhiRelations,
     ganRelations: res.ganRelations,
     ai: convertBaziToPrompt(res),
+    aik: convertBaziToKPrompt(res),
   };
 };
 const openPop = async () => {
