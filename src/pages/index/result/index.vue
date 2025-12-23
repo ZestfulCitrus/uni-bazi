@@ -578,7 +578,7 @@
   </view>
   <uv-popup ref="popups" :close-on-click-overlay="false" overlayOpacity="0.7">
     <uv-alert
-      title="关注不迷路，查看B站主页简介获取验证码"
+      title="关注后私信，自动回复验证码"
       type="warning"
       description="验证码可能在版本更新后替换，一次验证后可以无限次使用"
     ></uv-alert>
@@ -1081,7 +1081,7 @@ onLoad(async (option) => {
 
 const finish = (e) => {
   console.log("输入结束，当前值为：" + e);
-  if (e === "123456") {
+  if (e === "654321") {
     setToken1234("123456");
     popups.value.close();
   }
