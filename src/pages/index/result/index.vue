@@ -39,7 +39,10 @@
             >
             <view class="cw pl8"></view>
           </view>
-          <uv-qrcode style="margin-right: 16rpx;" ref="qrcode" size="60px" :value="`https:/8char.space`"></uv-qrcode>
+          <view style="display: flex; align-items: center; flex-direction: column; margin-right: 16rpx;">
+            <uv-qrcode ref="qrcode" size="60px" :value="`https:/8char.space`"></uv-qrcode>
+            <uv-text size="12" align="center" type="info" text="扫一扫查看"></uv-text>
+          </view>
         </view>
       </view>
     </view>
