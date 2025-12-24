@@ -592,6 +592,7 @@ function getServerData() {
   } catch (e) {
     uni.showToast({
       title: "数据解析失败",
+      icon: 'fail'
     });
   }
 };
